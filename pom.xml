@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.egakat</groupId>
+	<artifactId>egakat-io-solicitudes</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>egakat-io-solicitudes</name>
+	<description>Multimodule project with integration functionality</description>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.1.RELEASE</version>
+		<relativePath />
+		<!-- lookup parent from repository -->
+	</parent>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<egakat.integration.version>0.0.1-SNAPSHOT</egakat.integration.version>
+		<egakat.e-connect.version>0.0.1-SNAPSHOT</egakat.e-connect.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-integration-files-commons</artifactId>
+				<version>${egakat.integration.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-integration-core-files</artifactId>
+				<version>${egakat.integration.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>
+					egakat-integration-core-transformation
+				</artifactId>
+				<version>${egakat.integration.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-integration-maps-client</artifactId>
+				<version>${egakat.integration.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-e-connect-maestros-client</artifactId>
+				<version>${egakat.e-connect.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-wms-maestros-client</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<modules>
+		<module>egakat-io-solicitudes-commons</module>
+		<module>egakat-io-solicitudes-cedis-manufacturas</module>
+		<module>egakat-io-solicitudes-cedis-recibos</module>
+		<module>egakat-io-solicitudes-cedis-salidas</module>
+		
+		
+		<module>egakat-io-solicitudes-clientes-gws</module>
+		<module>egakat-io-solicitudes-clientes-heinz</module>
+		<module>egakat-io-solicitudes-transformation</module>
+	</modules>
+</project>
