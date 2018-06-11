@@ -19,6 +19,7 @@ import static com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom.CANTI
 import static com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom.ESTADO_INVENTARIO_BOM_CODIGO_ALTERNO;
 import static com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom.PRODUCTO_BOM_CODIGO_ALTERNO;
 import static com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom.SUBESTADO_INVENTARIO_BOM_CODIGO_ALTERNO;
+import static com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom.REQUIERE_BOM;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 import java.time.LocalDate;
@@ -45,6 +46,7 @@ public class MapEntidadManufacturaBomDecorator extends MapEntidadDecorator<Manuf
 		LocalDate fema = getLocalDate(archivo, registro, FEMA);
 		Integer cantidad = getInteger(archivo, registro, CANTIDAD);
 		Integer cantidadBom = getInteger(archivo, registro, CANTIDAD_BOM);
+		int requiereBom = getInteger(archivo, registro, REQUIERE_BOM);
 
 		// @formatter:off
  		val result = ManufacturaBom.builder()
@@ -76,6 +78,7 @@ public class MapEntidadManufacturaBomDecorator extends MapEntidadDecorator<Manuf
 				.cantidadBom(cantidadBom)
 				.estadoInventarioBomCodigoAlterno(defaultString(getString(archivo, registro,ESTADO_INVENTARIO_BOM_CODIGO_ALTERNO)))
 				.subestadoInventarioBomCodigoAlterno(defaultString(getString(archivo, registro,SUBESTADO_INVENTARIO_BOM_CODIGO_ALTERNO)))
+				.requiereBom(requiereBom == 1)
 				
 				.build();
 		// @formatter:on

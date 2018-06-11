@@ -1,14 +1,21 @@
 package com.egakat.io.solicitudes.transformation.service.impl;
 
+import static com.egakat.integration.files.enums.EstadoRegistroType.DESCARTADO;
+import static com.egakat.integration.files.enums.EstadoRegistroType.ERROR_ENRIQUECIMIENTO;
+import static com.egakat.integration.files.enums.EstadoRegistroType.ERROR_HOMOLOGACION;
 import static com.egakat.integration.files.enums.EstadoRegistroType.ERROR_VALIDACION;
+import static com.egakat.integration.files.enums.EstadoRegistroType.PROCESADO;
 import static com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom.ESTADO_INVENTARIO_BOM_CODIGO_ALTERNO;
 import static com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom.PRODUCTO_BOM_CODIGO_ALTERNO;
 import static com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom.SUBESTADO_INVENTARIO_BOM_CODIGO_ALTERNO;
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.joining;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +29,7 @@ import com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom;
 import com.egakat.io.solicitudes.repository.manufacturas.ManufacturaBomRepository;
 import com.egakat.io.solicitudes.transformation.service.api.ManufacturasBomTransformationService;
 import com.egakat.wms.maestros.client.service.api.WhareHouseLocalService;
+import com.egakat.wms.maestros.dto.MaterialDto;
 
 import lombok.val;
 
@@ -86,138 +94,186 @@ public class ManufacturasBomTransformationServiceImpl extends SolicitudesTransfo
 	}
 
 	@Override
-	protected boolean validateRow(ManufacturaBom registro, List<ArchivoErrorDto> errores, List<CampoDto> campos) {
-		boolean result = super.validateRow(registro, errores, campos);
+	protected void validateGroups(List<ManufacturaBom> registros, ArrayList<ArchivoErrorDto> errores,
+			List<CampoDto> campos) {
+		super.validateGroups(registros, errores, campos);
+		discard(registros);
 
-		if (result) {
-			if (registro.isRequiereBom()) {
-				val cliente = clienteService.getByCodigo(registro.getClienteCodigo());
-				val bodega = bodegaService.findOneById(registro.getIdBodega());
+		val estados = Arrays.asList(PROCESADO, DESCARTADO, ERROR_ENRIQUECIMIENTO, ERROR_HOMOLOGACION);
+		val grupos = registros.stream().filter(a -> !estados.contains(a.getEstado()))
+				.collect(groupingBy(ManufacturaBom::getIdGrupo));
 
-				val client_id = cliente.getCodigoAlternoWms();
-				val wh_id = bodega.getCodigo();
-				val prtnum = registro.getProductoCodigoAlterno();
-				val invsts = registro.getEstadoInventarioCodigoAlterno();
+		if (!grupos.isEmpty()) {
+			for (val grupo : grupos.values()) {
+				if (validarCantidadesDeProducto(grupo, errores)) {
 
-				result = whService.productoTieneListaDeMateriales(wh_id, client_id, prtnum, invsts);
-				if (!result) {
-					val mensaje = "El producto no tiene asociada una lista de materiales";
-					val datos = String.format("client_id=%s, wh_id=%s, prtnum=%s", client_id, wh_id, prtnum);
-					val error = ArchivoErrorDto.error(registro.getIdArchivo(), mensaje, registro.getNumeroLinea(),
-							datos);
+					val registro = grupo.get(0);
+					if (registro.isRequiereBom()) {
+						val cliente = clienteService.getByCodigo(registro.getClienteCodigo());
+						val bodega = bodegaService.findOneById(registro.getIdBodega());
 
-					errores.add(error);
-				} else {
-					val materiales = whService.findBom(wh_id, client_id, prtnum);
-					
-					//chequee que no hayan fraciones de producto en la lista de materiales
-					
+						val client_id = cliente.getCodigoAlternoWms();
+						val wh_id = bodega.getCodigo();
+						val prtnum = registro.getProductoCodigoAlterno();
+						val invsts = registro.getEstadoInventarioCodigoAlterno();
+
+						boolean existeBom = whService.productoTieneListaDeMateriales(wh_id, client_id, prtnum, invsts);
+
+						if (existeBom) {
+							validarMateriales(wh_id, client_id, prtnum, grupo, errores);
+						} else {
+							errorProductoRequiereUnaListaDeMateriales(errores, registro, wh_id, client_id);
+						}
+					}
 				}
 			}
 		}
-
-		return result;
 	}
 
-	@Override
-	protected void validateGroups(List<ManufacturaBom> registros, ArrayList<ArchivoErrorDto> errores,
-			List<CampoDto> campos) {
-		// super.validateGroups(registros, errores, campos);
-		// discard(registros);
-		//
-		// val estados = Arrays.asList(PROCESADO, DESCARTADO, ERROR_ENRIQUECIMIENTO,
-		// ERROR_HOMOLOGACION);
-		// val groups = registros.stream().filter(a -> !estados.contains(a.getEstado()))
-		// .collect(groupingBy(ManufacturaBom::getIdGrupo));
-		//
-		// for (val key : groups.keySet()) {
-		// val lineas = groups.get(key);
-		//
-		// if (checkCantidadesLinea(lineas, errores)) {
-		// checkCantidadesBom(lineas, errores);
-		// }
-		// }
-		//
-		// System.out.println(groups);
-	}
-
-	protected boolean checkCantidadesLinea(List<ManufacturaBom> lineas, ArrayList<ArchivoErrorDto> errores) {
+	protected boolean validarCantidadesDeProducto(List<ManufacturaBom> lineas, ArrayList<ArchivoErrorDto> errores) {
 		boolean result = true;
 
 		val cantidades = lineas.stream().map(ManufacturaBom::getCantidad).distinct().collect(toList());
 		if (cantidades.size() > 1) {
-			val mensaje = getMensajeErrorMultiplesCantidades(lineas.get(0));
-			val datos = getDatosErrorMultiplesCantidades(lineas.get(0), cantidades);
-
-			for (val linea : lineas) {
-				val error = ArchivoErrorDto.error(linea.getIdArchivo(), mensaje, linea.getNumeroLinea(), datos);
-				linea.setEstado(ERROR_VALIDACION);
-				errores.add(error);
-			}
+			val registro = lineas.get(0);
+			val s = cantidades.stream().map(String::valueOf).collect(joining("; "));
+			errorCantidadDeProducto(errores, registro, s);
 			result = false;
 		}
 
 		return result;
 	}
 
-	protected String getMensajeErrorMultiplesCantidades(ManufacturaBom linea) {
-		String format;
-		String mensaje;
-		format = "El producto con código %s y estado %s presenta cantidades diferentes en la misma solicitud. Totalice las cantidades de producto por estado.";
-		mensaje = String.format(format, linea.getProductoCodigoAlterno(), linea.getIdEstadoInventario());
-		return mensaje;
-	}
+	protected void validarMateriales(String wh_id, String client_id, String prtnum, List<ManufacturaBom> grupo,
+			List<ArchivoErrorDto> errores) {
 
-	protected String getDatosErrorMultiplesCantidades(ManufacturaBom linea, List<Integer> cantidades) {
-		val sb = new StringBuilder();
-		sb.append("cliente=").append(linea.getClienteCodigo());
-		sb.append(", solicitud=").append(linea.getNumeroSolicitud());
-		sb.append(", producto=").append(linea.getProductoCodigoAlterno());
-		sb.append(", estado=").append(linea.getIdEstadoInventario());
-		sb.append(", cantidades=").append(cantidades.stream().map(String::valueOf).collect(joining(", ")));
-		return sb.toString();
-	}
+		val materialesEsperados = whService.findBom(wh_id, client_id, prtnum);
+		val materialesSolicitados = grupo.stream().collect(
+				groupingBy(ManufacturaBom::getProductoBomCodigoAlterno, summingInt(ManufacturaBom::getCantidadBom)));
 
-	protected void checkCantidadesBom(List<ManufacturaBom> lineas, ArrayList<ArchivoErrorDto> errores) {
-		val linea = lineas.get(0);
-		val subgrupos = lineas.stream().collect(groupingBy(ManufacturaBom::getIdProductoBom));
+		val registro = grupo.get(0);
 
-		for (val productoId : subgrupos.keySet()) {
-			val sublineas = subgrupos.get(productoId);
-			int linqty = sublineas.stream().mapToInt(ManufacturaBom::getCantidadBom).sum();
-			int mod = linqty % linea.getCantidad();
+		// Lista de materiales como esta configurada para el producto en WMS
+		val faltantes = materialesEsperados.stream().map(a -> a.getPrtnum()).collect(toList());
 
-			if (mod > 0) {
-				val mensaje = getMensajeErrorCantidadBom(lineas.get(0), linqty);
-				val datos = getDatosErrorCantidadBom(lineas.get(0), linqty);
+		// Lista de los materiales solicitados en la solicitud
+		val sobrantes = new ArrayList<>(materialesSolicitados.keySet());
 
-				for (val sublinea : sublineas) {
-					val error = ArchivoErrorDto.error(sublinea.getIdArchivo(), mensaje, sublinea.getNumeroLinea(),
-							datos);
-					sublinea.setEstado(ERROR_VALIDACION);
-					errores.add(error);
+		// Se le restan a la lista materiales solicitados, la lista de materiales del
+		// WMS, si quedan elementos en la lista significa que se pidieron materiales de
+		// mas.
+		sobrantes.removeAll(faltantes);
+
+		// Se le resta a la lista materiales del WMS, la lista de materiales
+		// solicitados, si quedan elementos en la lista significa que no se pidieron
+		// todos los materiales requeridos por WMS.
+		faltantes.removeAll(materialesSolicitados.keySet());
+
+		if (!sobrantes.isEmpty()) {
+			errorMaterialesSobrantes(errores, registro, wh_id, client_id, String.join(" ; ", sobrantes));
+		}
+
+		if (!faltantes.isEmpty()) {
+			errorMaterialesFaltantes(errores, registro, wh_id, client_id, String.join(" ; ", sobrantes));
+		}
+
+		if (sobrantes.isEmpty() && faltantes.isEmpty()) {
+			for (val material : materialesEsperados) {
+				val cantidadProducto = new BigDecimal(registro.getCantidad());
+				val cantidadMaterialEsperada = material.getCnsqty().multiply(cantidadProducto);
+				val cantidadMaterialSolicitada = new BigDecimal(materialesSolicitados.get(material.getPrtnum()));
+
+				if (cantidadMaterialEsperada.compareTo(cantidadMaterialSolicitada) != 0) {
+					errorCantidadDeMateriales(errores, registro, wh_id, client_id, material, cantidadMaterialEsperada,
+							cantidadMaterialSolicitada);
 				}
 			}
 		}
 	}
 
-	private String getMensajeErrorCantidadBom(ManufacturaBom linea, int linqty) {
-		String format;
-		String mensaje;
-		format = "Se está solicitando un total de %d unidades del material con código %s para armar %d unidades del producto %s en estado %s. El número total de unidades del material solicitado debe ser divisible entre el número de unidades del producto que se va armar.";
-		mensaje = String.format(format, linqty, linea.getProductoBomCodigoAlterno(), linea.getCantidad(),
-				linea.getProductoCodigoAlterno(), linea.getIdEstadoInventario());
-		return mensaje;
+	protected void errorCantidadDeProducto(List<ArchivoErrorDto> errores, ManufacturaBom registro, String cantidades) {
+		val format = "El producto con código %s y estado %s presenta cantidades diferentes en la misma solicitud. Totalice por solicitud las cantidades de producto por estado.";
+
+		val mensaje = String.format(format, registro.getProductoCodigoAlterno(), registro.getIdEstadoInventario());
+		val sb = getDatosError(registro);
+		sb.append(", ");
+		sb.append("cantidades=[").append(cantidades).append("] ");
+
+		val error = ArchivoErrorDto.error(registro.getIdArchivo(), mensaje, registro.getNumeroLinea(), sb.toString());
+		errores.add(error);
+		registro.setEstado(ERROR_VALIDACION);
 	}
 
-	private String getDatosErrorCantidadBom(ManufacturaBom linea, int linqty) {
+	protected void errorProductoRequiereUnaListaDeMateriales(ArrayList<ArchivoErrorDto> errores,
+			ManufacturaBom registro, String wh_id, String client_id) {
+		val mensaje = "El producto no tiene asociada una lista de materiales";
+		val sb = getDatosError(registro);
+		sb.append(", ");
+		sb.append("wh_id=").append(wh_id).append(", ");
+		sb.append("client_id=").append(client_id).append(", ");
+		sb.append("prtnum=").append(registro.getProductoCodigoAlterno());
+
+		val error = ArchivoErrorDto.error(registro.getIdArchivo(), mensaje, registro.getNumeroLinea(), sb.toString());
+		errores.add(error);
+		registro.setEstado(ERROR_VALIDACION);
+	}
+
+	protected void errorMaterialesSobrantes(List<ArchivoErrorDto> errores, ManufacturaBom registro, String wh_id,
+			String client_id, String sobrantes) {
+		val mensaje = "Se incluyeron productos de mas en la lista de materiales solicitada.";
+		val sb = getDatosError(registro);
+		sb.append(", ");
+		sb.append("wh_id=").append(wh_id).append(", ");
+		sb.append("client_id=").append(client_id).append(", ");
+		sb.append("prtnum=").append(registro.getProductoCodigoAlterno());
+
+		val error = ArchivoErrorDto.error(registro.getIdArchivo(), mensaje, registro.getNumeroLinea(), sb.toString());
+		errores.add(error);
+		registro.setEstado(ERROR_VALIDACION);
+	}
+
+	protected void errorMaterialesFaltantes(List<ArchivoErrorDto> errores, ManufacturaBom registro, String wh_id,
+			String client_id, String faltantes) {
+		val mensaje = "No se incluyeron todos los productos en la lista de materiales solicitada.";
+		val sb = getDatosError(registro);
+		sb.append(", ");
+		sb.append("wh_id=").append(wh_id).append(", ");
+		sb.append("client_id=").append(client_id).append(", ");
+		sb.append("prtnum=").append(registro.getProductoCodigoAlterno());
+
+		val error = ArchivoErrorDto.error(registro.getIdArchivo(), mensaje, registro.getNumeroLinea(), sb.toString());
+		errores.add(error);
+		registro.setEstado(ERROR_VALIDACION);
+	}
+
+	protected void errorCantidadDeMateriales(List<ArchivoErrorDto> errores, ManufacturaBom registro, String wh_id,
+			String client_id, MaterialDto material, BigDecimal cantidadMaterialEsperada,
+			BigDecimal cantidadMaterialSolicitada) {
+		val mensaje = "La cantidad total de material solicitado no corresponde a la cantidad de material requerido para producir la cantidad de producto";
+
+		val sb = getDatosError(registro);
+		sb.append(", ");
+		sb.append("cantidad producto=").append(registro.getCantidad()).append(", ");
+		sb.append("wh_id=").append(wh_id).append(", ");
+		sb.append("client_id=").append(client_id).append(", ");
+		sb.append("prtnum=").append(registro.getProductoCodigoAlterno()).append(", ");
+		sb.append("material=").append(material.getPrtnum()).append(", ");
+		sb.append("cnsqty=").append(material.getCnsqty().toPlainString()).append(", ");
+		sb.append("total material esperado=").append(cantidadMaterialEsperada.toPlainString()).append(", ");
+		sb.append("total material solicitado=").append(cantidadMaterialSolicitada.toPlainString());
+
+		val error = ArchivoErrorDto.error(registro.getIdArchivo(), mensaje, registro.getNumeroLinea(), sb.toString());
+		errores.add(error);
+		registro.setEstado(ERROR_VALIDACION);
+	}
+
+	protected StringBuilder getDatosError(ManufacturaBom registro) {
 		val sb = new StringBuilder();
-		sb.append("cliente=").append(linea.getClienteCodigo());
-		sb.append(", solicitud=").append(linea.getNumeroSolicitud());
-		sb.append(", producto=").append(linea.getProductoCodigoAlterno());
-		sb.append(", estado=").append(linea.getIdEstadoInventario());
-		sb.append(", cantidad=").append(linea.getCantidad());
-		sb.append(", linqty=").append(linqty);
-		return sb.toString();
+		sb.append("bodega=").append(registro.getBodegaCodigoAlterno()).append(", ");
+		sb.append("numero_solicitud=").append(registro.getNumeroSolicitud()).append(", ");
+		sb.append("cliente=").append(registro.getClienteCodigo()).append(", ");
+		sb.append("producto=").append(registro.getProductoCodigoAlterno()).append(", ");
+		sb.append("estado=").append(registro.getIdEstadoInventario());
+		return sb;
 	}
 }
