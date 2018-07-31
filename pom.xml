@@ -78,5 +78,6 @@
 		<module>egakat-io-solicitudes-clientes-gws</module>
 		<module>egakat-io-solicitudes-clientes-heinz</module>
 		<module>egakat-io-solicitudes-transformation</module>
+		<module>egakat-io-solicitudes-clientes-gws-rest</module>
 	</modules>
 </project>

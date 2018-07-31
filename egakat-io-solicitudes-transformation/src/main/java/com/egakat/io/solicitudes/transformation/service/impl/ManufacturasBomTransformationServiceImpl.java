@@ -94,7 +94,7 @@ public class ManufacturasBomTransformationServiceImpl extends SolicitudesTransfo
 	}
 
 	@Override
-	protected void validateGroups(List<ManufacturaBom> registros, ArrayList<ArchivoErrorDto> errores,
+	protected void validateGroups(List<ManufacturaBom> registros, List<ArchivoErrorDto> errores,
 			List<CampoDto> campos) {
 		super.validateGroups(registros, errores, campos);
 		discard(registros);
@@ -130,7 +130,7 @@ public class ManufacturasBomTransformationServiceImpl extends SolicitudesTransfo
 		}
 	}
 
-	protected boolean validarCantidadesDeProducto(List<ManufacturaBom> lineas, ArrayList<ArchivoErrorDto> errores) {
+	protected boolean validarCantidadesDeProducto(List<ManufacturaBom> lineas, List<ArchivoErrorDto> errores) {
 		boolean result = true;
 
 		val cantidades = lineas.stream().map(ManufacturaBom::getCantidad).distinct().collect(toList());
@@ -204,7 +204,7 @@ public class ManufacturasBomTransformationServiceImpl extends SolicitudesTransfo
 		registro.setEstado(ERROR_VALIDACION);
 	}
 
-	protected void errorProductoRequiereUnaListaDeMateriales(ArrayList<ArchivoErrorDto> errores,
+	protected void errorProductoRequiereUnaListaDeMateriales(List<ArchivoErrorDto> errores,
 			ManufacturaBom registro, String wh_id, String client_id) {
 		val mensaje = "El producto no tiene asociada una lista de materiales";
 		val sb = getDatosError(registro);

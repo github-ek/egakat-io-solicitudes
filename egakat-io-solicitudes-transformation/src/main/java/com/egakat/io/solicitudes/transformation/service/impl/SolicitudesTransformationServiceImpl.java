@@ -25,6 +25,11 @@ public abstract class SolicitudesTransformationServiceImpl<T extends Solicitud> 
 	protected LookUpService getLookUpService() {
 		return lookUpService;
 	}
+	
+	@Override
+	public void cacheEvict() {
+		getLookUpService().cacheEvict();
+	}
 
 	public SolicitudesTransformationServiceImpl() {
 		super();
