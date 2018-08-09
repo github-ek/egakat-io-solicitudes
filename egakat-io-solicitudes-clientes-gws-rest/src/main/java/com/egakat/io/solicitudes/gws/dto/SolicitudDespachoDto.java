@@ -149,7 +149,7 @@ public class SolicitudDespachoDto extends BusinessEntityDto<Long> {
 			@NotNull @Size(max = 100) String autorizadoNombres, @NotNull @Size(max = 20) String numeroOrdenCompra,
 			LocalDate fechaOrdenCompra, @NotNull @Size(max = 200) String nota, Long idCliente, Long idServicio,
 			Long idTercero, Long idCanal, Long idCiudad, Long idPunto, @NotNull LocalDateTime fechaCreacionExterna) {
-		super(id, version, creadoPor, fechaCreacion, modificadoPor, fechaModificacion);
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor);
 		this.estado = estado;
 		this.integracion = integracion;
 		this.idExterno = idExterno;

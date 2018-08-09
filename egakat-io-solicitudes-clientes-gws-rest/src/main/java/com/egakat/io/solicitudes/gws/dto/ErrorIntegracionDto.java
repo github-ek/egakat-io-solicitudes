@@ -89,7 +89,7 @@ public class ErrorIntegracionDto extends BusinessEntityDto<Long> {
 			@NotNull @Size(max = 100) String arg4, @NotNull @Size(max = 100) String arg5,
 			@NotNull @Size(max = 100) String arg6, @NotNull @Size(max = 100) String arg7,
 			@NotNull @Size(max = 100) String arg8, @NotNull @Size(max = 100) String arg9) {
-		super(id, version, creadoPor, fechaCreacion, modificadoPor, fechaModificacion);
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor);
 		this.integracion = integracion;
 		this.idExterno = idExterno;
 		this.codigo = codigo;

@@ -7,6 +7,8 @@ import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -53,19 +55,21 @@ public class Recibo extends SolicitudTercero {
 	}
 
 	@Builder
-	public Recibo(Long id, int version, LocalDateTime FechaCreacion, String createdBy, LocalDateTime FechaModificacion,
-			String modifiedBy, Long idArchivo, EstadoRegistroType estado, int numeroLinea, String clienteCodigo,
-			String servicioCodigoAlterno, String numeroSolicitud, String prefijo, String numeroSolicitudSinPrefijo,
-			LocalDate femi, LocalDate fema, String nota, String productoCodigoAlterno, String productoNombre,
-			int cantidad, String unidadMedidaCodigoAlterno, String bodegaCodigoAlterno,
-			String estadoInventarioCodigoAlterno, String lote, Long idCliente, Long idServicio, Long idProducto,
-			Long idUnidadMedida, Long idBodega, String idEstadoInventario, Long valorUnitarioDeclarado,
-			String requiereAgendamiento, LocalTime homi, LocalTime homa, String terceroIdentificacion,
-			String terceroNombre, String canalCodigoAlterno, String requiereTransporte, String ciudadCodigoAlterno,
-			String direccion, String puntoCodigoAlterno, String puntoNombre, String contactoNombres,
-			String contactoTelefonos, String contactoEmail, String documentoCliente, LocalDate fechaDocumentoCliente,
-			Long idTercero, Long idCanal, Long idCiudad, Long idPunto, String bl, String contenedor) {
-		super(id, version, FechaCreacion, createdBy, FechaModificacion, modifiedBy, idArchivo, estado, numeroLinea,
+	public Recibo(Long id, int version, LocalDateTime fechaCreacion, String creadoPor, LocalDateTime fechaModificacion,
+			String modificadoPor, Long idArchivo, @NotNull EstadoRegistroType estado, int numeroLinea,
+			@NotEmpty String clienteCodigo, @NotEmpty String servicioCodigoAlterno, @NotEmpty String numeroSolicitud,
+			@NotNull String prefijo, @NotNull String numeroSolicitudSinPrefijo, LocalDate femi, LocalDate fema,
+			@NotNull String nota, @NotNull String productoCodigoAlterno, @NotNull String productoNombre, int cantidad,
+			@NotNull String unidadMedidaCodigoAlterno, @NotEmpty String bodegaCodigoAlterno,
+			@NotNull String estadoInventarioCodigoAlterno, @NotNull String lote, Long idCliente, Long idServicio,
+			Long idProducto, Long idUnidadMedida, Long idBodega, String idEstadoInventario, Long valorUnitarioDeclarado,
+			@NotNull String requiereAgendamiento, LocalTime homi, LocalTime homa, @NotNull String terceroIdentificacion,
+			@NotNull String terceroNombre, @NotNull String canalCodigoAlterno, @NotEmpty String requiereTransporte,
+			@NotNull String ciudadCodigoAlterno, @NotNull String direccion, @NotNull String puntoCodigoAlterno,
+			@NotNull String puntoNombre, @NotNull String contactoNombres, @NotNull String contactoTelefonos,
+			@Email String contactoEmail, @NotNull String documentoCliente, LocalDate fechaDocumentoCliente,
+			Long idTercero, Long idCanal, Long idCiudad, Long idPunto, @NotNull String bl, @NotNull String contenedor) {
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor, idArchivo, estado, numeroLinea,
 				clienteCodigo, servicioCodigoAlterno, numeroSolicitud, prefijo, numeroSolicitudSinPrefijo, femi, fema,
 				nota, productoCodigoAlterno, productoNombre, cantidad, unidadMedidaCodigoAlterno, bodegaCodigoAlterno,
 				estadoInventarioCodigoAlterno, lote, idCliente, idServicio, idProducto, idUnidadMedida, idBodega,

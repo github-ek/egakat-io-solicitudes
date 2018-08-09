@@ -104,16 +104,18 @@ public class Traslado extends Solicitud {
 	}
 
 	@Builder
-	public Traslado(Long id, int version, LocalDateTime FechaCreacion, String createdBy, LocalDateTime FechaModificacion,
-			String modifiedBy, Long idArchivo, EstadoRegistroType estado, int numeroLinea, String clienteCodigo,
-			String servicioCodigoAlterno, String numeroSolicitud, String prefijo, String numeroSolicitudSinPrefijo,
-			LocalDate femi, LocalDate fema, String nota, String productoCodigoAlterno, String productoNombre,
-			int cantidad, String unidadMedidaCodigoAlterno, String bodegaCodigoAlterno,
-			String estadoInventarioCodigoAlterno, String lote, Long idCliente, Long idServicio, Long idProducto,
-			Long idUnidadMedida, Long idBodega, String idEstadoInventario, Long valorUnitarioDeclarado,
-			String bodegaTrasladoCodigoAlterno, String estadoInventarioTrasladoCodigoAlterno, Long idBodegaTraslado,
+	public Traslado(Long id, int version, LocalDateTime fechaCreacion, String creadoPor,
+			LocalDateTime fechaModificacion, String modificadoPor, Long idArchivo, @NotNull EstadoRegistroType estado,
+			int numeroLinea, @NotEmpty String clienteCodigo, @NotEmpty String servicioCodigoAlterno,
+			@NotEmpty String numeroSolicitud, @NotNull String prefijo, @NotNull String numeroSolicitudSinPrefijo,
+			LocalDate femi, LocalDate fema, @NotNull String nota, @NotNull String productoCodigoAlterno,
+			@NotNull String productoNombre, int cantidad, @NotNull String unidadMedidaCodigoAlterno,
+			@NotEmpty String bodegaCodigoAlterno, @NotNull String estadoInventarioCodigoAlterno, @NotNull String lote,
+			Long idCliente, Long idServicio, Long idProducto, Long idUnidadMedida, Long idBodega,
+			String idEstadoInventario, Long valorUnitarioDeclarado, @NotEmpty String bodegaTrasladoCodigoAlterno,
+			@NotNull String estadoInventarioTrasladoCodigoAlterno, Long idBodegaTraslado,
 			String idEstadoInventarioTraslado) {
-		super(id, version, FechaCreacion, createdBy, FechaModificacion, modifiedBy, idArchivo, estado, numeroLinea,
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor, idArchivo, estado, numeroLinea,
 				clienteCodigo, servicioCodigoAlterno, numeroSolicitud, prefijo, numeroSolicitudSinPrefijo, femi, fema,
 				nota, productoCodigoAlterno, productoNombre, cantidad, unidadMedidaCodigoAlterno, bodegaCodigoAlterno,
 				estadoInventarioCodigoAlterno, lote, idCliente, idServicio, idProducto, idUnidadMedida, idBodega,

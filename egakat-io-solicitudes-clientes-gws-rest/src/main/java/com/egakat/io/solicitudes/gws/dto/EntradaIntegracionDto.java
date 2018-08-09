@@ -96,7 +96,7 @@ public class EntradaIntegracionDto extends BusinessEntityDto<Long> {
 			@NotNull @Size(max = 100) String arg4, @NotNull @Size(max = 100) String arg5,
 			@NotNull @Size(max = 100) String arg6, @NotNull @Size(max = 100) String arg7,
 			@NotNull @Size(max = 100) String arg8, @NotNull @Size(max = 100) String arg9, @NotNull String datos) {
-		super(id, version, creadoPor, fechaCreacion, modificadoPor, fechaModificacion);
+		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor);
 		this.estado = estado;
 		this.programarNotificacion = programarNotificacion;
 		this.notificacionRealizada = notificacionRealizada;
