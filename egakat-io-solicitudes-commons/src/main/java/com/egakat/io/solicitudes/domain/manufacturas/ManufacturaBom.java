@@ -28,8 +28,6 @@ import lombok.val;
 @ToString(callSuper = true)
 @NoArgsConstructor
 public class ManufacturaBom extends Solicitud {
-
-	private static final long serialVersionUID = 1L;
 	
 	public static final String REQUIERE_BOM = "REQUIERE_BOM";
 	public static final String PRODUCTO_BOM_CODIGO_ALTERNO = "PRODUCTO_BOM_CODIGO_ALTERNO";

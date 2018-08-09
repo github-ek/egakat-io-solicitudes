@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.client.RestClientResponseException;
 
-import com.egakat.commons.dto.EntityDto;
+import com.egakat.commons.dto.BusinessEntityDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,9 +23,7 @@ import lombok.val;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorIntegracionDto extends EntityDto<Long> {
-
-	private static final long serialVersionUID = 1L;
+public class ErrorIntegracionDto extends BusinessEntityDto<Long> {
 
 	@NotNull
 	@Size(max = 50)

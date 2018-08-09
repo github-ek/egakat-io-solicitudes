@@ -29,8 +29,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Traslado extends Solicitud {
 
-	private static final long serialVersionUID = 1L;
-
 	public static final String VALOR_UNITARIO_DECLARADO = "VALOR_UNITARIO_DECLARADO";
 
 	public static final String BODEGA_TRASLADO_CODIGO_ALTERNO = "BODEGA_TRASLADO_CODIGO_ALTERNO";

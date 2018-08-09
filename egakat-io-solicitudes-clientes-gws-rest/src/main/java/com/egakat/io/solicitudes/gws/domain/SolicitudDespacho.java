@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.egakat.commons.domain.BaseEntity;
+import com.egakat.commons.domain.BusinessEntity;
 import com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType;
 
 import lombok.Getter;
@@ -31,9 +31,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AttributeOverride(name = "id", column = @Column(name = "id_solicitud_despacho"))
-public class SolicitudDespacho extends BaseEntity<Long> {
-
-	private static final long serialVersionUID = 1L;
+public class SolicitudDespacho extends BusinessEntity<Long> {
 
 	@Column(name = "estado", length = 50, nullable = false)
 	@NotNull

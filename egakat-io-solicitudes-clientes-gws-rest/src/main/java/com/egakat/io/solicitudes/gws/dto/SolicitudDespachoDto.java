@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.egakat.commons.dto.EntityDto;
+import com.egakat.commons.dto.BusinessEntityDto;
 import com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType;
 
 import lombok.AllArgsConstructor;
@@ -22,9 +22,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class SolicitudDespachoDto extends EntityDto<Long> {
-
-	private static final long serialVersionUID = 1L;
+public class SolicitudDespachoDto extends BusinessEntityDto<Long> {
 
 	@NotNull
 	private EstadoEntradaIntegracionType estado;

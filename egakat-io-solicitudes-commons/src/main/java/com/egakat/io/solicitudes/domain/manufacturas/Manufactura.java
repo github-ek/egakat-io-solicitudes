@@ -29,8 +29,6 @@ public class Manufactura extends Solicitud {
 
 	public static final String REQUIERE_BOM = "REQUIERE_BOM";
 
-	private static final long serialVersionUID = 1L;
-
 	@Column(name = "requiere_bom")
 	private boolean requiereBom;
 

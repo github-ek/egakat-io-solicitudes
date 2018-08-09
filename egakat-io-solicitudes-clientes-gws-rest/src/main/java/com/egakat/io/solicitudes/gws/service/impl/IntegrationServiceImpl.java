@@ -85,7 +85,7 @@ public class IntegrationServiceImpl implements IntegrationService {
 		download();
 		ack();
 		reject();
-		// accept();
+		accept();
 		//
 		System.out.println();
 	}

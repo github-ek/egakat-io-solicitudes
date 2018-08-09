@@ -23,8 +23,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public abstract class Solicitud extends Registro {
 
-	private static final long serialVersionUID = 1L;
-
 	public static final String CLIENTE_CODIGO = "CLIENTE_CODIGO";
 	public static final String SERVICIO_CODIGO_ALTERNO = "SERVICIO_CODIGO_ALTERNO";
 	public static final String NUMERO_SOLICITUD = "NUMERO_SOLICITUD";

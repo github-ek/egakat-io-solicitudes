@@ -28,7 +28,7 @@ public class TakeFeedsServiceImpl implements TakeFeedsService {
 
 	@Override
 	public void takeFeeds() {
-		val ids = localService.getAllByStatus("MIGRADO");
+		val ids = localService.getAllByStatus("ENVIAR");
 		for (val id : ids) {
 			val model = asEntradaIntegracion(id);
 			

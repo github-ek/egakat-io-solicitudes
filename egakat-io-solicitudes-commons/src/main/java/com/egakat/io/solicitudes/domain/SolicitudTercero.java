@@ -26,7 +26,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public abstract class SolicitudTercero extends Solicitud {
 
-	private static final long serialVersionUID = 1L;
 	
 	public static final String VALOR_UNITARIO_DECLARADO = "VALOR_UNITARIO_DECLARADO";
 	

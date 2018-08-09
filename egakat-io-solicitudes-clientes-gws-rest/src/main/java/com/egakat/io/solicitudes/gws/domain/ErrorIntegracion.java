@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.egakat.commons.domain.BaseEntity;
+import com.egakat.commons.domain.BusinessEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +24,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AttributeOverride(name = "id", column = @Column(name = "id_error_integracion"))
-public class ErrorIntegracion extends BaseEntity<Long> {
-
-	private static final long serialVersionUID = 1L;
+public class ErrorIntegracion extends BusinessEntity<Long> {
 
 	@Column(name = "integracion", length = 50, nullable = false)
 	@NotNull

@@ -26,8 +26,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Destruccion extends Solicitud {
 
-	private static final long serialVersionUID = 1L;
-
 	@Builder
 	public Destruccion(Long id, int version, LocalDateTime FechaCreacion, String createdBy, LocalDateTime FechaModificacion,
 			String modifiedBy, Long idArchivo, EstadoRegistroType estado, int numeroLinea, String clienteCodigo,

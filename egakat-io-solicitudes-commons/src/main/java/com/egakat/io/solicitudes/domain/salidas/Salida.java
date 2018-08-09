@@ -29,8 +29,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Salida extends SolicitudTercero {
 
-	private static final long serialVersionUID = 1L;
-
 	public static final String PREDISTRIBUCION_CROSSDOCK = "PREDISTRIBUCION_CROSSDOCK";
 
 	public static final String AUTORIZADO_IDENTIFICACION = "AUTORIZADO_IDENTIFICACION";
