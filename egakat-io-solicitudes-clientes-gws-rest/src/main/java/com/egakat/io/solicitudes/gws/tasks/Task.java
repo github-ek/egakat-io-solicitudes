@@ -25,7 +25,7 @@ public class Task {
 	}
 
 	protected void download() {
-		//integrationService.execute();
+		integrationService.execute();
 	}
 
 	protected void transformar() {
