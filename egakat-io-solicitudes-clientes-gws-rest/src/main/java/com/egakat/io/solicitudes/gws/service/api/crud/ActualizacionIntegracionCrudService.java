@@ -13,6 +13,8 @@ import com.egakat.io.solicitudes.gws.enums.EstadoNotificacionType;
 @Transactional(readOnly = true)
 public interface ActualizacionIntegracionCrudService extends CrudService<ActualizacionIntegracionDto, Long> {
 
+	ActualizacionIntegracionDto findOneAllByEstadoIntegracionIn(String integracion, String idExterno);
+
 	List<ActualizacionIntegracionDto> findAllByEstadoIntegracionIn(String integracion,
 			EstadoIntegracionType... estadosIntegracion);
 

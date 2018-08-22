@@ -34,7 +34,6 @@ abstract public class DataQualityEntryDto extends SimpleEntityDto<Long> {
 	private String correlacion;
 
 	@NotNull
-	@Size(max = 50)
 	private EstadoIntegracionType estadoIntegracion;
 	
 	public boolean hasErrors() {

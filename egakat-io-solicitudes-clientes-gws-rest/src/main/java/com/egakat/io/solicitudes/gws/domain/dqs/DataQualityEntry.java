@@ -41,7 +41,6 @@ abstract public class DataQualityEntry extends SimpleEntity<Long> {
 
 	@Column(name = "estado_integracion", length = 50, nullable = false)
 	@NotNull
-	@Size(max = 50)
 	@Enumerated(EnumType.STRING)
 	private EstadoIntegracionType estadoIntegracion;
 

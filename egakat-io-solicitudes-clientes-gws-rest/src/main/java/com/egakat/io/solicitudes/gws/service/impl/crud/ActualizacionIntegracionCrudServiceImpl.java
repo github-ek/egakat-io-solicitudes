@@ -2,6 +2,8 @@ package com.egakat.io.solicitudes.gws.service.impl.crud;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -154,5 +156,15 @@ public class ActualizacionIntegracionCrudServiceImpl
 
 		erroresService.create(errores);
 		update(model);
+	}
+
+	@Override
+	public ActualizacionIntegracionDto findOneAllByEstadoIntegracionIn(String integracion, String idExterno) {
+		val optional = getRepository().findByIdExterno(idExterno);
+		if (!optional.isPresent()) {
+			throw new EntityNotFoundException("idExterno = " + String.valueOf(idExterno));
+		}
+		val result = asModel(optional.get());
+		return result;	
 	}
 }

@@ -19,4 +19,6 @@ public interface ActualizacionIntegracionRepository
 			EstadoNotificacionType estadoNotificacion);
 
 	Optional<ActualizacionIntegracion> findByIntegracionAndIdExterno(String integracion, String idExterno);
+
+	Optional<ActualizacionIntegracion> findByIdExterno(String idExterno);
 }
