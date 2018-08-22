@@ -2,16 +2,19 @@ package com.egakat.io.solicitudes.gws.service.impl;
 
 import static com.egakat.io.solicitudes.gws.constants.IntegracionesConstants.SOLICITUDES_SALIDAS;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.egakat.io.solicitudes.gws.dto.EntradaIntegracionDto;
-import com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType;
+import com.egakat.io.solicitudes.gws.dto.ActualizacionIntegracionDto;
+import com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType;
 import com.egakat.io.solicitudes.gws.service.api.TakeFeedsService;
 import com.egakat.io.solicitudes.gws.service.api.client.SalidasLocalService;
-import com.egakat.io.solicitudes.gws.service.api.crud.EntradaIntegracionCrudService;
+import com.egakat.io.solicitudes.gws.service.api.crud.ActualizacionIntegracionCrudService;
 
 import lombok.val;
+
 @Service
 public class TakeFeedsServiceImpl implements TakeFeedsService {
 
@@ -19,7 +22,7 @@ public class TakeFeedsServiceImpl implements TakeFeedsService {
 	private SalidasLocalService localService;
 
 	@Autowired
-	private EntradaIntegracionCrudService entradasService;
+	private ActualizacionIntegracionCrudService entradasService;
 
 	@Override
 	public String getCodigoIntegracion() {
@@ -29,24 +32,24 @@ public class TakeFeedsServiceImpl implements TakeFeedsService {
 	@Override
 	public void takeFeeds() {
 		val ids = localService.getAllByStatus("ENVIAR");
+		val correlacion = LocalDateTime.now().toString();
 		for (val id : ids) {
-			val model = asEntradaIntegracion(id);
-			
+			val model = asEntradaIntegracion(id, correlacion);
+
 			entradasService.enqueue(model);
 		}
 
 	}
 
-	protected EntradaIntegracionDto asEntradaIntegracion(Integer id) {
+	protected ActualizacionIntegracionDto asEntradaIntegracion(Integer id, String correlacion) {
 		// @formatter:off
-		val result = EntradaIntegracionDto
+		val result = ActualizacionIntegracionDto
 				.builder()
-				.estado(EstadoEntradaIntegracionType.NO_PROCESADO)
-				.programarNotificacion(false)
-				.notificacionRealizada(false)
 				.integracion(getCodigoIntegracion())
 				.idExterno(id.toString())
+				.correlacion(correlacion)
 				.estadoExterno("")
+				.estadoIntegracion(EstadoIntegracionType.NO_PROCESADO)
 				.build();				
 		// @formatter:on
 

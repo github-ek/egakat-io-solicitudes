@@ -1,6 +1,6 @@
 package com.egakat.io.solicitudes.gws.enums;
 
-public enum EstadoEntradaIntegracionType {
+public enum EstadoIntegracionType {
 	// @formatter:off
     NO_PROCESADO,
     ERROR_ESTRUCTURA,

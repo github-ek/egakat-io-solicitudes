@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.client.RestClientResponseException;
 
-import com.egakat.commons.dto.BusinessEntityDto;
+import com.egakat.commons.dto.SimpleEntityDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +23,7 @@ import lombok.val;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorIntegracionDto extends BusinessEntityDto<Long> {
+public class ErrorIntegracionDto extends SimpleEntityDto<Long> {
 
 	@NotNull
 	@Size(max = 50)
@@ -34,64 +34,58 @@ public class ErrorIntegracionDto extends BusinessEntityDto<Long> {
 	private String idExterno;
 
 	@NotNull
-	@Size(max = 50)
+	@Size(max = 100)
+	private String correlacion;
+
+	@NotNull
+	@Size(max = 100)
 	private String codigo;
 
 	@NotNull
 	private String mensaje;
 
-	@NotNull
 	@Size(max = 100)
 	private String arg0;
 
-	@NotNull
 	@Size(max = 100)
 	private String arg1;
 
-	@NotNull
 	@Size(max = 100)
 	private String arg2;
 
-	@NotNull
 	@Size(max = 100)
 	private String arg3;
 
-	@NotNull
 	@Size(max = 100)
 	private String arg4;
 
-	@NotNull
 	@Size(max = 100)
 	private String arg5;
 
-	@NotNull
 	@Size(max = 100)
 	private String arg6;
 
-	@NotNull
 	@Size(max = 100)
 	private String arg7;
 
-	@NotNull
 	@Size(max = 100)
 	private String arg8;
 
-	@NotNull
 	@Size(max = 100)
 	private String arg9;
 
 	@Builder
-	public ErrorIntegracionDto(Long id, int version, String creadoPor, LocalDateTime fechaCreacion,
-			String modificadoPor, LocalDateTime fechaModificacion, @NotNull @Size(max = 50) String integracion,
-			@NotNull @Size(max = 100) String idExterno, @NotNull @Size(max = 50) String codigo, @NotNull String mensaje,
-			@NotNull @Size(max = 100) String arg0, @NotNull @Size(max = 100) String arg1,
-			@NotNull @Size(max = 100) String arg2, @NotNull @Size(max = 100) String arg3,
-			@NotNull @Size(max = 100) String arg4, @NotNull @Size(max = 100) String arg5,
-			@NotNull @Size(max = 100) String arg6, @NotNull @Size(max = 100) String arg7,
-			@NotNull @Size(max = 100) String arg8, @NotNull @Size(max = 100) String arg9) {
-		super(id, version, fechaCreacion, creadoPor, fechaModificacion, modificadoPor);
+	public ErrorIntegracionDto(Long id, int version, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
+			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String idExterno,
+			@NotNull @Size(max = 100) String correlacion, @NotNull @Size(max = 100) String codigo,
+			@NotNull String mensaje, @Size(max = 100) String arg0, @Size(max = 100) String arg1,
+			@Size(max = 100) String arg2, @Size(max = 100) String arg3, @Size(max = 100) String arg4,
+			@Size(max = 100) String arg5, @Size(max = 100) String arg6, @Size(max = 100) String arg7,
+			@Size(max = 100) String arg8, @Size(max = 100) String arg9) {
+		super(id, version, fechaCreacion, fechaModificacion);
 		this.integracion = integracion;
 		this.idExterno = idExterno;
+		this.correlacion = correlacion;
 		this.codigo = codigo;
 		this.mensaje = mensaje;
 		this.arg0 = arg0;
@@ -106,8 +100,8 @@ public class ErrorIntegracionDto extends BusinessEntityDto<Long> {
 		this.arg9 = arg9;
 	}
 
-	public static ErrorIntegracionDto error(String integracion, String idExterno, String codigo, String mensaje,
-			String... arg) {
+	public static ErrorIntegracionDto error(String integracion, String idExterno, String correlacion, String codigo,
+			String mensaje, String... arg) {
 		val argumentos = normalizarArgumentos(arg);
 
 		// @formatter:off
@@ -115,7 +109,8 @@ public class ErrorIntegracionDto extends BusinessEntityDto<Long> {
 				.builder()
 				.integracion(integracion)
 				.idExterno(idExterno)
-				.codigo(codigo)
+				.correlacion(correlacion)
+				.codigo(StringUtils.left(codigo, 100))
 				.mensaje(mensaje)
 				.arg0(argumentos[0])
 				.arg1(argumentos[1])
@@ -133,13 +128,14 @@ public class ErrorIntegracionDto extends BusinessEntityDto<Long> {
 		return result;
 	}
 
-	public static ErrorIntegracionDto error(String integracion, String idExterno, String codigo, Throwable t) {
+	public static ErrorIntegracionDto error(String integracion, String idExterno, String correlacion, String codigo,
+			Throwable t) {
 		val c = StringUtils.isEmpty(codigo) ? t.getClass().getName() : codigo;
 		String msg = t.getMessage();
 		if (t instanceof RestClientResponseException) {
 			msg = ((RestClientResponseException) t).getResponseBodyAsString();
 		}
-		val result = error(integracion, idExterno, c, msg);
+		val result = error(integracion, idExterno, correlacion, c, msg);
 		return result;
 	}
 

@@ -1,14 +1,18 @@
 package com.egakat.io.solicitudes.gws.domain;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.egakat.commons.domain.SimpleEntity;
+import com.egakat.io.solicitudes.gws.domain.dqs.DataQualityEntry;
+import com.egakat.io.solicitudes.gws.enums.EstadoNotificacionType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,37 +20,26 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "integraciones_errores")
+@Table(name = "integraciones_actualizaciones")
+@AttributeOverride(name = "id", column = @Column(name = "id_integracion_actualizacion"))
 @DynamicUpdate
 @Getter
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class ErrorIntegracion extends SimpleEntity<Long> {
+public class ActualizacionIntegracion extends DataQualityEntry {
 
-	@Column(name = "integracion", length = 50, nullable = false)
+	@Column(name = "estado_externo", length = 50, nullable = false)
 	@NotNull
 	@Size(max = 50)
-	private String integracion;
+	private String estadoExterno;
 
-	@Column(name = "id_externo", length = 100, nullable = false)
-	@NotNull
-	@Size(max = 100)
-	private String idExterno;
+	@Column(name = "estado_notificacion", length = 50, nullable = true)
+	@Enumerated(EnumType.STRING)
+	private EstadoNotificacionType estadoNotificacion;
 
-	@Column(name = "correlacion", length = 100, nullable = false)
-	@NotNull
-	@Size(max = 100)
-	private String correlacion;
-
-	@Column(name = "codigo", length = 50, nullable = false)
-	@NotNull
-	@Size(max = 100)
-	private String codigo;
-
-	@Column(name = "mensaje", nullable = false)
-	@NotNull
-	private String mensaje;
+	@Column(name = "entradas_en_cola", nullable = false)
+	private int entradasEnCola;
 
 	@Column(name = "arg0", length = 100, nullable = true)
 	@Size(max = 100)
@@ -88,4 +81,6 @@ public class ErrorIntegracion extends SimpleEntity<Long> {
 	@Size(max = 100)
 	private String arg9;
 
+	@Column(name = "datos", length = -1, nullable = true)
+	private String datos;
 }

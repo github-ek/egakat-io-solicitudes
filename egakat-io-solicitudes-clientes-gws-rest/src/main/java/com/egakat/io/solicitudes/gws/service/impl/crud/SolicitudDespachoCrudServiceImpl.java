@@ -1,11 +1,14 @@
 package com.egakat.io.solicitudes.gws.service.impl.crud;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.egakat.core.services.crud.impl.CrudServiceImpl;
 import com.egakat.io.solicitudes.gws.domain.SolicitudDespacho;
 import com.egakat.io.solicitudes.gws.dto.SolicitudDespachoDto;
+import com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType;
 import com.egakat.io.solicitudes.gws.repository.SolicitudDespachoRepository;
 import com.egakat.io.solicitudes.gws.service.api.crud.SolicitudDespachoCrudService;
 
@@ -22,6 +25,20 @@ public class SolicitudDespachoCrudServiceImpl extends CrudServiceImpl<SolicitudD
 	protected SolicitudDespachoRepository getRepository() {
 		return repository;
 	}
+	
+	@Override
+	public List<String> findAllCorrelacionesByEstadoIntegracionIn(List<EstadoIntegracionType> estados){
+		val result = getRepository().findAllCorrelacionesByEstadoIntegracionIn(estados);
+		return result;
+	}
+
+	@Override
+	public List<SolicitudDespachoDto> findAllByCorrelacionAndEstadoIntegracionIn(String correlacion,
+			List<EstadoIntegracionType> estados) {
+		val entities = getRepository().findAllByCorrelacionAndEstadoIntegracionIn(correlacion, estados);
+		val result = asModels(entities);
+		return result;
+	}
 
 	@Override
 	protected SolicitudDespachoDto asModel(SolicitudDespacho entity) {
@@ -29,10 +46,10 @@ public class SolicitudDespachoCrudServiceImpl extends CrudServiceImpl<SolicitudD
 		val result = SolicitudDespachoDto
 				.builder()
 				.id(entity.getId())
-				.idCorrelacion(entity.getIdCorrelacion())
 				.integracion(entity.getIntegracion())
 				.idExterno(entity.getIdExterno())
-				.estado(entity.getEstado())
+				.correlacion(entity.getCorrelacion())
+				.estadoIntegracion(entity.getEstadoIntegracion())
 				.clienteCodigoAlterno(entity.getClienteCodigoAlterno())
 				.servicioCodigoAlterno(entity.getServicioCodigoAlterno())
 				.numeroSolicitud(entity.getNumeroSolicitud())
@@ -42,9 +59,9 @@ public class SolicitudDespachoCrudServiceImpl extends CrudServiceImpl<SolicitudD
 				.fema(entity.getFema())
 				.homi(entity.getHomi())
 				.homa(entity.getHoma())
-				.requiereAgendamiento(entity.getRequiereAgendamiento())
-				.requiereTransporte(entity.getRequiereTransporte())
-				.requiereDespacharCompleto(entity.getRequiereDespacharCompleto())
+				.requiereTransporte(entity.isRequiereTransporte())
+				.requiereAgendamiento(entity.isRequiereAgendamiento())
+				.requiereDespacharCompleto(entity.isRequiereDespacharCompleto())
 				.terceroIdentificacion(entity.getTerceroIdentificacion())
 				.terceroNombre(entity.getTerceroNombre())
 				.canalCodigoAlterno(entity.getCanalCodigoAlterno())
@@ -75,10 +92,10 @@ public class SolicitudDespachoCrudServiceImpl extends CrudServiceImpl<SolicitudD
 	@Override
 	protected SolicitudDespacho asEntity(SolicitudDespachoDto model, SolicitudDespacho entity) {
 
-		entity.setIdCorrelacion(model.getIdCorrelacion());
 		entity.setIntegracion(model.getIntegracion());
 		entity.setIdExterno(model.getIdExterno());
-		entity.setEstado(model.getEstado());
+		entity.setCorrelacion(model.getCorrelacion());
+		entity.setEstadoIntegracion(model.getEstadoIntegracion());
 		entity.setClienteCodigoAlterno(model.getClienteCodigoAlterno());
 		entity.setServicioCodigoAlterno(model.getServicioCodigoAlterno());
 		entity.setNumeroSolicitud(model.getNumeroSolicitud());
@@ -88,9 +105,9 @@ public class SolicitudDespachoCrudServiceImpl extends CrudServiceImpl<SolicitudD
 		entity.setFema(model.getFema());
 		entity.setHomi(model.getHomi());
 		entity.setHoma(model.getHoma());
-		entity.setRequiereAgendamiento(model.getRequiereAgendamiento());
-		entity.setRequiereTransporte(model.getRequiereTransporte());
-		entity.setRequiereDespacharCompleto(model.getRequiereDespacharCompleto());
+		entity.setRequiereTransporte(model.isRequiereTransporte());
+		entity.setRequiereAgendamiento(model.isRequiereAgendamiento());
+		entity.setRequiereDespacharCompleto(model.isRequiereDespacharCompleto());
 		entity.setTerceroIdentificacion(model.getTerceroIdentificacion());
 		entity.setTerceroNombre(model.getTerceroNombre());
 		entity.setCanalCodigoAlterno(model.getCanalCodigoAlterno());

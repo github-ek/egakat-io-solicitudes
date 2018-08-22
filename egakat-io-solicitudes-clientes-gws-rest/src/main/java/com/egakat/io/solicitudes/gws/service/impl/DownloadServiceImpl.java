@@ -1,31 +1,26 @@
 package com.egakat.io.solicitudes.gws.service.impl;
 
-import static com.egakat.io.solicitudes.gws.dto.ErrorIntegracionDto.error;
-import static com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType.ERROR_ESTRUCTURA;
-import static com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType.ESTRUCTURA_VALIDA;
+import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.egakat.io.solicitudes.gws.dto.EntradaIntegracionDto;
+import com.egakat.io.solicitudes.gws.dto.ActualizacionIntegracionDto;
 import com.egakat.io.solicitudes.gws.dto.ErrorIntegracionDto;
 import com.egakat.io.solicitudes.gws.dto.SolicitudDespachoDto;
+import com.egakat.io.solicitudes.gws.dto.SolicitudDespachoLineaDto;
+import com.egakat.io.solicitudes.gws.dto.client.SolicitudDto;
 import com.egakat.io.solicitudes.gws.service.api.DownloadService;
 import com.egakat.io.solicitudes.gws.service.api.client.SalidasLocalService;
-import com.egakat.io.solicitudes.gws.service.api.crud.EntradaIntegracionCrudService;
-import com.egakat.io.solicitudes.gws.service.api.crud.ErrorIntegracionCrudService;
 import com.egakat.io.solicitudes.gws.service.api.crud.SolicitudDespachoCrudService;
-import com.gws.integraciones.solicitudes.salidas.dto.SolicitudDto;
+import com.egakat.io.solicitudes.gws.service.api.crud.SolicitudDespachoLineaCrudService;
 
 import lombok.val;
 
@@ -39,77 +34,63 @@ public class DownloadServiceImpl implements DownloadService {
 	private SolicitudDespachoCrudService localService;
 
 	@Autowired
-	private EntradaIntegracionCrudService entradasService;
-
-	@Autowired
-	private ErrorIntegracionCrudService erroresService;
+	private SolicitudDespachoLineaCrudService localLineaService;
 
 	@Override
-	public void download(EntradaIntegracionDto entry) {
-		SolicitudDto externalEntity = null;
-		SolicitudDespachoDto localEntity = null;
-		val errores = new ArrayList<ErrorIntegracionDto>();
+	public void download(ActualizacionIntegracionDto entry, List<ErrorIntegracionDto> errores) {
+		errores.clear();
+
+		SolicitudDto external = null;
+		SolicitudDespachoDto model = null;
 
 		try {
-			externalEntity = getExternalEntity(entry, errores);
+			external = getExternalEntity(entry, errores);
 			if (errores.isEmpty()) {
-				localEntity = asLocalEntity(externalEntity, entry, errores);
+				model = asModel(external, entry, errores);
+				if (errores.isEmpty()) {
+					create(model);
+					entry.setEstadoIntegracion(ESTRUCTURA_VALIDA);
+				}
 			}
 		} catch (RuntimeException e) {
-			val error = error(entry.getIntegracion(), entry.getIdExterno(), "", e);
+			val error = error(entry, e);
 			errores.add(error);
 		}
 
-		if (errores.isEmpty()) {
-			createLocalEntity(localEntity);
-			entry.setEstado(ESTRUCTURA_VALIDA);
-		} else {
-			if(externalEntity !=null) {
-				for (val error : errores) {
-					error.setArg0(externalEntity.getSeriesName());
-					error.setArg1(String.valueOf(externalEntity.getDocNum()));
-				}
-			}
-			erroresService.create(errores);
-			entry.setEstado(ERROR_ESTRUCTURA);
+		if (!errores.isEmpty()) {
+			discard(external, errores);
 		}
-		entry.setProgramarNotificacion(true);
-		entry.setNotificacionRealizada(false);
-		entradasService.update(entry);
 	}
 
-	protected SolicitudDto getExternalEntity(EntradaIntegracionDto entry, List<ErrorIntegracionDto> errores) {
+	protected SolicitudDto getExternalEntity(ActualizacionIntegracionDto entry, List<ErrorIntegracionDto> errores) {
 		val id = Integer.parseInt(entry.getIdExterno());
 		val result = externalService.findOneById(id);
+		// TODO QUITAR ESTO
+		result.setId(id);
 		return result;
 	}
 
-	protected SolicitudDespachoDto asLocalEntity(SolicitudDto entity, EntradaIntegracionDto entry,
+	protected SolicitudDespachoDto asModel(SolicitudDto external, ActualizacionIntegracionDto entry,
 			List<ErrorIntegracionDto> errores) {
 
-		val idCorrelacion = String.format("%s-%s", entry.getIntegracion(), LocalDate.now().toString());
-		val idExterno = String.valueOf(entity.getId());
+		val idExterno = String.valueOf(external.getId());
 
-		val prefijo = defaultString(entity.getSeriesName());
-		val numeroSolicitudSinPrefijo = String.valueOf(entity.getDocNum());
+		val prefijo = defaultString(external.getPrefijo());
+		val numeroSolicitudSinPrefijo = String.valueOf(external.getNumeroSolicitudSinPrefijo());
 		val numeroSolicitud = String.format("%s-%s", prefijo, numeroSolicitudSinPrefijo);
 
-		val femi = getFecha(entity.getFeMi(), "femi", entry, errores);
-		val fema = getFecha(entity.getFeMa(), "fema", entry, errores);
-		val homi = getHora(entity.getHoMi(), "homi", entry, errores);
-		val homa = getHora(entity.getHoMa(), "homa", entry, errores);
+		val femi = getFecha(external.getFemi(), "femi", entry, errores);
+		val fema = getFecha(external.getFema(), "fema", entry, errores);
+		val homi = getHora(external.getHomi(), "homi", entry, errores);
+		val homa = getHora(external.getHoma(), "homa", entry, errores);
 
-		val requiereAgendamiento = "N";
-		val requiereTransporte = "S";
-		val requiereDespacharCompleto = "N";
+		val requiereTransporte = true;
+		val requiereAgendamiento = false;
+		val requiereDespacharCompleto = false;
 
-		// TODO NO HAY ORDEN COMPRA, CUANDO ES OBLIGATORIO
-		val numeroOrdenCompra = defaultString("");
 		LocalDate fechaOrdenCompra = null;
-
-		val nota = defaultString(entity.getComments());
-
 		val fechaCreacionExterna = LocalDateTime.now();
+		val lineas = asLineas(external);
 
 		SolicitudDespachoDto result = null;
 
@@ -117,12 +98,12 @@ public class DownloadServiceImpl implements DownloadService {
 			// @formatter:off
 			result = SolicitudDespachoDto
 					.builder() 
-					.idCorrelacion(idCorrelacion)
 					.integracion(entry.getIntegracion())
 					.idExterno(idExterno)
-					.estado(ESTRUCTURA_VALIDA)
-					.clienteCodigoAlterno(defaultString(entity.getCodCliente()))
-					.servicioCodigoAlterno(defaultString(entity.getTipoServicio()))
+					.correlacion(entry.getCorrelacion())
+					.estadoIntegracion(ESTRUCTURA_VALIDA)
+					.clienteCodigoAlterno(defaultString(external.getClienteCodigoAlterno()))
+					.servicioCodigoAlterno(defaultString(external.getServicioCodigoAlterno()))
 					.numeroSolicitud(numeroSolicitud)
 					.prefijo(prefijo)
 					.numeroSolicitudSinPrefijo(numeroSolicitudSinPrefijo)
@@ -130,39 +111,79 @@ public class DownloadServiceImpl implements DownloadService {
 					.fema(fema)
 					.homi(homi)
 					.homa(homa)
-					.requiereAgendamiento(requiereAgendamiento)
 					.requiereTransporte(requiereTransporte)
+					.requiereAgendamiento(requiereAgendamiento)
 					.requiereDespacharCompleto(requiereDespacharCompleto)
-					.terceroIdentificacion(defaultString(entity.getNit()))
-					.terceroNombre(defaultString(entity.getRazonSocial()))
-					.canalCodigoAlterno(defaultString(entity.getGroupName()))
-					.ciudadCodigoAlterno(defaultString(entity.getCodDane()))
-					.direccion(defaultString(entity.getDireccion()))
-					.puntoCodigoAlterno("")
+					.terceroIdentificacion(defaultString(external.getTerceroIdentificacion()))
+					.terceroNombre(defaultString(external.getTerceroNombre()))
+					.canalCodigoAlterno(defaultString(external.getCanalCodigoAlterno()))
+					.ciudadCodigoAlterno(defaultString(external.getCiudadCodigoAlterno()))
+					.direccion(defaultString(external.getDireccion()))
+					.puntoCodigoAlterno(defaultString(external.getPuntoCodigoAlterno()))
 					.puntoNombre("")
 					.autorizadoIdentificacion("")
 					.autorizadoNombres("")
-					.numeroOrdenCompra(numeroOrdenCompra)
+					.numeroOrdenCompra(defaultString(external.getNumeroOrdenCompra()))
 					.fechaOrdenCompra(fechaOrdenCompra)
-					.nota(nota)
+					.nota(defaultString(external.getNota()))
 					.fechaCreacionExterna(fechaCreacionExterna)
+					.lineas(lineas)
 					.build();
 			// @formatter:on
 		}
 		return result;
 	}
 
-	protected void createLocalEntity(final com.egakat.io.solicitudes.gws.dto.SolicitudDespachoDto localEntity) {
-		localService.create(localEntity);
+	protected List<SolicitudDespachoLineaDto> asLineas(SolicitudDto entity) {
+		val lineas = new ArrayList<SolicitudDespachoLineaDto>();
+		int i = 0;
+		for (val external : entity.getLineas()) {
+			// @formatter:off
+			val model = SolicitudDespachoLineaDto.builder()
+					.numeroLinea(i++)
+					.numeroLineaExterno(external.getNumeroLineaExterno())
+					.numeroSubLineaExterno(external.getNumeroSubLineaExterno())
+					.productoCodigoAlterno(external.getProductoCodigoAlterno())
+					.productoNombre(external.getProductoNombre())
+					.cantidad(external.getCantidad())
+					.bodegaCodigoAlterno(external.getBodegaCodigoAlterno())
+					.estadoInventarioCodigoAlterno(external.getBodegaCodigoAlterno())
+					.lote("")
+					.predistribucion(external.getPredistribucion())
+					.valorUnitarioDeclarado(null)
+					.build();
+			// @formatter:on
+			lineas.add(model);
+		}
+		return lineas;
 	}
 
-	@Override
-	public void acknowledge(EntradaIntegracionDto entry) {
-		// TODO Auto-generated method stub
+	protected void create(SolicitudDespachoDto model) {
+		val newModel = localService.create(model);
 
+		val id = newModel.getId();
+		for (val linea : model.getLineas()) {
+			linea.setIdSolicitudDespacho(id);
+			localLineaService.create(linea);
+		}
 	}
 
-	protected LocalDate getFecha(LocalDate value, String attribute, EntradaIntegracionDto entry,
+	protected void discard(SolicitudDto external, List<ErrorIntegracionDto> errores) {
+		if (external != null) {
+			for (val error : errores) {
+				error.setArg0(external.getClienteCodigoAlterno());
+				error.setArg1(external.getPrefijo());
+				error.setArg2(external.getNumeroSolicitudSinPrefijo());
+				error.setArg3(external.getServicioCodigoAlterno());
+				error.setArg4(external.getTerceroIdentificacion());
+				error.setArg5(external.getTerceroNombre());
+				error.setArg6(external.getCanalCodigoAlterno());
+				error.setArg7(external.getCiudadCodigoAlterno());
+			}
+		}
+	}
+
+	protected LocalDate getFecha(LocalDate value, String attribute, ActualizacionIntegracionDto entry,
 			List<ErrorIntegracionDto> errores) {
 		LocalDate result = null;
 
@@ -170,41 +191,37 @@ public class DownloadServiceImpl implements DownloadService {
 			result = value;
 		} else {
 			val msg = "No se ha suministrado un valor para este atributo de tipo FECHA.EN PRODUCCION SIEMPRE DEBE ENVIAR UNA FECHA A MENOS QUE EXPLICITAMENTE EXISTA UNA REGLA PARA DEDUCIRLA Y DEPENDA DEL OPL";
-			val error = error(entry.getIntegracion(), entry.getIdExterno(), attribute, msg);
+			val error = error(entry, attribute, msg);
 			errores.add(error);
 		}
 
 		return result;
 	}
 
-	private LocalTime getHora(String value, String attribute, EntradaIntegracionDto entry,
+	private LocalTime getHora(LocalTime value, String attribute, ActualizacionIntegracionDto entry,
 			List<ErrorIntegracionDto> errores) {
 		LocalTime result = null;
 
 		if (value != null) {
-			val formatter = getDateTimeFormatter();
-			try {
-				result = LocalTime.parse(StringUtils.left(value, 5), formatter);
-			} catch (DateTimeParseException e) {
-				val error = error(entry.getIntegracion(), entry.getIdExterno(), attribute, e);
-				errores.add(error);
-			}
+			result = value;
 		} else {
-			val msg = "No se ha suministrado un valor para este atributo de tipo HORA.EN PRODUCCION SIEMPRE DEBE ENVIAR UNA FECHA A MENOS QUE EXPLICITAMENTE EXISTA UNA REGLA PARA DEDUCIRLA Y DEPENDA DEL OPL";
-			val error = error(entry.getIntegracion(), entry.getIdExterno(), attribute, msg);
+			val msg = "No se ha suministrado un valor para este atributo de tipo HORA.EN PRODUCCION SIEMPRE DEBE ENVIAR UNA HORA A MENOS QUE EXPLICITAMENTE EXISTA UNA REGLA PARA DEDUCIRLA Y DEPENDA DEL OPL";
+			val error = error(entry, attribute, msg);
 			errores.add(error);
 		}
 
 		return result;
 	}
 
-	private static DateTimeFormatter formatter = null;
-
-	protected static DateTimeFormatter getDateTimeFormatter() {
-		if (formatter == null) {
-			formatter = DateTimeFormatter.ofPattern("HH:mm");
-		}
-		return formatter;
+	protected ErrorIntegracionDto error(ActualizacionIntegracionDto entry, String codigo, String mensaje) {
+		val result = ErrorIntegracionDto.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(),
+				codigo, mensaje);
+		return result;
 	}
 
+	protected ErrorIntegracionDto error(ActualizacionIntegracionDto entry, Throwable e) {
+		val result = ErrorIntegracionDto.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), "",
+				e);
+		return result;
+	}
 }

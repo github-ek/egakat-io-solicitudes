@@ -1,30 +1,33 @@
 package com.egakat.io.solicitudes.gws.service.impl;
 
-import static com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType.CORREGIDO;
-import static com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType.DESCARTADO;
-import static com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType.ERROR_CARGUE;
-import static com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType.ERROR_ENRIQUECIMIENTO;
-import static com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType.ERROR_HOMOLOGACION;
-import static com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType.ERROR_VALIDACION;
-import static com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType.ERROR_ESTRUCTURA;
-import static com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType.ESTRUCTURA_VALIDA;
-import static com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType.NO_PROCESADO;
-import static com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType.PROCESADO;
+import static com.egakat.io.solicitudes.gws.constants.IntegracionesConstants.SOLICITUDES_SALIDAS;
+import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.CORREGIDO;
+import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.DESCARTADO;
+import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.ERROR_CARGUE;
+import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.ERROR_ENRIQUECIMIENTO;
+import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.ERROR_ESTRUCTURA;
+import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.ERROR_HOMOLOGACION;
+import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.ERROR_VALIDACION;
+import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
+import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.NO_PROCESADO;
+import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.PROCESADO;
+
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.egakat.io.solicitudes.gws.dto.EntradaIntegracionDto;
-import com.egakat.io.solicitudes.gws.service.api.NotificationSchedulerService;
+import com.egakat.io.solicitudes.gws.dto.ActualizacionIntegracionDto;
+import com.egakat.io.solicitudes.gws.dto.ErrorIntegracionDto;
 import com.egakat.io.solicitudes.gws.service.api.DownloadService;
 import com.egakat.io.solicitudes.gws.service.api.IntegrationService;
+import com.egakat.io.solicitudes.gws.service.api.NotificationService;
 import com.egakat.io.solicitudes.gws.service.api.TakeFeedsService;
-import com.egakat.io.solicitudes.gws.service.api.crud.EntradaIntegracionCrudService;
+import com.egakat.io.solicitudes.gws.service.api.crud.ActualizacionIntegracionCrudService;
 import com.egakat.io.solicitudes.gws.service.api.crud.ErrorIntegracionCrudService;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
-import static com.egakat.io.solicitudes.gws.constants.IntegracionesConstants.SOLICITUDES_SALIDAS;
 
 @Service
 @Slf4j
@@ -43,40 +46,37 @@ public class IntegrationServiceImpl implements IntegrationService {
 	private DownloadService downloadService;
 
 	@Autowired
-	private NotificationSchedulerService nNotificationSchedulerService;
+	private NotificationService notificationService;
 
 	@Autowired
-	private EntradaIntegracionCrudService entradasService;
+	private ActualizacionIntegracionCrudService actualizacionesService;
+
+	@Autowired
+	private ErrorIntegracionCrudService erroresService;
 
 	@Override
-	public String getCodigoIntegracion() {
+	public String getIntegracion() {
 		return SOLICITUDES_SALIDAS;
 	}
 
-	@Override
-	public TakeFeedsService getTakeFeedsService() {
+	protected TakeFeedsService getTakeFeedsService() {
 		return takeFeedsService;
 	}
 
-	@Override
-	public DownloadService getDownloadService() {
+	protected DownloadService getDownloadService() {
 		return downloadService;
 	}
 
-	@Override
-	public NotificationSchedulerService getNotificationSchedulerService() {
-		return nNotificationSchedulerService;
+	protected NotificationService getNotificationService() {
+		return notificationService;
 	}
 
-	@Override
-	public EntradaIntegracionCrudService getEntradasService() {
-		return entradasService;
+	protected ActualizacionIntegracionCrudService getActualizacionesService() {
+		return actualizacionesService;
 	}
 
-	@Override
-	public ErrorIntegracionCrudService getErroresService() {
-		// TODO Auto-generated method stub
-		return null;
+	protected ErrorIntegracionCrudService getErroresService() {
+		return erroresService;
 	}
 
 	@Override
@@ -85,9 +85,7 @@ public class IntegrationServiceImpl implements IntegrationService {
 		download();
 		ack();
 		reject();
-		accept();
-		//
-		System.out.println();
+		// accept();
 	}
 
 	protected void takeFeeds() {
@@ -99,12 +97,17 @@ public class IntegrationServiceImpl implements IntegrationService {
 	}
 
 	protected void download() {
-		val entries = getEntradasService().findAllByIntegracionAndEstado(getCodigoIntegracion(), NO_PROCESADO,
-				CORREGIDO);
+		// @formatter:off
+		val entries = getActualizacionesService().findAllByEstadoIntegracionIn(getIntegracion(), 
+		NO_PROCESADO,
+		CORREGIDO);
+		// @formatter:on
 
+		val errores = new ArrayList<ErrorIntegracionDto>();
 		for (val entry : entries) {
 			try {
-				getDownloadService().download(entry);
+				getDownloadService().download(entry, errores);
+				getActualizacionesService().update(entry, errores, ESTRUCTURA_VALIDA, ERROR_ESTRUCTURA);
 			} catch (RuntimeException e) {
 				log(entry, OPERACION_DOWNLOAD, e);
 			}
@@ -112,12 +115,11 @@ public class IntegrationServiceImpl implements IntegrationService {
 	}
 
 	protected void ack() {
-		val entries = getEntradasService().findAllByIntegracionAndEstado(getCodigoIntegracion(), true,
-				ESTRUCTURA_VALIDA);
+		val entries = getActualizacionesService().findAllNoNotificadasByEstadoIntegracionIn(getIntegracion(), ESTRUCTURA_VALIDA);
 
 		for (val entry : entries) {
 			try {
-				getNotificationSchedulerService().ack(entry);
+				getNotificationService().ack(entry);
 			} catch (RuntimeException e) {
 				log(entry, OPERACION_ACKNOWLEDGE, e);
 			}
@@ -126,7 +128,7 @@ public class IntegrationServiceImpl implements IntegrationService {
 
 	protected void reject() {
 		// @formatter:off
-		val entries = getEntradasService().findAllByIntegracionAndEstado(getCodigoIntegracion(), true,
+		val entries = getActualizacionesService().findAllNoNotificadasByEstadoIntegracionIn(getIntegracion(), 
 		ERROR_ESTRUCTURA,
 	    ERROR_ENRIQUECIMIENTO,
 	    ERROR_HOMOLOGACION,
@@ -137,7 +139,7 @@ public class IntegrationServiceImpl implements IntegrationService {
 
 		for (val entry : entries) {
 			try {
-				getNotificationSchedulerService().reject(entry);
+				getNotificationService().reject(entry);
 			} catch (RuntimeException e) {
 				log(entry, OPERACION_REJECT, e);
 			}
@@ -145,19 +147,20 @@ public class IntegrationServiceImpl implements IntegrationService {
 	}
 
 	protected void accept() {
-		val entries = getEntradasService().findAllByIntegracionAndEstado(getCodigoIntegracion(), PROCESADO);
+		val entries = getActualizacionesService().findAllNoNotificadasByEstadoIntegracionIn(getIntegracion(),
+				PROCESADO);
 
 		for (val entry : entries) {
 			try {
-				getNotificationSchedulerService().accept(entry);
+				getNotificationService().accept(entry);
 			} catch (RuntimeException e) {
 				log(entry, OPERACION_ACCEPT, e);
 			}
 		}
 	}
 
-	private void log(EntradaIntegracionDto entry, String operacion, RuntimeException e) {
-		log.error("INTEGRACIÓN:{} ", getCodigoIntegracion());
+	private void log(ActualizacionIntegracionDto entry, String operacion, RuntimeException e) {
+		log.error("INTEGRACIÓN:{} ", getIntegracion());
 		log.error("OPERACIÓN:{} ", operacion);
 		if (entry != null) {
 			log.error("ENTRADA:{}", entry.getIdExterno());

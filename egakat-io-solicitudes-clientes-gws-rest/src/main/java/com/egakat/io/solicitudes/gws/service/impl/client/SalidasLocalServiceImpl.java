@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import com.egakat.core.web.client.configuration.RestProperties;
 import com.egakat.core.web.client.service.impl.LocalQueryServiceImpl;
 import com.egakat.io.solicitudes.gws.components.SalidasRestProperties;
+import com.egakat.io.solicitudes.gws.constants.RestConstants;
 import com.egakat.io.solicitudes.gws.dto.ErrorIntegracionDto;
+import com.egakat.io.solicitudes.gws.dto.client.SolicitudDto;
 import com.egakat.io.solicitudes.gws.service.api.client.SalidasLocalService;
-import com.gws.integraciones.solicitudes.salidas.constants.RestConstants;
-import com.gws.integraciones.solicitudes.salidas.dto.SolicitudDto;
 
 import lombok.val;
 
@@ -57,7 +57,13 @@ public class SalidasLocalServiceImpl extends LocalQueryServiceImpl<SolicitudDto,
 	}
 
 	@Override
-	public void notificarErrores(Integer id, List<ErrorIntegracionDto> errores) {
+	public void aceptar(Integer id) {
+		val query = "/{id}?status={status}";
+		getRestClient().put(getResourcePath() + query, "", Object.class, id, "ACEPTADO");
+	}
+
+	@Override
+	public void rechazar(Integer id, List<ErrorIntegracionDto> errores) {
 		val query = "/{id}?status={status}";
 		getRestClient().put(getResourcePath() + query, errores, Object.class, id, "ERROR");
 	}

@@ -2,17 +2,17 @@ package com.egakat.io.solicitudes.gws.service.api;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.egakat.io.solicitudes.gws.dto.EntradaIntegracionDto;
+import com.egakat.io.solicitudes.gws.dto.ActualizacionIntegracionDto;
 
 @Transactional(readOnly = true)
-public interface NotificationSchedulerService {
+public interface NotificationService {
 
 	@Transactional(readOnly = false)
-	void ack(EntradaIntegracionDto entry);
+	void ack(ActualizacionIntegracionDto entry);
 
 	@Transactional(readOnly = false)
-	void reject(EntradaIntegracionDto entry);
+	void reject(ActualizacionIntegracionDto entry);
 
 	@Transactional(readOnly = false)
-	void accept(EntradaIntegracionDto entry);
+	void accept(ActualizacionIntegracionDto entry);
 }

@@ -7,6 +7,6 @@ import com.egakat.io.solicitudes.gws.dto.ErrorIntegracionDto;
 
 public interface ErrorIntegracionCrudService extends CrudService<ErrorIntegracionDto, Long> {
 
-	List<ErrorIntegracionDto> findAllByIntegracionAndIdExterno(String integracion, String idExterno);
+	List<ErrorIntegracionDto> findAllByIntegracionAndIdExternoAndCorrelacion(String integracion, String idExterno,String Correlacion);
 
 }

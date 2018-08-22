@@ -7,17 +7,16 @@ import java.time.LocalTime;
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.egakat.commons.domain.BusinessEntity;
-import com.egakat.io.solicitudes.gws.enums.EstadoEntradaIntegracionType;
+import com.egakat.io.solicitudes.gws.domain.dqs.DataQualityEntry;
+import com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,33 +24,13 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "solicitudes_despacho")
+@AttributeOverride(name = "id", column = @Column(name = "id_solicitud_despacho"))
 @DynamicUpdate
 @Getter
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
-@AttributeOverride(name = "id", column = @Column(name = "id_solicitud_despacho"))
-public class SolicitudDespacho extends BusinessEntity<Long> {
-
-	@Column(name = "estado", length = 50, nullable = false)
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	private EstadoEntradaIntegracionType estado;
-
-	@Column(name = "integracion", length = 50, nullable = false)
-	@NotNull
-	@Size(max = 50)
-	private String integracion;
-
-	@Column(name = "id_externo", length = 100, nullable = false)
-	@NotNull
-	@Size(max = 100)
-	private String idExterno;
-
-	@Column(name = "id_correlacion", length = 100, nullable = false)
-	@NotNull
-	@Size(max = 100)
-	private String idCorrelacion;
+public class SolicitudDespacho extends DataQualityEntry {
 
 	@Column(name = "cliente_codigo_alterno", length = 50, nullable = false)
 	@NotNull
@@ -90,20 +69,14 @@ public class SolicitudDespacho extends BusinessEntity<Long> {
 	@Column(name = "homa")
 	private LocalTime homa;
 
-	@Column(name = "requiere_agendamiento", length = 1, nullable = false)
-	@NotNull
-	@Size(max = 1)
-	private String requiereAgendamiento;
+	@Column(name = "requiere_transporte", nullable = false)
+	private boolean requiereTransporte;
 
-	@Column(name = "requiere_transporte", length = 1, nullable = false)
-	@NotNull
-	@Size(max = 1)
-	private String requiereTransporte;
+	@Column(name = "requiere_agendamiento", nullable = false)
+	private boolean requiereAgendamiento;
 
-	@Column(name = "requiere_despachar_completo", length = 1, nullable = false)
-	@NotNull
-	@Size(max = 1)
-	private String requiereDespacharCompleto;
+	@Column(name = "requiere_despachar_completo", nullable = false)
+	private boolean requiereDespacharCompleto;
 
 	@Column(name = "tercero_identificacion", length = 20, nullable = false)
 	@NotNull
@@ -181,8 +154,56 @@ public class SolicitudDespacho extends BusinessEntity<Long> {
 	@Column(name = "id_punto")
 	private Long idPunto;
 
-	@Column(name = "fecha_creacion_externa", nullable = false)
-	@NotNull
+	@Column(name = "fecha_creacion_externa")
 	private LocalDateTime fechaCreacionExterna;
 
+	@Builder
+	public SolicitudDespacho(Long id, int version, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
+			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String idExterno,
+			@NotNull @Size(max = 100) String correlacion,
+			@NotNull @Size(max = 50) EstadoIntegracionType estadoIntegracion,
+			@NotNull @Size(max = 50) String clienteCodigoAlterno, @NotNull @Size(max = 50) String servicioCodigoAlterno,
+			@NotNull @Size(max = 20) String numeroSolicitud, @NotNull @Size(max = 20) String prefijo,
+			@NotNull @Size(max = 20) String numeroSolicitudSinPrefijo, LocalDate femi, LocalDate fema, LocalTime homi,
+			LocalTime homa, boolean requiereTransporte, boolean requiereAgendamiento, boolean requiereDespacharCompleto,
+			@NotNull @Size(max = 20) String terceroIdentificacion, @NotNull @Size(max = 100) String terceroNombre,
+			@NotNull @Size(max = 50) String canalCodigoAlterno, @NotNull @Size(max = 50) String ciudadCodigoAlterno,
+			@NotNull @Size(max = 150) String direccion, @NotNull @Size(max = 50) String puntoCodigoAlterno,
+			@NotNull @Size(max = 100) String puntoNombre, @NotNull @Size(max = 20) String autorizadoIdentificacion,
+			@NotNull @Size(max = 100) String autorizadoNombres, @NotNull @Size(max = 20) String numeroOrdenCompra,
+			LocalDate fechaOrdenCompra, @NotNull @Size(max = 200) String nota, Long idCliente, Long idServicio,
+			Long idTercero, Long idCanal, Long idCiudad, Long idPunto, LocalDateTime fechaCreacionExterna) {
+		super(id, version, fechaCreacion, fechaModificacion, integracion, idExterno, correlacion, estadoIntegracion);
+		this.clienteCodigoAlterno = clienteCodigoAlterno;
+		this.servicioCodigoAlterno = servicioCodigoAlterno;
+		this.numeroSolicitud = numeroSolicitud;
+		this.prefijo = prefijo;
+		this.numeroSolicitudSinPrefijo = numeroSolicitudSinPrefijo;
+		this.femi = femi;
+		this.fema = fema;
+		this.homi = homi;
+		this.homa = homa;
+		this.requiereTransporte = requiereTransporte;
+		this.requiereAgendamiento = requiereAgendamiento;
+		this.requiereDespacharCompleto = requiereDespacharCompleto;
+		this.terceroIdentificacion = terceroIdentificacion;
+		this.terceroNombre = terceroNombre;
+		this.canalCodigoAlterno = canalCodigoAlterno;
+		this.ciudadCodigoAlterno = ciudadCodigoAlterno;
+		this.direccion = direccion;
+		this.puntoCodigoAlterno = puntoCodigoAlterno;
+		this.puntoNombre = puntoNombre;
+		this.autorizadoIdentificacion = autorizadoIdentificacion;
+		this.autorizadoNombres = autorizadoNombres;
+		this.numeroOrdenCompra = numeroOrdenCompra;
+		this.fechaOrdenCompra = fechaOrdenCompra;
+		this.nota = nota;
+		this.idCliente = idCliente;
+		this.idServicio = idServicio;
+		this.idTercero = idTercero;
+		this.idCanal = idCanal;
+		this.idCiudad = idCiudad;
+		this.idPunto = idPunto;
+		this.fechaCreacionExterna = fechaCreacionExterna;
+	}
 }

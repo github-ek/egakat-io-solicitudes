@@ -33,6 +33,7 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 				.id(entity.getId())
 				.integracion(entity.getIntegracion())
 				.idExterno(entity.getIdExterno())
+				.correlacion(entity.getCorrelacion())
 				.codigo(entity.getCodigo())
 				.mensaje(entity.getMensaje())
 				.arg0(entity.getArg0())
@@ -58,6 +59,7 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 
 		entity.setIntegracion(model.getIntegracion());
 		entity.setIdExterno(model.getIdExterno());
+		entity.setCorrelacion(model.getCorrelacion());
 		entity.setCodigo(model.getCodigo());
 		entity.setMensaje(model.getMensaje());
 		entity.setArg0(model.getArg0());
@@ -80,8 +82,8 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 	}
 
 	@Override
-	public List<ErrorIntegracionDto> findAllByIntegracionAndIdExterno(String integracion, String idExterno) {
-		val entities = getRepository().findAllByIntegracionAndIdExterno(integracion, idExterno);
+	public List<ErrorIntegracionDto> findAllByIntegracionAndIdExternoAndCorrelacion(String integracion, String idExterno, String correlacion) {
+		val entities = getRepository().findAllByIntegracionAndIdExternoAndCorrelacion(integracion, idExterno, correlacion);
 		val result = asModels(entities);
 		return result;
 	}

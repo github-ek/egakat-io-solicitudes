@@ -7,6 +7,6 @@ import com.egakat.io.solicitudes.gws.domain.ErrorIntegracion;
 
 public interface ErrorIntegracionRepository extends IdentifiedDomainObjectRepository<ErrorIntegracion, Long> {
 	
-	List<ErrorIntegracion> findAllByIntegracionAndIdExterno(String integracion, String idExterno);
+	List<ErrorIntegracion> findAllByIntegracionAndIdExternoAndCorrelacion(String integracion, String idExterno, String correlacion);
 
 }
