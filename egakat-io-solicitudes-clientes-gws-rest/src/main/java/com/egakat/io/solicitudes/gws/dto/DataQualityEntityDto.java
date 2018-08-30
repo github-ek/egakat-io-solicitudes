@@ -1,4 +1,4 @@
-package com.egakat.io.solicitudes.gws.dto.dqs;
+package com.egakat.io.solicitudes.gws.dto;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +19,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-abstract public class DataQualityEntryDto extends SimpleEntityDto<Long> {
+abstract public class DataQualityEntityDto extends SimpleEntityDto<Long> {
 
 	@NotNull
 	@Size(max = 50)
@@ -27,15 +27,15 @@ abstract public class DataQualityEntryDto extends SimpleEntityDto<Long> {
 
 	@NotNull
 	@Size(max = 100)
-	private String idExterno;
-
-	@NotNull
-	@Size(max = 100)
 	private String correlacion;
 
 	@NotNull
+	@Size(max = 100)
+	private String idExterno;
+
+	@NotNull
 	private EstadoIntegracionType estadoIntegracion;
-	
+
 	public boolean hasErrors() {
 		switch (getEstadoIntegracion()) {
 		case ERROR_ENRIQUECIMIENTO:
@@ -48,14 +48,13 @@ abstract public class DataQualityEntryDto extends SimpleEntityDto<Long> {
 		}
 	}
 
-	public DataQualityEntryDto(Long id, int version, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
-			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String idExterno,
-			@NotNull @Size(max = 100) String correlacion,
-			@NotNull @Size(max = 50) EstadoIntegracionType estadoIntegracion) {
+	public DataQualityEntityDto(Long id, int version, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
+			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String correlacion,
+			@NotNull @Size(max = 100) String idExterno, @NotNull EstadoIntegracionType estadoIntegracion) {
 		super(id, version, fechaCreacion, fechaModificacion);
 		this.integracion = integracion;
-		this.idExterno = idExterno;
 		this.correlacion = correlacion;
+		this.idExterno = idExterno;
 		this.estadoIntegracion = estadoIntegracion;
 	}
 }

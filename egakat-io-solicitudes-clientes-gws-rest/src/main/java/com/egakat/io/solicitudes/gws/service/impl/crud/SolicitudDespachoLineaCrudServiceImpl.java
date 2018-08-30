@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.egakat.core.services.crud.impl.CrudServiceImpl;
-import com.egakat.io.solicitudes.gws.domain.SolicitudDespachoLinea;
-import com.egakat.io.solicitudes.gws.dto.SolicitudDespachoLineaDto;
-import com.egakat.io.solicitudes.gws.repository.SolicitudDespachoLineaRepository;
+import com.egakat.io.solicitudes.gws.domain.solicitudes.SolicitudDespachoLinea;
+import com.egakat.io.solicitudes.gws.dto.solicitudes.SolicitudDespachoLineaDto;
+import com.egakat.io.solicitudes.gws.repository.solicitudes.SolicitudDespachoLineaRepository;
 import com.egakat.io.solicitudes.gws.service.api.crud.SolicitudDespachoLineaCrudService;
 
 import lombok.val;

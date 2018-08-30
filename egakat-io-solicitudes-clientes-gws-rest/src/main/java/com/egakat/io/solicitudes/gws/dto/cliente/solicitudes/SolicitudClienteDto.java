@@ -1,4 +1,4 @@
-package com.egakat.io.solicitudes.gws.dto.client;
+package com.egakat.io.solicitudes.gws.dto.cliente.solicitudes;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,7 +21,7 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class SolicitudDto extends EntityDto<Integer> {
+public class SolicitudClienteDto extends EntityDto<Integer> {
 
 	private static final String DATE_FORMAT = "yyyy-MM-dd";
 
@@ -104,17 +104,17 @@ public class SolicitudDto extends EntityDto<Integer> {
 	@Size(max = 200)
 	private String nota;
 
-	private List<SolicitudLineaDto> lineas;
+	private List<SolicitudClienteLineaDto> lineas;
 	
 	@Builder
-	public SolicitudDto(Integer id, @NotNull @Size(max = 20) String clienteCodigoAlterno,
+	public SolicitudClienteDto(Integer id, @NotNull @Size(max = 20) String clienteCodigoAlterno,
 			@NotNull @Size(max = 50) String servicioCodigoAlterno, @NotNull @Size(max = 20) String prefijo,
 			@NotNull @Size(max = 20) String numeroSolicitudSinPrefijo, @NotNull LocalDate femi, @NotNull LocalDate fema,
 			LocalTime homi, LocalTime homa, @NotNull @Size(max = 20) String terceroIdentificacion,
 			@NotNull @Size(max = 100) String terceroNombre, @NotNull @Size(max = 50) String canalCodigoAlterno,
 			@NotNull @Size(max = 50) String ciudadCodigoAlterno, @NotNull @Size(max = 150) String direccion,
 			@NotNull @Size(max = 50) String puntoCodigoAlterno, @NotNull @Size(max = 20) String numeroOrdenCompra,
-			@NotNull @Size(max = 200) String nota, List<SolicitudLineaDto> lineas) {
+			@NotNull @Size(max = 200) String nota, List<SolicitudClienteLineaDto> lineas) {
 		super(id);
 		this.clienteCodigoAlterno = clienteCodigoAlterno;
 		this.servicioCodigoAlterno = servicioCodigoAlterno;

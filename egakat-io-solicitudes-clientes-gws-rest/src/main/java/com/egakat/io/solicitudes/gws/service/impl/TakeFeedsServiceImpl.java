@@ -1,6 +1,6 @@
 package com.egakat.io.solicitudes.gws.service.impl;
 
-import static com.egakat.io.solicitudes.gws.constants.IntegracionesConstants.SOLICITUDES_SALIDAS;
+import static com.egakat.io.solicitudes.gws.configuration.constants.IntegracionesConstants.SOLICITUDES_SALIDAS;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.egakat.io.solicitudes.gws.dto.ActualizacionIntegracionDto;
 import com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType;
 import com.egakat.io.solicitudes.gws.service.api.TakeFeedsService;
-import com.egakat.io.solicitudes.gws.service.api.client.SalidasLocalService;
+import com.egakat.io.solicitudes.gws.service.api.cliente.solicitudes.SolicitudClienteLocalService;
 import com.egakat.io.solicitudes.gws.service.api.crud.ActualizacionIntegracionCrudService;
 
 import lombok.val;
@@ -19,7 +19,7 @@ import lombok.val;
 public class TakeFeedsServiceImpl implements TakeFeedsService {
 
 	@Autowired
-	private SalidasLocalService localService;
+	private SolicitudClienteLocalService localService;
 
 	@Autowired
 	private ActualizacionIntegracionCrudService entradasService;

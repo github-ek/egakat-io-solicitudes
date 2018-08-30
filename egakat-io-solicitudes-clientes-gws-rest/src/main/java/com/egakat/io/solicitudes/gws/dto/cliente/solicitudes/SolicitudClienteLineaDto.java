@@ -1,4 +1,4 @@
-package com.egakat.io.solicitudes.gws.dto.client;
+package com.egakat.io.solicitudes.gws.dto.cliente.solicitudes;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -18,7 +18,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @Builder
-public class SolicitudLineaDto extends EntityDto<Integer> {
+public class SolicitudClienteLineaDto extends EntityDto<Integer> {
 
 	@JsonProperty("lineNum")
 	@NotNull
@@ -53,7 +53,7 @@ public class SolicitudLineaDto extends EntityDto<Integer> {
 	private String predistribucion;
 
 	@Builder
-	public SolicitudLineaDto(Integer id, @NotNull @Size(max = 50) String numeroLineaExterno,
+	public SolicitudClienteLineaDto(Integer id, @NotNull @Size(max = 50) String numeroLineaExterno,
 			@NotNull @Size(max = 50) String numeroSubLineaExterno,
 			@NotEmpty @Size(max = 50) String productoCodigoAlterno, @NotNull @Size(max = 50) String productoNombre,
 			int cantidad, @NotEmpty @Size(max = 50) String bodegaCodigoAlterno,

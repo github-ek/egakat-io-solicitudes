@@ -1,4 +1,4 @@
-package com.egakat.io.solicitudes.gws.dto;
+package com.egakat.io.solicitudes.gws.dto.solicitudes;
 
 import java.time.LocalDateTime;
 

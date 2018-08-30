@@ -42,10 +42,10 @@ public class ActualizacionIntegracionCrudServiceImpl
 				.builder()
 				.id(entity.getId())
 				.integracion(entity.getIntegracion())
-				.idExterno(entity.getIdExterno())
 				.correlacion(entity.getCorrelacion())
-				.estadoExterno(entity.getEstadoExterno())
+				.idExterno(entity.getIdExterno())
 				.estadoIntegracion(entity.getEstadoIntegracion())
+				.estadoExterno(entity.getEstadoExterno())
 				.estadoNotificacion(entity.getEstadoNotificacion())
 				.entradasEnCola(entity.getEntradasEnCola())
 				.arg0(entity.getArg0())
@@ -71,10 +71,10 @@ public class ActualizacionIntegracionCrudServiceImpl
 	protected ActualizacionIntegracion asEntity(ActualizacionIntegracionDto model, ActualizacionIntegracion entity) {
 
 		entity.setIntegracion(model.getIntegracion());
-		entity.setIdExterno(model.getIdExterno());
 		entity.setCorrelacion(model.getCorrelacion());
-		entity.setEstadoExterno(model.getEstadoExterno());
+		entity.setIdExterno(model.getIdExterno());
 		entity.setEstadoIntegracion(model.getEstadoIntegracion());
+		entity.setEstadoExterno(model.getEstadoExterno());
 		entity.setEstadoNotificacion(model.getEstadoNotificacion());
 		entity.setEntradasEnCola(model.getEntradasEnCola());
 		entity.setArg0(model.getArg0());
@@ -97,6 +97,20 @@ public class ActualizacionIntegracionCrudServiceImpl
 		return new ActualizacionIntegracion();
 	}
 
+	// ========================================================================================================
+	@Override
+	public ActualizacionIntegracionDto findOneByIntegracionAndCorrelacionAndIdExterno(String integracion,
+			String correlacion, String idExterno) {
+		val optional = getRepository().findByIntegracionAndCorrelacionAndIdExterno(integracion, correlacion, idExterno);
+
+		if (!optional.isPresent()) {
+			val format = "integracion=%s, correlacion=%s, id_externo=%s";
+			throw new EntityNotFoundException(String.format(format, integracion, correlacion, idExterno));
+		}
+		val result = asModel(optional.get());
+		return result;
+	}
+
 	@Override
 	public List<ActualizacionIntegracionDto> findAllByEstadoIntegracionIn(String integracion,
 			EstadoIntegracionType... estadosIntegracion) {
@@ -116,7 +130,9 @@ public class ActualizacionIntegracionCrudServiceImpl
 
 	@Override
 	public void enqueue(ActualizacionIntegracionDto model) {
-		val optional = getRepository().findByIntegracionAndIdExterno(model.getIntegracion(), model.getIdExterno());
+		val optional = getRepository().findByIntegracionAndCorrelacionAndIdExterno(model.getIntegracion(),
+				model.getCorrelacion(), model.getIdExterno());
+
 		if (!optional.isPresent()) {
 			create(model);
 		} else {
@@ -129,8 +145,8 @@ public class ActualizacionIntegracionCrudServiceImpl
 	}
 
 	@Override
-	public void update(ActualizacionIntegracionDto model, List<ErrorIntegracionDto> errores, EstadoIntegracionType ok,
-			EstadoIntegracionType error) {
+	public void updateEstadoIntegracion(ActualizacionIntegracionDto model, List<ErrorIntegracionDto> errores,
+			EstadoIntegracionType ok, EstadoIntegracionType error) {
 
 		if (errores.isEmpty()) {
 			model.setEstadoIntegracion(ok);
@@ -144,27 +160,18 @@ public class ActualizacionIntegracionCrudServiceImpl
 	}
 
 	@Override
-	public void update(ActualizacionIntegracionDto model, List<ErrorIntegracionDto> errores, EstadoNotificacionType ok,
-			EstadoNotificacionType error) {
+	public void updateEstadoNotificacion(ActualizacionIntegracionDto model, List<ErrorIntegracionDto> errores,
+			EstadoNotificacionType ok, EstadoNotificacionType error) {
 		if (errores.isEmpty()) {
 			model.setEstadoNotificacion(ok);
-			// TODO programar salidas
+			// TODO ¿en este punto se debe programar una notificacion?
 		} else {
 			model.setEstadoNotificacion(error);
-			// TODO guardar errores de intentos
+			// TODO se debe hacer un manejo de re intento de notificacion en caso de error,
+			// esto se podria manejar mejor en las notificaciones
 		}
 
 		erroresService.create(errores);
 		update(model);
-	}
-
-	@Override
-	public ActualizacionIntegracionDto findOneAllByEstadoIntegracionIn(String integracion, String idExterno) {
-		val optional = getRepository().findByIdExterno(idExterno);
-		if (!optional.isPresent()) {
-			throw new EntityNotFoundException("idExterno = " + String.valueOf(idExterno));
-		}
-		val result = asModel(optional.get());
-		return result;	
 	}
 }

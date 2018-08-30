@@ -1,6 +1,6 @@
 package com.egakat.io.solicitudes.gws.service.impl;
 
-import static com.egakat.io.solicitudes.gws.constants.IntegracionesConstants.SOLICITUDES_SALIDAS;
+import static com.egakat.io.solicitudes.gws.configuration.constants.IntegracionesConstants.SOLICITUDES_SALIDAS;
 import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.CORREGIDO;
 import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.DESCARTADO;
 import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.ERROR_CARGUE;
@@ -85,7 +85,7 @@ public class IntegrationServiceImpl implements IntegrationService {
 		download();
 		ack();
 		reject();
-		// accept();
+		accept();
 	}
 
 	protected void takeFeeds() {
@@ -107,7 +107,7 @@ public class IntegrationServiceImpl implements IntegrationService {
 		for (val entry : entries) {
 			try {
 				getDownloadService().download(entry, errores);
-				getActualizacionesService().update(entry, errores, ESTRUCTURA_VALIDA, ERROR_ESTRUCTURA);
+				getActualizacionesService().updateEstadoIntegracion(entry, errores, ESTRUCTURA_VALIDA, ERROR_ESTRUCTURA);
 			} catch (RuntimeException e) {
 				log(entry, OPERACION_DOWNLOAD, e);
 			}

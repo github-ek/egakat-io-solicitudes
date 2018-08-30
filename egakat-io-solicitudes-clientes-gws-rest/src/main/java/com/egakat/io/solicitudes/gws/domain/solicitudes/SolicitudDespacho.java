@@ -1,4 +1,4 @@
-package com.egakat.io.solicitudes.gws.domain;
+package com.egakat.io.solicitudes.gws.domain.solicitudes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.egakat.io.solicitudes.gws.domain.dqs.DataQualityEntry;
+import com.egakat.io.solicitudes.gws.domain.DataQualityEntity;
 import com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType;
 
 import lombok.Builder;
@@ -30,7 +30,7 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class SolicitudDespacho extends DataQualityEntry {
+public class SolicitudDespacho extends DataQualityEntity {
 
 	@Column(name = "cliente_codigo_alterno", length = 50, nullable = false)
 	@NotNull
@@ -159,9 +159,8 @@ public class SolicitudDespacho extends DataQualityEntry {
 
 	@Builder
 	public SolicitudDespacho(Long id, int version, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
-			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String idExterno,
-			@NotNull @Size(max = 100) String correlacion,
-			@NotNull @Size(max = 50) EstadoIntegracionType estadoIntegracion,
+			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String correlacion,
+			@NotNull @Size(max = 100) String idExterno, @NotNull EstadoIntegracionType estadoIntegracion,
 			@NotNull @Size(max = 50) String clienteCodigoAlterno, @NotNull @Size(max = 50) String servicioCodigoAlterno,
 			@NotNull @Size(max = 20) String numeroSolicitud, @NotNull @Size(max = 20) String prefijo,
 			@NotNull @Size(max = 20) String numeroSolicitudSinPrefijo, LocalDate femi, LocalDate fema, LocalTime homi,
@@ -173,7 +172,7 @@ public class SolicitudDespacho extends DataQualityEntry {
 			@NotNull @Size(max = 100) String autorizadoNombres, @NotNull @Size(max = 20) String numeroOrdenCompra,
 			LocalDate fechaOrdenCompra, @NotNull @Size(max = 200) String nota, Long idCliente, Long idServicio,
 			Long idTercero, Long idCanal, Long idCiudad, Long idPunto, LocalDateTime fechaCreacionExterna) {
-		super(id, version, fechaCreacion, fechaModificacion, integracion, idExterno, correlacion, estadoIntegracion);
+		super(id, version, fechaCreacion, fechaModificacion, integracion, correlacion, idExterno, estadoIntegracion);
 		this.clienteCodigoAlterno = clienteCodigoAlterno;
 		this.servicioCodigoAlterno = servicioCodigoAlterno;
 		this.numeroSolicitud = numeroSolicitud;

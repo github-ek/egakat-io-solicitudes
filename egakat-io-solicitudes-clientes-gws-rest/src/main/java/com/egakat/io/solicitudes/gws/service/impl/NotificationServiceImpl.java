@@ -11,7 +11,7 @@ import com.egakat.io.solicitudes.gws.dto.ActualizacionIntegracionDto;
 import com.egakat.io.solicitudes.gws.dto.ErrorIntegracionDto;
 import com.egakat.io.solicitudes.gws.enums.EstadoNotificacionType;
 import com.egakat.io.solicitudes.gws.service.api.NotificationService;
-import com.egakat.io.solicitudes.gws.service.api.client.SalidasLocalService;
+import com.egakat.io.solicitudes.gws.service.api.cliente.solicitudes.SolicitudClienteLocalService;
 import com.egakat.io.solicitudes.gws.service.api.crud.ActualizacionIntegracionCrudService;
 import com.egakat.io.solicitudes.gws.service.api.crud.ErrorIntegracionCrudService;
 
@@ -21,7 +21,7 @@ import lombok.val;
 public class NotificationServiceImpl implements NotificationService {
 
 	@Autowired
-	private SalidasLocalService externalService;
+	private SolicitudClienteLocalService externalService;
 
 	@Autowired
 	private ActualizacionIntegracionCrudService actualizacionesService;
@@ -41,7 +41,7 @@ public class NotificationServiceImpl implements NotificationService {
 			errores.add(error);
 		}
 
-		actualizacionesService.update(entry, errores, EstadoNotificacionType.NOTIFICADA, EstadoNotificacionType.ERROR);
+		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA, EstadoNotificacionType.ERROR);
 	}
 
 	@Override
@@ -58,12 +58,21 @@ public class NotificationServiceImpl implements NotificationService {
 			errores.add(error);
 		}
 
-		actualizacionesService.update(entry, errores, EstadoNotificacionType.NOTIFICADA, EstadoNotificacionType.ERROR);
+		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA, EstadoNotificacionType.ERROR);
 	}
 
 	@Override
 	public void accept(ActualizacionIntegracionDto entry) {
-		// TODO Auto-generated method stub
+		val errores = new ArrayList<ErrorIntegracionDto>();
 
+		try {
+			val id = Integer.parseInt(entry.getIdExterno());
+			externalService.aceptar(id);
+		} catch (RuntimeException e) {
+			val error = error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), "", e);
+			errores.add(error);
+		}
+
+		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA, EstadoNotificacionType.ERROR);
 	}
 }

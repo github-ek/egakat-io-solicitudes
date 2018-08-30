@@ -1,4 +1,4 @@
-package com.egakat.io.solicitudes.gws.service.impl.client;
+package com.egakat.io.solicitudes.gws.service.impl.cliente.solicitudes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,20 +8,20 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.core.web.client.configuration.RestProperties;
 import com.egakat.core.web.client.service.impl.LocalQueryServiceImpl;
-import com.egakat.io.solicitudes.gws.components.SalidasRestProperties;
-import com.egakat.io.solicitudes.gws.constants.RestConstants;
+import com.egakat.io.solicitudes.gws.configuration.constants.IntegracionesRestConstants;
+import com.egakat.io.solicitudes.gws.configuration.properties.SolicitudDespachoClienteRestProperties;
 import com.egakat.io.solicitudes.gws.dto.ErrorIntegracionDto;
-import com.egakat.io.solicitudes.gws.dto.client.SolicitudDto;
-import com.egakat.io.solicitudes.gws.service.api.client.SalidasLocalService;
+import com.egakat.io.solicitudes.gws.dto.cliente.solicitudes.SolicitudClienteDto;
+import com.egakat.io.solicitudes.gws.service.api.cliente.solicitudes.SolicitudClienteLocalService;
 
 import lombok.val;
 
 @Service
-public class SalidasLocalServiceImpl extends LocalQueryServiceImpl<SolicitudDto, Integer>
-		implements SalidasLocalService {
+public class SolicitudClienteLocalServiceImpl extends LocalQueryServiceImpl<SolicitudClienteDto, Integer>
+		implements SolicitudClienteLocalService {
 
 	@Autowired
-	private SalidasRestProperties properties;
+	private SolicitudDespachoClienteRestProperties properties;
 
 	protected RestProperties getProperties() {
 		return properties;
@@ -29,17 +29,17 @@ public class SalidasLocalServiceImpl extends LocalQueryServiceImpl<SolicitudDto,
 
 	@Override
 	protected String getResourceName() {
-		return RestConstants.SOLICITUDES_SALIDAS;
+		return IntegracionesRestConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override
-	protected Class<SolicitudDto> getResponseType() {
-		return SolicitudDto.class;
+	protected Class<SolicitudClienteDto> getResponseType() {
+		return SolicitudClienteDto.class;
 	}
 
 	@Override
-	protected Class<SolicitudDto[]> getArrayReponseType() {
-		return SolicitudDto[].class;
+	protected Class<SolicitudClienteDto[]> getArrayReponseType() {
+		return SolicitudClienteDto[].class;
 	}
 
 	@Override

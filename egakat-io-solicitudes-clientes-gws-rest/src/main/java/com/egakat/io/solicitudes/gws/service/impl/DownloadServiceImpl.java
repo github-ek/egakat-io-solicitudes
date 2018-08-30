@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.io.solicitudes.gws.dto.ActualizacionIntegracionDto;
 import com.egakat.io.solicitudes.gws.dto.ErrorIntegracionDto;
-import com.egakat.io.solicitudes.gws.dto.SolicitudDespachoDto;
-import com.egakat.io.solicitudes.gws.dto.SolicitudDespachoLineaDto;
-import com.egakat.io.solicitudes.gws.dto.client.SolicitudDto;
+import com.egakat.io.solicitudes.gws.dto.cliente.solicitudes.SolicitudClienteDto;
+import com.egakat.io.solicitudes.gws.dto.solicitudes.SolicitudDespachoDto;
+import com.egakat.io.solicitudes.gws.dto.solicitudes.SolicitudDespachoLineaDto;
 import com.egakat.io.solicitudes.gws.service.api.DownloadService;
-import com.egakat.io.solicitudes.gws.service.api.client.SalidasLocalService;
+import com.egakat.io.solicitudes.gws.service.api.cliente.solicitudes.SolicitudClienteLocalService;
 import com.egakat.io.solicitudes.gws.service.api.crud.SolicitudDespachoCrudService;
 import com.egakat.io.solicitudes.gws.service.api.crud.SolicitudDespachoLineaCrudService;
 
@@ -28,7 +28,7 @@ import lombok.val;
 public class DownloadServiceImpl implements DownloadService {
 
 	@Autowired
-	private SalidasLocalService externalService;
+	private SolicitudClienteLocalService externalService;
 
 	@Autowired
 	private SolicitudDespachoCrudService localService;
@@ -40,7 +40,7 @@ public class DownloadServiceImpl implements DownloadService {
 	public void download(ActualizacionIntegracionDto entry, List<ErrorIntegracionDto> errores) {
 		errores.clear();
 
-		SolicitudDto external = null;
+		SolicitudClienteDto external = null;
 		SolicitudDespachoDto model = null;
 
 		try {
@@ -62,7 +62,7 @@ public class DownloadServiceImpl implements DownloadService {
 		}
 	}
 
-	protected SolicitudDto getExternalEntity(ActualizacionIntegracionDto entry, List<ErrorIntegracionDto> errores) {
+	protected SolicitudClienteDto getExternalEntity(ActualizacionIntegracionDto entry, List<ErrorIntegracionDto> errores) {
 		val id = Integer.parseInt(entry.getIdExterno());
 		val result = externalService.findOneById(id);
 		// TODO QUITAR ESTO
@@ -70,7 +70,7 @@ public class DownloadServiceImpl implements DownloadService {
 		return result;
 	}
 
-	protected SolicitudDespachoDto asModel(SolicitudDto external, ActualizacionIntegracionDto entry,
+	protected SolicitudDespachoDto asModel(SolicitudClienteDto external, ActualizacionIntegracionDto entry,
 			List<ErrorIntegracionDto> errores) {
 
 		val idExterno = String.valueOf(external.getId());
@@ -134,7 +134,7 @@ public class DownloadServiceImpl implements DownloadService {
 		return result;
 	}
 
-	protected List<SolicitudDespachoLineaDto> asLineas(SolicitudDto entity) {
+	protected List<SolicitudDespachoLineaDto> asLineas(SolicitudClienteDto entity) {
 		val lineas = new ArrayList<SolicitudDespachoLineaDto>();
 		int i = 0;
 		for (val external : entity.getLineas()) {
@@ -168,7 +168,7 @@ public class DownloadServiceImpl implements DownloadService {
 		}
 	}
 
-	protected void discard(SolicitudDto external, List<ErrorIntegracionDto> errores) {
+	protected void discard(SolicitudClienteDto external, List<ErrorIntegracionDto> errores) {
 		if (external != null) {
 			for (val error : errores) {
 				error.setArg0(external.getClienteCodigoAlterno());

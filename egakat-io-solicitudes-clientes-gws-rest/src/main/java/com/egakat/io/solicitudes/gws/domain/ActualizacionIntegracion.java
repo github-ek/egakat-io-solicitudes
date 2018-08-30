@@ -11,7 +11,6 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.egakat.io.solicitudes.gws.domain.dqs.DataQualityEntry;
 import com.egakat.io.solicitudes.gws.enums.EstadoNotificacionType;
 
 import lombok.Getter;
@@ -27,7 +26,7 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class ActualizacionIntegracion extends DataQualityEntry {
+public class ActualizacionIntegracion extends DataQualityEntity {
 
 	@Column(name = "estado_externo", length = 50, nullable = false)
 	@NotNull

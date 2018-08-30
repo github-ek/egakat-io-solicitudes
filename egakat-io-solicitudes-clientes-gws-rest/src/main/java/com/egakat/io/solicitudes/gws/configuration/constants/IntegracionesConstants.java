@@ -1,4 +1,4 @@
-package com.egakat.io.solicitudes.gws.constants;
+package com.egakat.io.solicitudes.gws.configuration.constants;
 
 public class IntegracionesConstants {
 

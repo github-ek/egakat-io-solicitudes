@@ -1,4 +1,4 @@
-package com.egakat.io.solicitudes.gws.domain;
+package com.egakat.io.solicitudes.gws.domain.solicitudes;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

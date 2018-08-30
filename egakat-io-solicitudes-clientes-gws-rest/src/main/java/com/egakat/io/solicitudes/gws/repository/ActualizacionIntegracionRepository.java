@@ -11,14 +11,13 @@ import com.egakat.io.solicitudes.gws.enums.EstadoNotificacionType;
 public interface ActualizacionIntegracionRepository
 		extends IdentifiedDomainObjectRepository<ActualizacionIntegracion, Long> {
 
+	Optional<ActualizacionIntegracion> findByIntegracionAndCorrelacionAndIdExterno(String integracion,
+			String correlacion, String idExterno);
+
 	List<ActualizacionIntegracion> findAllByIntegracionAndEstadoIntegracionIn(String integracion,
 			EstadoIntegracionType[] estadosIntegracion);
 
 	List<ActualizacionIntegracion> findAllByIntegracionAndEstadoIntegracionInAndEstadoNotificacion(String integracion,
-			EstadoIntegracionType[] estadosIntegracion,
-			EstadoNotificacionType estadoNotificacion);
+			EstadoIntegracionType[] estadosIntegracion, EstadoNotificacionType estadoNotificacion);
 
-	Optional<ActualizacionIntegracion> findByIntegracionAndIdExterno(String integracion, String idExterno);
-
-	Optional<ActualizacionIntegracion> findByIdExterno(String idExterno);
 }

@@ -1,6 +1,6 @@
 package com.egakat.io.solicitudes.gws.service.impl;
 
-import static com.egakat.io.solicitudes.gws.constants.IntegracionesConstants.SOLICITUDES_SALIDAS;
+import static com.egakat.io.solicitudes.gws.configuration.constants.IntegracionesConstants.SOLICITUDES_SALIDAS;
 import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.CORREGIDO;
 import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.ERROR_VALIDACION;
 import static com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 import com.egakat.econnect.maestros.client.service.api.lookup.LookUpService;
 import com.egakat.integration.maps.client.service.api.MapaLocalService;
 import com.egakat.io.solicitudes.gws.dto.ErrorIntegracionDto;
-import com.egakat.io.solicitudes.gws.dto.SolicitudDespachoDto;
-import com.egakat.io.solicitudes.gws.dto.SolicitudDespachoLineaDto;
+import com.egakat.io.solicitudes.gws.dto.solicitudes.SolicitudDespachoDto;
+import com.egakat.io.solicitudes.gws.dto.solicitudes.SolicitudDespachoLineaDto;
 import com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType;
 import com.egakat.io.solicitudes.gws.enums.EstadoNotificacionType;
 import com.egakat.io.solicitudes.gws.service.api.SolicitudDespachoDataQualityService;
@@ -101,8 +101,8 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 						model.getCorrelacion(), model.getEstadoIntegracion());
 
 				val errores = new ArrayList<ErrorIntegracionDto>();
-				val entry = actualizacionesService.findOneAllByEstadoIntegracionIn(model.getIntegracion(),
-						model.getIdExterno());
+				val entry = actualizacionesService.findOneByIntegracionAndCorrelacionAndIdExterno(
+						model.getIntegracion(), model.getCorrelacion(), model.getIdExterno());
 				val lineas = solicitudLineaService.findAllByIdSolicitudDespacho(model.getId());
 
 				transformar(model, lineas, errores);
@@ -310,7 +310,8 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		return StringUtils.defaultString(_default).toUpperCase();
 	}
 
-	protected String[] getLineaArgs(final com.egakat.io.solicitudes.gws.dto.SolicitudDespachoLineaDto linea) {
+	protected String[] getLineaArgs(
+			final com.egakat.io.solicitudes.gws.dto.solicitudes.SolicitudDespachoLineaDto linea) {
 		return new String[] { String.valueOf(linea.getNumeroLinea()), linea.getNumeroLineaExterno(),
 				linea.getNumeroSubLineaExterno(), String.valueOf(linea.getId()) };
 	}

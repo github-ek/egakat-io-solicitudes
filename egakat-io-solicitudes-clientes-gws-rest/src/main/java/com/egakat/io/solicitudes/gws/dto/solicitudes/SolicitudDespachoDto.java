@@ -1,4 +1,4 @@
-package com.egakat.io.solicitudes.gws.dto;
+package com.egakat.io.solicitudes.gws.dto.solicitudes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,7 +8,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.egakat.io.solicitudes.gws.dto.dqs.DataQualityEntryDto;
+import com.egakat.io.solicitudes.gws.dto.DataQualityEntityDto;
 import com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +23,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class SolicitudDespachoDto extends DataQualityEntryDto {
+public class SolicitudDespachoDto extends DataQualityEntityDto {
 
 	@NotNull
 	@Size(max = 50)
@@ -115,9 +115,8 @@ public class SolicitudDespachoDto extends DataQualityEntryDto {
 
 	@Builder
 	public SolicitudDespachoDto(Long id, int version, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
-			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String idExterno,
-			@NotNull @Size(max = 100) String correlacion,
-			@NotNull @Size(max = 50) EstadoIntegracionType estadoIntegracion,
+			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String correlacion,
+			@NotNull @Size(max = 100) String idExterno, @NotNull EstadoIntegracionType estadoIntegracion,
 			@NotNull @Size(max = 50) String clienteCodigoAlterno, @NotNull @Size(max = 50) String servicioCodigoAlterno,
 			@NotNull @Size(max = 20) String numeroSolicitud, @NotNull @Size(max = 20) String prefijo,
 			@NotNull @Size(max = 20) String numeroSolicitudSinPrefijo, LocalDate femi, LocalDate fema, LocalTime homi,
@@ -130,7 +129,7 @@ public class SolicitudDespachoDto extends DataQualityEntryDto {
 			LocalDate fechaOrdenCompra, @NotNull @Size(max = 200) String nota, Long idCliente, Long idServicio,
 			Long idTercero, Long idCanal, Long idCiudad, Long idPunto, LocalDateTime fechaCreacionExterna,
 			List<SolicitudDespachoLineaDto> lineas) {
-		super(id, version, fechaCreacion, fechaModificacion, integracion, idExterno, correlacion, estadoIntegracion);
+		super(id, version, fechaCreacion, fechaModificacion, integracion, correlacion, idExterno, estadoIntegracion);
 		this.clienteCodigoAlterno = clienteCodigoAlterno;
 		this.servicioCodigoAlterno = servicioCodigoAlterno;
 		this.numeroSolicitud = numeroSolicitud;

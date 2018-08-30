@@ -1,4 +1,4 @@
-package com.egakat.io.solicitudes.gws.domain.dqs;
+package com.egakat.io.solicitudes.gws.domain;
 
 import java.time.LocalDateTime;
 
@@ -22,36 +22,35 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
-abstract public class DataQualityEntry extends SimpleEntity<Long> {
+abstract public class DataQualityEntity extends SimpleEntity<Long> {
 
 	@Column(name = "integracion", length = 50, nullable = false)
 	@NotNull
 	@Size(max = 50)
 	private String integracion;
 
-	@Column(name = "id_externo", length = 100, nullable = false)
-	@NotNull
-	@Size(max = 100)
-	private String idExterno;
-
 	@Column(name = "correlacion", length = 100, nullable = false)
 	@NotNull
 	@Size(max = 100)
 	private String correlacion;
+
+	@Column(name = "id_externo", length = 100, nullable = false)
+	@NotNull
+	@Size(max = 100)
+	private String idExterno;
 
 	@Column(name = "estado_integracion", length = 50, nullable = false)
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private EstadoIntegracionType estadoIntegracion;
 
-	public DataQualityEntry(Long id, int version, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
-			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String idExterno,
-			@NotNull @Size(max = 100) String correlacion,
-			@NotNull @Size(max = 50) EstadoIntegracionType estadoIntegracion) {
+	public DataQualityEntity(Long id, int version, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
+			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String correlacion,
+			@NotNull @Size(max = 100) String idExterno, @NotNull EstadoIntegracionType estadoIntegracion) {
 		super(id, version, fechaCreacion, fechaModificacion);
 		this.integracion = integracion;
-		this.idExterno = idExterno;
 		this.correlacion = correlacion;
+		this.idExterno = idExterno;
 		this.estadoIntegracion = estadoIntegracion;
 	}
 }

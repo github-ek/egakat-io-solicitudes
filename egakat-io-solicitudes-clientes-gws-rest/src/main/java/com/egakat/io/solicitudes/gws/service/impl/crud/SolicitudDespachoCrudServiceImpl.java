@@ -1,20 +1,36 @@
 package com.egakat.io.solicitudes.gws.service.impl.crud;
 
+import static com.egakat.io.solicitudes.gws.dto.ErrorIntegracionDto.error;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import com.egakat.core.services.crud.impl.CrudServiceImpl;
-import com.egakat.io.solicitudes.gws.domain.SolicitudDespacho;
-import com.egakat.io.solicitudes.gws.dto.SolicitudDespachoDto;
+import com.egakat.io.solicitudes.gws.domain.solicitudes.SolicitudDespacho;
+import com.egakat.io.solicitudes.gws.dto.ErrorIntegracionDto;
+import com.egakat.io.solicitudes.gws.dto.cliente.ordenes.OrdenAlistamientoClienteCancelacionDto;
+import com.egakat.io.solicitudes.gws.dto.cliente.ordenes.OrdenAlistamientoClienteDto;
+import com.egakat.io.solicitudes.gws.dto.cliente.ordenes.OrdenAlistamientoClienteLineaDto;
+import com.egakat.io.solicitudes.gws.dto.cliente.ordenes.OrdenAlistamientoClienteLoteDto;
+import com.egakat.io.solicitudes.gws.dto.solicitudes.SolicitudDespachoDto;
 import com.egakat.io.solicitudes.gws.enums.EstadoIntegracionType;
-import com.egakat.io.solicitudes.gws.repository.SolicitudDespachoRepository;
+import com.egakat.io.solicitudes.gws.repository.ordenes.OrdenAlistamiento;
+import com.egakat.io.solicitudes.gws.repository.solicitudes.SolicitudDespachoRepository;
+import com.egakat.io.solicitudes.gws.service.api.cliente.ordenes.OrdenAlistamientoClienteLocalService;
 import com.egakat.io.solicitudes.gws.service.api.crud.SolicitudDespachoCrudService;
+import com.egakat.wms.maestros.client.service.api.OrdStageLocalService;
+import com.egakat.wms.maestros.dto.ordenes.OrdShipmentDto;
 
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class SolicitudDespachoCrudServiceImpl extends CrudServiceImpl<SolicitudDespacho, SolicitudDespachoDto, Long>
 		implements SolicitudDespachoCrudService {
 
@@ -25,9 +41,9 @@ public class SolicitudDespachoCrudServiceImpl extends CrudServiceImpl<SolicitudD
 	protected SolicitudDespachoRepository getRepository() {
 		return repository;
 	}
-	
+
 	@Override
-	public List<String> findAllCorrelacionesByEstadoIntegracionIn(List<EstadoIntegracionType> estados){
+	public List<String> findAllCorrelacionesByEstadoIntegracionIn(List<EstadoIntegracionType> estados) {
 		val result = getRepository().findAllCorrelacionesByEstadoIntegracionIn(estados);
 		return result;
 	}
@@ -47,8 +63,8 @@ public class SolicitudDespachoCrudServiceImpl extends CrudServiceImpl<SolicitudD
 				.builder()
 				.id(entity.getId())
 				.integracion(entity.getIntegracion())
-				.idExterno(entity.getIdExterno())
 				.correlacion(entity.getCorrelacion())
+				.idExterno(entity.getIdExterno())
 				.estadoIntegracion(entity.getEstadoIntegracion())
 				.clienteCodigoAlterno(entity.getClienteCodigoAlterno())
 				.servicioCodigoAlterno(entity.getServicioCodigoAlterno())
@@ -93,8 +109,8 @@ public class SolicitudDespachoCrudServiceImpl extends CrudServiceImpl<SolicitudD
 	protected SolicitudDespacho asEntity(SolicitudDespachoDto model, SolicitudDespacho entity) {
 
 		entity.setIntegracion(model.getIntegracion());
-		entity.setIdExterno(model.getIdExterno());
 		entity.setCorrelacion(model.getCorrelacion());
+		entity.setIdExterno(model.getIdExterno());
 		entity.setEstadoIntegracion(model.getEstadoIntegracion());
 		entity.setClienteCodigoAlterno(model.getClienteCodigoAlterno());
 		entity.setServicioCodigoAlterno(model.getServicioCodigoAlterno());
@@ -134,5 +150,110 @@ public class SolicitudDespachoCrudServiceImpl extends CrudServiceImpl<SolicitudD
 	@Override
 	protected SolicitudDespacho newEntity() {
 		return new SolicitudDespacho();
+	}
+
+	@Autowired
+	private OrdStageLocalService ordStageService;
+
+	@Autowired
+	private OrdenAlistamientoClienteLocalService ordenAlistamientoClienteService;
+
+	@Override
+	public void upload(OrdShipmentDto ord) {
+		val errores = new ArrayList<ErrorIntegracionDto>();
+
+		String client_id = ord.getClientId();
+		String ordnum = ord.getOrdnum();
+		String wh_id = ord.getWhId();
+
+		val orden = getRepository().findOneOrdenDeAlistamientoEnStage(client_id, ordnum, wh_id);
+		val model = asOrden(ord, orden);
+
+		try {
+			try {
+				ordenAlistamientoClienteService.upload(model);
+			} catch (HttpServerErrorException e) {
+				if (e.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
+					log.debug("{}", e.getResponseBodyAsString());
+				}
+			}
+
+			getRepository().updateEstadoNoficacion(orden.getIdOrdenAlistamiento());
+			getRepository().flush();
+			ordStageService.ack(ord);
+		} catch (Exception e) {
+			val error = error(orden.getIntegracion(), orden.getIdExterno(), orden.getCorrelacion(), "", e);
+			log.debug("error:{}", error);
+			errores.add(error);
+		}
+
+		// actualizacionesService.updateEstadoNotificacion(entry,
+		// errores,EstadoNotificacionType.NOTIFICADA, EstadoNotificacionType.ERROR);
+	}
+
+	protected OrdenAlistamientoClienteDto asOrden(OrdShipmentDto ord, OrdenAlistamiento orden) {
+		val lineas = asLineas(orden.getId(), ord);
+
+		// @formatter:off
+		val result = OrdenAlistamientoClienteDto
+				.builder()
+				.idOrdenAlistamiento(orden.getIdOrdenAlistamiento())
+				.id(orden.getIdExterno().toString())
+				.numeroOrden(ord.getOrdnum())
+				.tipoOrden(ord.getOrdtyp())
+				.lineas(lineas)
+				.build();
+		// @formatter:on
+		return result;
+	}
+
+	protected List<OrdenAlistamientoClienteLineaDto> asLineas(Long id, OrdShipmentDto ord) {
+		val lineas = new ArrayList<OrdenAlistamientoClienteLineaDto>();
+
+		val alistadas = ord.getLineas();
+		val solicitadas = getRepository().findOrdenesDeAlistamientoEnStageLineas(id);
+
+		for (val s : solicitadas) {
+			val cancelaciones = new ArrayList<OrdenAlistamientoClienteCancelacionDto>();
+			val lotes = new ArrayList<OrdenAlistamientoClienteLoteDto>();
+
+			val optional = alistadas.stream().filter(a -> a.getOrdlin().equals(s.getOrdlin())).findFirst();
+
+			int cantidadDespachada = 0;
+			String estadoInventario = "";
+			if (optional.isPresent()) {
+				val ordlin = optional.get();
+				cantidadDespachada = ordlin.getShpqty() + ordlin.getStgqty();
+				estadoInventario = ordlin.getInvsts();
+
+				ordlin.getCancelaciones().forEach(a -> {
+					cancelaciones.add(new OrdenAlistamientoClienteCancelacionDto(a.getCancod(), a.getRemqty()));
+				});
+
+				ordlin.getLotes().forEach(a -> {
+					lotes.add(new OrdenAlistamientoClienteLoteDto(a.getLotnum(), a.getUntqty(), a.getInvsts()));
+				});
+			}
+
+			int cantidadNoDespachada = s.getCantidad() - cantidadDespachada;
+
+			// @formatter:off
+			val linea = OrdenAlistamientoClienteLineaDto
+					.builder()
+					.numeroLineaExterno(s.getNumeroLineaExterno())
+					.numeroSublineaExterno(s.getNumeroSublineaExterno())
+					.productoCodigo(s.getProductoCodigoAlterno())
+					.bodegaCodigoAlterno(s.getBodegaCodigoAlterno())
+					.cantidadDespachada(cantidadDespachada)
+					.cantidadNoDespachada(cantidadNoDespachada)
+					.estadoInventario(estadoInventario)
+					.bodegaCodigo(ord.getWhId())
+					.cancelaciones(cancelaciones)
+					.lotes(lotes)
+					.build();
+			// @formatter:on
+			lineas.add(linea);
+		}
+		return lineas;
 	}
 }

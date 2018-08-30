@@ -28,19 +28,19 @@ public class ActualizacionIntegracionDto extends SimpleEntityDto<Long> {
 	private String integracion;
 
 	@NotNull
-	@Size(max = 100)
-	private String idExterno;
-
-	@NotNull
 	@Size(max = 50)
 	private String correlacion;
 
 	@NotNull
-	@Size(max = 50)
-	private String estadoExterno;
+	@Size(max = 100)
+	private String idExterno;
 
 	@NotNull
 	private EstadoIntegracionType estadoIntegracion;
+
+	@NotNull
+	@Size(max = 50)
+	private String estadoExterno;
 
 	private EstadoNotificacionType estadoNotificacion;
 
@@ -158,20 +158,18 @@ public class ActualizacionIntegracionDto extends SimpleEntityDto<Long> {
 	@Builder
 	public ActualizacionIntegracionDto(Long id, int version, LocalDateTime fechaCreacion,
 			LocalDateTime fechaModificacion, @NotNull @Size(max = 50) String integracion,
-			@NotNull @Size(max = 100) String idExterno, @NotNull @Size(max = 50) String correlacion,
-			@NotNull @Size(max = 50) String estadoExterno,
-			@NotNull EstadoIntegracionType estadoIntegracion,
-			EstadoNotificacionType estadoNotificacion, int entradasEnCola,
-			@Size(max = 100) String arg0, @Size(max = 100) String arg1, @Size(max = 100) String arg2,
-			@Size(max = 100) String arg3, @Size(max = 100) String arg4, @Size(max = 100) String arg5,
-			@Size(max = 100) String arg6, @Size(max = 100) String arg7, @Size(max = 100) String arg8,
-			@Size(max = 100) String arg9, String datos) {
+			@NotNull @Size(max = 50) String correlacion, @NotNull @Size(max = 100) String idExterno,
+			@NotNull EstadoIntegracionType estadoIntegracion, @NotNull @Size(max = 50) String estadoExterno,
+			EstadoNotificacionType estadoNotificacion, int entradasEnCola, @Size(max = 100) String arg0,
+			@Size(max = 100) String arg1, @Size(max = 100) String arg2, @Size(max = 100) String arg3,
+			@Size(max = 100) String arg4, @Size(max = 100) String arg5, @Size(max = 100) String arg6,
+			@Size(max = 100) String arg7, @Size(max = 100) String arg8, @Size(max = 100) String arg9, String datos) {
 		super(id, version, fechaCreacion, fechaModificacion);
 		this.integracion = integracion;
-		this.idExterno = idExterno;
 		this.correlacion = correlacion;
-		this.estadoExterno = estadoExterno;
+		this.idExterno = idExterno;
 		this.estadoIntegracion = estadoIntegracion;
+		this.estadoExterno = estadoExterno;
 		this.estadoNotificacion = estadoNotificacion;
 		this.entradasEnCola = entradasEnCola;
 		this.arg0 = arg0;

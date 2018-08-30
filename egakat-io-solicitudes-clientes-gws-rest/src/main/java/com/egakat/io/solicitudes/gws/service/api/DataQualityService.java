@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.egakat.core.web.client.service.api.CacheEvictSupported;
-import com.egakat.io.solicitudes.gws.domain.dqs.DataQualityEntry;
+import com.egakat.io.solicitudes.gws.domain.DataQualityEntity;
 
 
 @Transactional(readOnly = true)
-public interface DataQualityService<T extends DataQualityEntry> extends CacheEvictSupported{
+public interface DataQualityService<T extends DataQualityEntity> extends CacheEvictSupported{
 
 	List<String> getCorrelacionesPendientes();
 

@@ -1,12 +1,12 @@
-package com.egakat.io.solicitudes.gws.service.api.client;
+package com.egakat.io.solicitudes.gws.service.api.cliente.solicitudes;
 
 import java.util.List;
 
 import com.egakat.core.web.client.service.api.LocalQueryService;
 import com.egakat.io.solicitudes.gws.dto.ErrorIntegracionDto;
-import com.egakat.io.solicitudes.gws.dto.client.SolicitudDto;
+import com.egakat.io.solicitudes.gws.dto.cliente.solicitudes.SolicitudClienteDto;
 
-public interface SalidasLocalService extends LocalQueryService<SolicitudDto, Integer> {
+public interface SolicitudClienteLocalService extends LocalQueryService<SolicitudClienteDto, Integer> {
 
 	List<Integer> getAllByStatus(String status);
 
