@@ -8,9 +8,9 @@ import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
 
 public interface ErrorIntegracionRepository extends IdentifiedDomainObjectRepository<ErrorIntegracion, Long> {
 
-	List<ErrorIntegracion> findAllByIntegracionAndIdExternoAndCorrelacion(String integracion, String idExterno,
-			String correlacion);
-
 	List<ErrorIntegracion> findAllByIntegracionAndEstadoNotificacionIn(String integracion,
 			EstadoNotificacionType[] estados);
+
+	List<ErrorIntegracion> findAllByIntegracionAndIdExternoAndCorrelacion(String integracion, String idExterno,
+			String correlacion);
 }

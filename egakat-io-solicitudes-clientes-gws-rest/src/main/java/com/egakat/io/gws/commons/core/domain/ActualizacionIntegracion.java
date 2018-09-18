@@ -40,11 +40,6 @@ public class ActualizacionIntegracion extends IntegrationEntity {
 
 	@Column(name = "entradas_en_cola", nullable = false)
 	private int entradasEnCola;
-
-	@Column(name = "estado_externo", length = 50, nullable = false)
-	@NotNull
-	@Size(max = 50)
-	private String estadoExterno;
 	
 	@Column(name = "arg0", length = 100, nullable = true)
 	@Size(max = 100)

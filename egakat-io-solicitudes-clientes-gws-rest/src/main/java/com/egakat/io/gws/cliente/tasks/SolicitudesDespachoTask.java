@@ -1,13 +1,13 @@
-package com.egakat.io.gws.solicitudes.tasks;
+package com.egakat.io.gws.cliente.tasks;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.egakat.io.gws.commons.core.service.api.deprecated.IntegrationService;
-import com.egakat.io.gws.commons.solicitudes.service.api.SolicitudDespachoDataQualityService;
+import com.egakat.io.gws.commons.solicitudes.service.api.IntegrationService;
 import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoCrudService;
+import com.egakat.io.gws.deprecated.core.service.api.SolicitudDespachoDataQualityService;
 import com.egakat.wms.maestros.client.service.api.OrdStageLocalService;
 
 import lombok.val;
@@ -33,7 +33,7 @@ public class SolicitudesDespachoTask {
 	public void run() {
 		download();
 		transformar();
-		upload();
+		//upload();
 	}
 
 	protected void download() {

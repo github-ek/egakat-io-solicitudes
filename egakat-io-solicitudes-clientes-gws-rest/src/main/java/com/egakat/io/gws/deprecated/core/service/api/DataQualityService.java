@@ -1,4 +1,4 @@
-package com.egakat.io.gws.commons.core.service.api.deprecated;
+package com.egakat.io.gws.deprecated.core.service.api;
 
 import java.util.List;
 
@@ -13,5 +13,6 @@ public interface DataQualityService<T extends IntegrationEntity> extends CacheEv
 	@Transactional(readOnly = true)
 	List<String> getCorrelacionesPendientes();
 
+	@Transactional
 	void transformar(String correlacion);
 }

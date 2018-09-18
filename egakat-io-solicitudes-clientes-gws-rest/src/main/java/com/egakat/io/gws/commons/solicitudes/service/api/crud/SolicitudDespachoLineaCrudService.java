@@ -11,5 +11,5 @@ import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoLineaDto;
 public interface SolicitudDespachoLineaCrudService extends CrudService<SolicitudDespachoLineaDto, Long> {
 
 	List<SolicitudDespachoLineaDto> findAllByIdSolicitudDespacho(Long id);
-	
+
 }

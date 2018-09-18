@@ -32,6 +32,14 @@ abstract public class IntegrationEntityCrudServiceImpl<E extends IntegrationEnti
 		val result = getRepository().existsByIntegracionAndIdExterno(integracion, idExterno);
 		return result;
 	}
+	
+	@Override
+	public M findOneByIntegracionAndIdExterno(String integracion, String idExterno) {
+		val entities = getRepository().findAllByIntegracionAndIdExterno(integracion, idExterno);
+		val entity = entities.findFirst().get();
+		val result = asModel(entity);
+		return result;
+	}
 
 	@Override
 	public M update(M model, List<ErrorIntegracionDto> errores) {

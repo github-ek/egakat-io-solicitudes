@@ -1,4 +1,4 @@
-package com.egakat.io.gws.solicitudes.service.impl;
+package com.egakat.io.gws.cliente.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.core.web.client.configuration.RestProperties;
 import com.egakat.core.web.client.service.impl.LocalQueryServiceImpl;
+import com.egakat.io.gws.cliente.dto.SolicitudClienteDto;
+import com.egakat.io.gws.cliente.service.api.SolicitudClienteLocalService;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
 import com.egakat.io.gws.configuration.properties.SolicitudDespachoClienteRestProperties;
-import com.egakat.io.gws.solicitudes.dto.SolicitudClienteDto;
-import com.egakat.io.gws.solicitudes.service.api.SolicitudClienteLocalService;
 
 import lombok.val;
 

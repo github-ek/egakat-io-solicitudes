@@ -14,7 +14,6 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.egakat.io.gws.commons.core.domain.IntegrationEntity;
-import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
 
 import lombok.Builder;
 import lombok.Getter;

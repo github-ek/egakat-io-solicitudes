@@ -12,7 +12,6 @@ import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
 import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
 import com.egakat.io.gws.commons.core.repository.ActualizacionIntegracionRepository;
 import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionCrudService;
-import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudService;
 
 import lombok.val;
 
@@ -20,9 +19,6 @@ import lombok.val;
 public class ActualizacionIntegracionCrudServiceImpl
 		extends IntegrationEntityCrudServiceImpl<ActualizacionIntegracion, ActualizacionIntegracionDto>
 		implements ActualizacionIntegracionCrudService {
-
-	@Autowired
-	private ErrorIntegracionCrudService erroresService;
 
 	@Autowired
 	private ActualizacionIntegracionRepository repository;
@@ -39,12 +35,11 @@ public class ActualizacionIntegracionCrudServiceImpl
 				.builder()
 				.id(entity.getId())
 				.integracion(entity.getIntegracion())
-				.correlacion(entity.getCorrelacion())
 				.idExterno(entity.getIdExterno())
+				.correlacion(entity.getCorrelacion())
 				.estadoIntegracion(entity.getEstadoIntegracion())
 				.estadoNotificacion(entity.getEstadoNotificacion())
 				.entradasEnCola(entity.getEntradasEnCola())
-				.estadoExterno(entity.getEstadoExterno())
 				.arg0(entity.getArg0())
 				.arg1(entity.getArg1())
 				.arg2(entity.getArg2())
@@ -68,12 +63,11 @@ public class ActualizacionIntegracionCrudServiceImpl
 	protected ActualizacionIntegracion mergeEntity(ActualizacionIntegracionDto model, ActualizacionIntegracion entity) {
 
 		entity.setIntegracion(model.getIntegracion());
-		entity.setCorrelacion(model.getCorrelacion());
 		entity.setIdExterno(model.getIdExterno());
+		entity.setCorrelacion(model.getCorrelacion());
 		entity.setEstadoIntegracion(model.getEstadoIntegracion());
 		entity.setEstadoNotificacion(model.getEstadoNotificacion());
 		entity.setEntradasEnCola(model.getEntradasEnCola());
-		entity.setEstadoExterno(model.getEstadoExterno());
 		entity.setArg0(model.getArg0());
 		entity.setArg1(model.getArg1());
 		entity.setArg2(model.getArg2());
@@ -96,17 +90,17 @@ public class ActualizacionIntegracionCrudServiceImpl
 
 	@Override
 	public List<ActualizacionIntegracionDto> findAllByEstadoIntegracionIn(String integracion,
-			EstadoIntegracionType... estadosIntegracion) {
-		val entities = getRepository().findAllByIntegracionAndEstadoIntegracionIn(integracion, estadosIntegracion);
+			EstadoIntegracionType... estados) {
+		val entities = getRepository().findAllByIntegracionAndEstadoIntegracionIn(integracion, estados);
 		val result = asModels(entities);
 		return result;
 	}
 
 	@Override
 	public List<ActualizacionIntegracionDto> findAllNoNotificadasByEstadoIntegracionIn(String integracion,
-			EstadoIntegracionType... estadoIntegracion) {
+			EstadoIntegracionType... estado) {
 		val entities = getRepository().findAllByIntegracionAndEstadoIntegracionInAndEstadoNotificacion(integracion,
-				estadoIntegracion, EstadoNotificacionType.NOTIFICAR);
+				estado, EstadoNotificacionType.NOTIFICAR);
 		val result = asModels(entities);
 		return result;
 	}
@@ -139,7 +133,6 @@ public class ActualizacionIntegracionCrudServiceImpl
 	@Override
 	public void updateEstadoIntegracion(ActualizacionIntegracionDto model, List<ErrorIntegracionDto> errores,
 			EstadoIntegracionType ok, EstadoIntegracionType error) {
-
 		if (errores.isEmpty()) {
 			model.setEstadoIntegracion(ok);
 		} else {
@@ -147,8 +140,7 @@ public class ActualizacionIntegracionCrudServiceImpl
 		}
 		model.setEstadoNotificacion(EstadoNotificacionType.NOTIFICAR);
 
-		erroresService.create(errores);
-		update(model);
+		update(model, errores);
 	}
 
 	@Override
@@ -163,21 +155,6 @@ public class ActualizacionIntegracionCrudServiceImpl
 			// esto se podria manejar mejor en las notificaciones
 		}
 
-		erroresService.create(errores);
-		update(model);
+		update(model, errores);
 	}
-
-	// ========================================================================================================
-//	@Override
-//	public ActualizacionIntegracionDto findOneByIntegracionAndCorrelacionAndIdExterno(String integracion,
-//			String correlacion, String idExterno) {
-//		val optional = getRepository().findByIntegracionAndCorrelacionAndIdExterno(integracion, correlacion, idExterno);
-//
-//		if (!optional.isPresent()) {
-//			val format = "integracion=%s, correlacion=%s, id_externo=%s";
-//			throw new EntityNotFoundException(String.format(format, integracion, correlacion, idExterno));
-//		}
-//		val result = asModel(optional.get());
-//		return result;
-//	}
 }

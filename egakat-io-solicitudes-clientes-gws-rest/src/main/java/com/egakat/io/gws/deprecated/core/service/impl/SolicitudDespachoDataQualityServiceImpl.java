@@ -1,9 +1,7 @@
-package com.egakat.io.gws.commons.solicitudes.service.impl;
+package com.egakat.io.gws.deprecated.core.service.impl;
 
 import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.CORREGIDO;
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.ERROR_VALIDACION;
 import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.VALIDADO;
 import static com.egakat.io.gws.configuration.constants.IntegracionesConstants.SOLICITUDES_SALIDAS;
 import static java.util.Arrays.asList;
 
@@ -23,15 +21,13 @@ import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionC
 import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudService;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoLineaDto;
-import com.egakat.io.gws.commons.solicitudes.service.api.SolicitudDespachoDataQualityService;
 import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoCrudService;
 import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoLineaCrudService;
+import com.egakat.io.gws.deprecated.core.service.api.SolicitudDespachoDataQualityService;
 
 import lombok.val;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespachoDataQualityService {
 
 	protected static long MAPA_SERVICIO_CODIGO_ALTERNO = 200;
@@ -83,47 +79,39 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 
 	@Override
 	public List<String> getCorrelacionesPendientes() {
-		val result = solicitudService.findAllCorrelacionesByEstadoIntegracionIn(getEstadosIntegracion());
+		val result = actualizacionesService.findAllCorrelacionesByEstadoIntegracionIn(getEstadosIntegracion());
 		return result;
 	}
 
 	@Override
 	public void transformar(String correlacion) {
-		val models = solicitudService.findAllByCorrelacionAndEstadoIntegracionIn(correlacion, getEstadosIntegracion());
+		val actualizaciones = actualizacionesService.findAllByEstadoIntegracionIn(getIntegracion(), ESTRUCTURA_VALIDA,
+				CORREGIDO);
 
-		if (!models.isEmpty()) {
-			int i = 1;
-			int n = models.size();
-			val format = "{} de {}:id={} ,integracion={}, id_externo={}, correlacion={}";
+		for (val a : actualizaciones) {
+			val model = solicitudService.findOneByIntegracionAndIdExterno(a.getIntegracion(), a.getIdExterno());
 
-			for (val model : models) {
-				log.debug(format, i++, n, model.getId(), model.getIntegracion(), model.getIdExterno(),
-						model.getCorrelacion());
+			val errores = new ArrayList<ErrorIntegracionDto>();
+			val entry = actualizacionesService.findOneByIntegracionAndIdExterno(model.getIntegracion(),
+					model.getIdExterno());
+			val lineas = solicitudLineaService.findAllByIdSolicitudDespacho(model.getId());
 
-				val errores = new ArrayList<ErrorIntegracionDto>();
-				val entry = actualizacionesService.findOneByIntegracionAndCorrelacionAndIdExterno(
-						model.getIntegracion(), model.getCorrelacion(), model.getIdExterno());
-				val lineas = solicitudLineaService.findAllByIdSolicitudDespacho(model.getId());
-
-				transformar(model, lineas, errores);
-				if (errores.isEmpty()) {
-					validar(model, lineas, errores);
-				}
-
-				if (errores.isEmpty()) {
-					model.setEstadoIntegracion(VALIDADO);
-					entry.setEstadoIntegracion(VALIDADO);
-				} else {
-					model.setEstadoIntegracion(ERROR_VALIDACION);
-					entry.setEstadoIntegracion(ERROR_VALIDACION);
-					entry.setEstadoNotificacion(EstadoNotificacionType.NOTIFICAR);
-				}
-
-				solicitudLineaService.update(lineas);
-				solicitudService.update(model);
-				actualizacionesService.update(entry);
-				erroresService.create(errores);
+			transformar(model, lineas, errores);
+			if (errores.isEmpty()) {
+				validar(model, lineas, errores);
 			}
+
+			if (errores.isEmpty()) {
+				entry.setEstadoIntegracion(EstadoIntegracionType.VALIDADO);
+			} else {
+				entry.setEstadoIntegracion(EstadoIntegracionType.ERROR_VALIDACION);
+				entry.setEstadoNotificacion(EstadoNotificacionType.NOTIFICAR);
+			}
+
+			solicitudService.update(model);
+			solicitudLineaService.update(lineas);
+			actualizacionesService.update(entry);
+			erroresService.create(errores);
 		}
 	}
 
@@ -190,8 +178,10 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 						getLineaArgs(linea)));
 			}
 			if (linea.getIdBodega() == null) {
-				errores.add(errorAtributoMapeableNoHomologado(entry, "BODEGA", linea.getBodegaCodigoAlterno(),
-						MAPA_BODEGA_CODIGO_ALTERNO, getLineaArgs(linea)));
+				val error = errorAtributoMapeableNoHomologado(entry, "BODEGA", linea.getBodegaCodigoAlterno(),
+						MAPA_BODEGA_CODIGO_ALTERNO, getLineaArgs(linea));
+				error.setArg4(arg4);
+				errores.add();
 			}
 			if (linea.getIdEstadoInventario() == null) {
 				errores.add(errorAtributoMapeableNoHomologado(entry, "BODEGA", linea.getEstadoInventarioCodigoAlterno(),
@@ -318,8 +308,8 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 	protected ErrorIntegracionDto errorAtributoRequeridoNoSuministrado(SolicitudDespachoDto entry, String codigo,
 			String... arg) {
 		val mensaje = "Este atributo no admite valores nulos o vacios";
-		val result = ErrorIntegracionDto.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(),
-				codigo, mensaje, arg);
+		val result = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), codigo,
+				mensaje, arg);
 		return result;
 	}
 
@@ -327,8 +317,8 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 			String... arg) {
 		val format = "Este atributo requiere ser homologado. Contiene el valor [%s], pero este valor no pudo ser homologado.";
 		val mensaje = String.format(format, valor);
-		val result = ErrorIntegracionDto.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(),
-				codigo, mensaje, arg);
+		val result = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), codigo,
+				mensaje, arg);
 		return result;
 	}
 
@@ -336,14 +326,13 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 			String valor, long idMapa, String... arg) {
 		val format = "Este atributo esta asociado al mapa de homologación con id=%d.Verifique que el valor [%s] exista en dicho mapa.";
 		val mensaje = String.format(format, idMapa, valor);
-		val result = ErrorIntegracionDto.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(),
-				codigo, mensaje, arg);
+		val result = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), codigo,
+				mensaje, arg);
 		return result;
 	}
 
 	protected ErrorIntegracionDto error(SolicitudDespachoDto entry, RuntimeException e) {
-		val result = ErrorIntegracionDto.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), "",
-				e);
+		val result = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), "", e);
 		return result;
 	}
 

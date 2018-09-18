@@ -1,4 +1,4 @@
-package com.egakat.io.gws.commons.core.service.impl;
+package com.egakat.io.gws.commons.solicitudes.service.impl;
 
 import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.CORREGIDO;
 import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.DESCARTADO;
@@ -23,8 +23,8 @@ import com.egakat.io.gws.commons.core.service.api.DownloadService;
 import com.egakat.io.gws.commons.core.service.api.NotificationService;
 import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionCrudService;
 import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudService;
-import com.egakat.io.gws.commons.core.service.api.deprecated.IntegrationService;
-import com.egakat.io.gws.solicitudes.service.api.SolicitudesDespachoPullService;
+import com.egakat.io.gws.commons.solicitudes.service.api.IntegrationService;
+import com.egakat.io.gws.commons.solicitudes.service.api.SolicitudesDespachoPullService;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class IntegrationServiceImpl implements IntegrationService {
 	private static final String OPERACION_REJECT = "REJECT";
 
 	@Autowired
-	private SolicitudesDespachoPullService takeFeedsService;
+	private SolicitudesDespachoPullService pullService;
 
 	@Autowired
 	private DownloadService downloadService;
@@ -58,8 +58,8 @@ public class IntegrationServiceImpl implements IntegrationService {
 		return SOLICITUDES_SALIDAS;
 	}
 
-	protected SolicitudesDespachoPullService getTakeFeedsService() {
-		return takeFeedsService;
+	protected SolicitudesDespachoPullService getPullService() {
+		return pullService;
 	}
 
 	protected DownloadService getDownloadService() {
@@ -80,33 +80,31 @@ public class IntegrationServiceImpl implements IntegrationService {
 
 	@Override
 	public void execute() {
-		takeFeeds();
+		pull();
 		download();
-		ack();
-		reject();
-		accept();
+		//ack();
+		//reject();
+		//accept();
 	}
 
-	protected void takeFeeds() {
+	protected void pull() {
 		try {
-			getTakeFeedsService().pull();
+			getPullService().pull();
 		} catch (RuntimeException e) {
 			log(null, OPERACION_TAKE_FEEDS, e);
 		}
 	}
 
 	protected void download() {
-		// @formatter:off
-		val entries = getActualizacionesService().findAllByEstadoIntegracionIn(getIntegracion(), 
-		NO_PROCESADO,
-		CORREGIDO);
-		// @formatter:on
+		val entries = getActualizacionesService().findAllByEstadoIntegracionIn(getIntegracion(), NO_PROCESADO,
+				CORREGIDO);
 
 		val errores = new ArrayList<ErrorIntegracionDto>();
 		for (val entry : entries) {
 			try {
 				getDownloadService().download(entry, errores);
-				getActualizacionesService().updateEstadoIntegracion(entry, errores, ESTRUCTURA_VALIDA, ERROR_ESTRUCTURA);
+				getActualizacionesService().updateEstadoIntegracion(entry, errores, ESTRUCTURA_VALIDA,
+						ERROR_ESTRUCTURA);
 			} catch (RuntimeException e) {
 				log(entry, OPERACION_DOWNLOAD, e);
 			}
@@ -114,7 +112,8 @@ public class IntegrationServiceImpl implements IntegrationService {
 	}
 
 	protected void ack() {
-		val entries = getActualizacionesService().findAllNoNotificadasByEstadoIntegracionIn(getIntegracion(), ESTRUCTURA_VALIDA);
+		val entries = getActualizacionesService().findAllNoNotificadasByEstadoIntegracionIn(getIntegracion(),
+				ESTRUCTURA_VALIDA);
 
 		for (val entry : entries) {
 			try {

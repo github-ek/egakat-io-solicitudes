@@ -1,17 +1,17 @@
-package com.egakat.io.gws.commons.core.service.impl.deprecated;
+package com.egakat.io.gws.deprecated.core.service.impl;
 
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.egakat.io.gws.cliente.service.api.SolicitudClienteLocalService;
 import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
 import com.egakat.io.gws.commons.core.service.api.NotificationService;
 import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionCrudService;
 import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudService;
-import com.egakat.io.gws.solicitudes.service.api.SolicitudClienteLocalService;
 
 import lombok.val;
 

@@ -12,6 +12,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.egakat.io.gws.cliente.dto.SolicitudClienteDto;
+import com.egakat.io.gws.cliente.service.api.SolicitudClienteLocalService;
 import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.commons.core.service.api.DownloadService;
@@ -20,8 +22,6 @@ import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoLineaDto;
 import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoCrudService;
 import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoLineaCrudService;
-import com.egakat.io.gws.solicitudes.dto.SolicitudClienteDto;
-import com.egakat.io.gws.solicitudes.service.api.SolicitudClienteLocalService;
 
 import lombok.val;
 

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
-import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
 import com.egakat.io.gws.commons.core.service.impl.crud.ExtendedIntegracionEntityCrudServiceImpl;
 import com.egakat.io.gws.commons.ordenes.repository.OrdenAlistamiento;
 import com.egakat.io.gws.commons.solicitudes.domain.SolicitudDespacho;
@@ -250,19 +249,6 @@ public class SolicitudDespachoCrudServiceImpl
 
 	@Override
 	public Slice<SolicitudDespachoDto> findByEstado(String estado, Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<String> findAllCorrelacionesByEstadoIntegracionIn(List<EstadoIntegracionType> estados) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<SolicitudDespachoDto> findAllByCorrelacionAndEstadoIntegracionIn(String correlacion,
-			List<EstadoIntegracionType> estados) {
 		// TODO Auto-generated method stub
 		return null;
 	}
