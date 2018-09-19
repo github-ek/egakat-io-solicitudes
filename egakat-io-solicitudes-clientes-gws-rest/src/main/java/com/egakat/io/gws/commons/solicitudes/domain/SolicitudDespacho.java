@@ -3,10 +3,15 @@ package com.egakat.io.gws.commons.solicitudes.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,7 +20,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import com.egakat.io.gws.commons.core.domain.IntegrationEntity;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -155,53 +159,17 @@ public class SolicitudDespacho extends IntegrationEntity {
 
 	@Column(name = "fecha_creacion_externa")
 	private LocalDateTime fechaCreacionExterna;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "solicitud", cascade = CascadeType.ALL)
+	private List<SolicitudDespachoLinea> lineas = new ArrayList<>();
 
-	@Builder
-	public SolicitudDespacho(Long id, int version, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
-			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String correlacion,
-			@NotNull @Size(max = 100) String idExterno, @NotNull @Size(max = 50) String clienteCodigoAlterno,
-			@NotNull @Size(max = 50) String servicioCodigoAlterno, @NotNull @Size(max = 20) String numeroSolicitud,
-			@NotNull @Size(max = 20) String prefijo, @NotNull @Size(max = 20) String numeroSolicitudSinPrefijo,
-			LocalDate femi, LocalDate fema, LocalTime homi, LocalTime homa, boolean requiereTransporte,
-			boolean requiereAgendamiento, boolean requiereDespacharCompleto,
-			@NotNull @Size(max = 20) String terceroIdentificacion, @NotNull @Size(max = 100) String terceroNombre,
-			@NotNull @Size(max = 50) String canalCodigoAlterno, @NotNull @Size(max = 50) String ciudadCodigoAlterno,
-			@NotNull @Size(max = 150) String direccion, @NotNull @Size(max = 50) String puntoCodigoAlterno,
-			@NotNull @Size(max = 100) String puntoNombre, @NotNull @Size(max = 20) String autorizadoIdentificacion,
-			@NotNull @Size(max = 100) String autorizadoNombres, @NotNull @Size(max = 20) String numeroOrdenCompra,
-			LocalDate fechaOrdenCompra, @NotNull @Size(max = 200) String nota, Long idCliente, Long idServicio,
-			Long idTercero, Long idCanal, Long idCiudad, Long idPunto, LocalDateTime fechaCreacionExterna) {
-		super(id, version, fechaCreacion, fechaModificacion, integracion, correlacion, idExterno);
-		this.clienteCodigoAlterno = clienteCodigoAlterno;
-		this.servicioCodigoAlterno = servicioCodigoAlterno;
-		this.numeroSolicitud = numeroSolicitud;
-		this.prefijo = prefijo;
-		this.numeroSolicitudSinPrefijo = numeroSolicitudSinPrefijo;
-		this.femi = femi;
-		this.fema = fema;
-		this.homi = homi;
-		this.homa = homa;
-		this.requiereTransporte = requiereTransporte;
-		this.requiereAgendamiento = requiereAgendamiento;
-		this.requiereDespacharCompleto = requiereDespacharCompleto;
-		this.terceroIdentificacion = terceroIdentificacion;
-		this.terceroNombre = terceroNombre;
-		this.canalCodigoAlterno = canalCodigoAlterno;
-		this.ciudadCodigoAlterno = ciudadCodigoAlterno;
-		this.direccion = direccion;
-		this.puntoCodigoAlterno = puntoCodigoAlterno;
-		this.puntoNombre = puntoNombre;
-		this.autorizadoIdentificacion = autorizadoIdentificacion;
-		this.autorizadoNombres = autorizadoNombres;
-		this.numeroOrdenCompra = numeroOrdenCompra;
-		this.fechaOrdenCompra = fechaOrdenCompra;
-		this.nota = nota;
-		this.idCliente = idCliente;
-		this.idServicio = idServicio;
-		this.idTercero = idTercero;
-		this.idCanal = idCanal;
-		this.idCiudad = idCiudad;
-		this.idPunto = idPunto;
-		this.fechaCreacionExterna = fechaCreacionExterna;
+	public void addLinea(SolicitudDespachoLinea item) {
+		lineas.add(item);
+		item.setSolicitud(this);
+	}
+
+	public void removeLinea(SolicitudDespachoLinea item) {
+		lineas.remove(item);
+		item.setSolicitud(null);
 	}
 }

@@ -1,15 +1,15 @@
-package com.egakat.io.gws.deprecated.core.service.impl;
+package com.egakat.io.gws.cliente.service.impl;
 
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.egakat.io.gws.cliente.service.api.SolicitudClienteLocalService;
+import com.egakat.io.gws.cliente.service.api.NotificationService;
+import com.egakat.io.gws.cliente.service.api.SolicitudesClienteLocalService;
 import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
-import com.egakat.io.gws.commons.core.service.api.NotificationService;
 import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionCrudService;
 import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudService;
 
@@ -19,7 +19,7 @@ import lombok.val;
 public class NotificationServiceImpl implements NotificationService {
 
 	@Autowired
-	private SolicitudClienteLocalService externalService;
+	private SolicitudesClienteLocalService externalService;
 
 	@Autowired
 	private ActualizacionIntegracionCrudService actualizacionesService;

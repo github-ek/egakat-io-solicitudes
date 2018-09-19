@@ -22,7 +22,6 @@ import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudServi
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoLineaDto;
 import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoCrudService;
-import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoLineaCrudService;
 import com.egakat.io.gws.deprecated.core.service.api.SolicitudDespachoDataQualityService;
 
 import lombok.val;
@@ -41,8 +40,6 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 	@Autowired
 	private SolicitudDespachoCrudService solicitudService;
 
-	@Autowired
-	private SolicitudDespachoLineaCrudService solicitudLineaService;
 
 	@Autowired
 	private ActualizacionIntegracionCrudService actualizacionesService;
@@ -94,7 +91,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 			val errores = new ArrayList<ErrorIntegracionDto>();
 			val entry = actualizacionesService.findOneByIntegracionAndIdExterno(model.getIntegracion(),
 					model.getIdExterno());
-			val lineas = solicitudLineaService.findAllByIdSolicitudDespacho(model.getId());
+			val lineas = model.getLineas();
 
 			transformar(model, lineas, errores);
 			if (errores.isEmpty()) {
@@ -109,7 +106,6 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 			}
 
 			solicitudService.update(model);
-			solicitudLineaService.update(lineas);
 			actualizacionesService.update(entry);
 			erroresService.create(errores);
 		}
@@ -174,18 +170,18 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		lineas.parallelStream().forEach(linea -> {
 			// TODO VALIDAR LINEAS Y SUBLINEAS EXTERNAS UNICAS
 			if (linea.getIdProducto() == null) {
-				errores.add(errorAtributoNoHomologado(entry, "PRODUCTO", linea.getProductoCodigoAlterno(),
-						getLineaArgs(linea)));
+				errores.add(
+						errorAtributoNoHomologado(entry, "PRODUCTO", linea.getProductoCodigoAlterno(), asArg(linea)));
 			}
 			if (linea.getIdBodega() == null) {
 				val error = errorAtributoMapeableNoHomologado(entry, "BODEGA", linea.getBodegaCodigoAlterno(),
-						MAPA_BODEGA_CODIGO_ALTERNO, getLineaArgs(linea));
-				error.setArg4(arg4);
-				errores.add();
+						MAPA_BODEGA_CODIGO_ALTERNO, asArg(linea));
+				error.setArg4(linea.getBodegaCodigoAlterno());
+				errores.add(error);
 			}
 			if (linea.getIdEstadoInventario() == null) {
 				errores.add(errorAtributoMapeableNoHomologado(entry, "BODEGA", linea.getEstadoInventarioCodigoAlterno(),
-						MAPA_ESTADO_INVENTARIO_CODIGO_ALTERNO, getLineaArgs(linea)));
+						MAPA_ESTADO_INVENTARIO_CODIGO_ALTERNO, asArg(linea)));
 			}
 		});
 
@@ -300,9 +296,21 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		return StringUtils.defaultString(_default).toUpperCase();
 	}
 
-	protected String[] getLineaArgs(final com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoLineaDto linea) {
-		return new String[] { String.valueOf(linea.getNumeroLinea()), linea.getNumeroLineaExterno(),
-				linea.getNumeroSubLineaExterno(), String.valueOf(linea.getId()) };
+	protected String[] asArg(SolicitudDespachoLineaDto linea, String... args) {
+		val result = new String[6 + args.length];
+		int i = 0;
+		result[i++] = String.valueOf(linea.getNumeroLinea());
+		result[i++] = linea.getNumeroLineaExterno();
+		result[i++] = linea.getNumeroSubLineaExterno();
+		result[i++] = linea.getProductoCodigoAlterno();
+		result[i++] = linea.getProductoNombre();
+		result[i++] = String.valueOf(linea.getCantidad());
+		
+		for (val a : args) {
+			result[i++] = a;
+		}
+
+		return result;
 	}
 
 	protected ErrorIntegracionDto errorAtributoRequeridoNoSuministrado(SolicitudDespachoDto entry, String codigo,

@@ -6,7 +6,7 @@ import com.egakat.core.web.client.service.api.LocalQueryService;
 import com.egakat.io.gws.cliente.dto.SolicitudClienteDto;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 
-public interface SolicitudClienteLocalService extends LocalQueryService<SolicitudClienteDto, Integer> {
+public interface SolicitudesClienteLocalService extends LocalQueryService<SolicitudClienteDto, Integer> {
 
 	List<Integer> getAllByStatus(String status);
 

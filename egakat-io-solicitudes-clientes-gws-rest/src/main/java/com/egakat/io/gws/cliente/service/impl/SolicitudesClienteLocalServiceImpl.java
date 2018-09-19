@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.egakat.core.web.client.configuration.RestProperties;
 import com.egakat.core.web.client.service.impl.LocalQueryServiceImpl;
 import com.egakat.io.gws.cliente.dto.SolicitudClienteDto;
-import com.egakat.io.gws.cliente.service.api.SolicitudClienteLocalService;
+import com.egakat.io.gws.cliente.service.api.SolicitudesClienteLocalService;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
 import com.egakat.io.gws.configuration.properties.SolicitudDespachoClienteRestProperties;
@@ -17,8 +17,8 @@ import com.egakat.io.gws.configuration.properties.SolicitudDespachoClienteRestPr
 import lombok.val;
 
 @Service
-public class SolicitudClienteLocalServiceImpl extends LocalQueryServiceImpl<SolicitudClienteDto, Integer>
-		implements SolicitudClienteLocalService {
+public class SolicitudesClienteLocalServiceImpl extends LocalQueryServiceImpl<SolicitudClienteDto, Integer>
+		implements SolicitudesClienteLocalService {
 
 	@Autowired
 	private SolicitudDespachoClienteRestProperties properties;

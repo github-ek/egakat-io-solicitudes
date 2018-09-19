@@ -2,6 +2,7 @@ package com.egakat.io.gws.commons.solicitudes.service.impl.crud;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,9 @@ import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.commons.core.service.impl.crud.ExtendedIntegracionEntityCrudServiceImpl;
 import com.egakat.io.gws.commons.ordenes.repository.OrdenAlistamiento;
 import com.egakat.io.gws.commons.solicitudes.domain.SolicitudDespacho;
+import com.egakat.io.gws.commons.solicitudes.domain.SolicitudDespachoLinea;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
+import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoLineaDto;
 import com.egakat.io.gws.commons.solicitudes.repository.SolicitudDespachoRepository;
 import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoCrudService;
 import com.egakat.io.gws.ordenes.dto.OrdenAlistamientoClienteCancelacionDto;
@@ -45,51 +48,86 @@ public class SolicitudDespachoCrudServiceImpl
 	@Override
 	protected SolicitudDespachoDto asModel(SolicitudDespacho entity) {
 		// @formatter:off
-		val result = SolicitudDespachoDto
-				.builder()
-				.id(entity.getId())
-				.integracion(entity.getIntegracion())
-				.correlacion(entity.getCorrelacion())
-				.idExterno(entity.getIdExterno())
-				.clienteCodigoAlterno(entity.getClienteCodigoAlterno())
-				.servicioCodigoAlterno(entity.getServicioCodigoAlterno())
-				.numeroSolicitud(entity.getNumeroSolicitud())
-				.prefijo(entity.getPrefijo())
-				.numeroSolicitudSinPrefijo(entity.getNumeroSolicitudSinPrefijo())
-				.femi(entity.getFemi())
-				.fema(entity.getFema())
-				.homi(entity.getHomi())
-				.homa(entity.getHoma())
-				.requiereTransporte(entity.isRequiereTransporte())
-				.requiereAgendamiento(entity.isRequiereAgendamiento())
-				.requiereDespacharCompleto(entity.isRequiereDespacharCompleto())
-				.terceroIdentificacion(entity.getTerceroIdentificacion())
-				.terceroNombre(entity.getTerceroNombre())
-				.canalCodigoAlterno(entity.getCanalCodigoAlterno())
-				.ciudadCodigoAlterno(entity.getCiudadCodigoAlterno())
-				.direccion(entity.getDireccion())
-				.puntoCodigoAlterno(entity.getPuntoCodigoAlterno())
-				.puntoNombre(entity.getPuntoNombre())
-				.autorizadoIdentificacion(entity.getAutorizadoIdentificacion())
-				.autorizadoNombres(entity.getAutorizadoNombres())
-				.numeroOrdenCompra(entity.getNumeroOrdenCompra())
-				.fechaOrdenCompra(entity.getFechaOrdenCompra())
-				.nota(entity.getNota())
-				.idCliente(entity.getIdCliente())
-				.idServicio(entity.getIdServicio())
-				.idTercero(entity.getIdTercero())
-				.idCanal(entity.getIdCanal())
-				.idCiudad(entity.getIdCiudad())
-				.idPunto(entity.getIdPunto())
-				.fechaCreacionExterna(entity.getFechaCreacionExterna())
-				.version(entity.getVersion())
-				.fechaCreacion(entity.getFechaCreacion())
-				.fechaModificacion(entity.getFechaModificacion())
-				.build();
-		// @formatter:on
+		val model = new SolicitudDespachoDto();
+		
+		model.setId(entity.getId());
+		model.setIntegracion(entity.getIntegracion());
+		model.setCorrelacion(entity.getCorrelacion());
+		model.setIdExterno(entity.getIdExterno());
+		model.setClienteCodigoAlterno(entity.getClienteCodigoAlterno());
+		model.setServicioCodigoAlterno(entity.getServicioCodigoAlterno());
+		model.setNumeroSolicitud(entity.getNumeroSolicitud());
+		model.setPrefijo(entity.getPrefijo());
+		model.setNumeroSolicitudSinPrefijo(entity.getNumeroSolicitudSinPrefijo());
+		model.setFemi(entity.getFemi());
+		model.setFema(entity.getFema());
+		model.setHomi(entity.getHomi());
+		model.setHoma(entity.getHoma());
+		model.setRequiereTransporte(entity.isRequiereTransporte());
+		model.setRequiereAgendamiento(entity.isRequiereAgendamiento());
+		model.setRequiereDespacharCompleto(entity.isRequiereDespacharCompleto());
+		model.setTerceroIdentificacion(entity.getTerceroIdentificacion());
+		model.setTerceroNombre(entity.getTerceroNombre());
+		model.setCanalCodigoAlterno(entity.getCanalCodigoAlterno());
+		model.setCiudadCodigoAlterno(entity.getCiudadCodigoAlterno());
+		model.setDireccion(entity.getDireccion());
+		model.setPuntoCodigoAlterno(entity.getPuntoCodigoAlterno());
+		model.setPuntoNombre(entity.getPuntoNombre());
+		model.setAutorizadoIdentificacion(entity.getAutorizadoIdentificacion());
+		model.setAutorizadoNombres(entity.getAutorizadoNombres());
+		model.setNumeroOrdenCompra(entity.getNumeroOrdenCompra());
+		model.setFechaOrdenCompra(entity.getFechaOrdenCompra());
+		model.setNota(entity.getNota());
+		model.setIdCliente(entity.getIdCliente());
+		model.setIdServicio(entity.getIdServicio());
+		model.setIdTercero(entity.getIdTercero());
+		model.setIdCanal(entity.getIdCanal());
+		model.setIdCiudad(entity.getIdCiudad());
+		model.setIdPunto(entity.getIdPunto());
+		model.setFechaCreacionExterna(entity.getFechaCreacionExterna());
+		model.setVersion(entity.getVersion());
+		model.setFechaCreacion(entity.getFechaCreacion());
+		model.setFechaModificacion(entity.getFechaModificacion());
+		model.setLineas(asItemModels(entity));
+
+		return model;
+	}
+	
+	protected List<SolicitudDespachoLineaDto> asItemModels(SolicitudDespacho entity) {
+		val result = new ArrayList<SolicitudDespachoLineaDto>();
+		entity.getLineas().forEach(item -> {
+			result.add(asItemModel(item));
+		});
 		return result;
 	}
 
+	protected SolicitudDespachoLineaDto asItemModel(SolicitudDespachoLinea entity) {
+		val model = new SolicitudDespachoLineaDto();
+
+		model.setId(entity.getId());
+		model.setIdSolicitudDespacho(entity.getSolicitud().getId());
+		model.setNumeroLinea(entity.getNumeroLinea());
+		model.setNumeroLineaExterno(entity.getNumeroLineaExterno());
+		model.setNumeroSubLineaExterno(entity.getNumeroSubLineaExterno());
+		model.setProductoCodigoAlterno(entity.getProductoCodigoAlterno());
+		model.setProductoNombre(entity.getProductoNombre());
+		model.setCantidad(entity.getCantidad());
+		model.setBodegaCodigoAlterno(entity.getBodegaCodigoAlterno());
+		model.setEstadoInventarioCodigoAlterno(entity.getEstadoInventarioCodigoAlterno());
+		model.setLote(entity.getLote());
+		model.setPredistribucion(entity.getPredistribucion());
+		model.setValorUnitarioDeclarado(entity.getValorUnitarioDeclarado());
+		model.setIdProducto(entity.getIdProducto());
+		model.setIdBodega(entity.getIdBodega());
+		model.setIdEstadoInventario(entity.getIdEstadoInventario());
+
+		model.setVersion(entity.getVersion());
+		model.setFechaCreacion(entity.getFechaCreacion());
+		model.setFechaModificacion(entity.getFechaModificacion());
+
+		return model;
+	}
+	
 	@Override
 	protected SolicitudDespacho mergeEntity(SolicitudDespachoDto model, SolicitudDespacho entity) {
 
@@ -120,6 +158,7 @@ public class SolicitudDespachoCrudServiceImpl
 		entity.setNumeroOrdenCompra(model.getNumeroOrdenCompra());
 		entity.setFechaOrdenCompra(model.getFechaOrdenCompra());
 		entity.setNota(model.getNota());
+		
 		entity.setIdCliente(model.getIdCliente());
 		entity.setIdServicio(model.getIdServicio());
 		entity.setIdTercero(model.getIdTercero());
@@ -128,14 +167,78 @@ public class SolicitudDespachoCrudServiceImpl
 		entity.setIdPunto(model.getIdPunto());
 		entity.setFechaCreacionExterna(model.getFechaCreacionExterna());
 
+		entity.setVersion(model.getVersion());
+
+		mergeItemEntities(model, entity);
+
 		return entity;
 	}
 
+	protected void mergeItemEntities(SolicitudDespachoDto model, SolicitudDespacho entity) {
+		val inserted = model.getLineas().stream().filter(a -> a.getId() == null).collect(Collectors.toList());
+		val updated = model.getLineas().stream().filter(a -> a.getId() != null).collect(Collectors.toList());
+		val deleted = new ArrayList<SolicitudDespachoLinea>();
+
+		entity.getLineas().stream().forEach(itemEntity -> {
+			val optional = updated.stream().filter(a -> a.getId().equals(itemEntity.getId())).findFirst();
+
+			if (optional.isPresent()) {
+				mergeItemEntity(optional.get(), itemEntity);
+			} else {
+				deleted.add(itemEntity);
+			}
+		});
+
+		deleted.stream().forEach(itemEntity -> entity.removeLinea(itemEntity));
+
+		inserted.forEach(itemModel -> {
+			val itemEntity = new SolicitudDespachoLinea();
+			mergeItemEntity(itemModel, itemEntity);
+			entity.addLinea(itemEntity);
+		});
+	}
+
+	protected void mergeItemEntity(SolicitudDespachoLineaDto model, SolicitudDespachoLinea entity) {
+		
+		entity.setNumeroLinea(model.getNumeroLinea());
+		entity.setNumeroLineaExterno(model.getNumeroLineaExterno());
+		entity.setNumeroSubLineaExterno(model.getNumeroSubLineaExterno());
+		entity.setProductoCodigoAlterno(model.getProductoCodigoAlterno());
+		entity.setProductoNombre(model.getProductoNombre());
+		entity.setCantidad(model.getCantidad());
+		entity.setBodegaCodigoAlterno(model.getBodegaCodigoAlterno());
+		entity.setEstadoInventarioCodigoAlterno(model.getEstadoInventarioCodigoAlterno());
+		entity.setLote(model.getLote());
+		entity.setPredistribucion(model.getPredistribucion());
+		entity.setValorUnitarioDeclarado(model.getValorUnitarioDeclarado());
+		entity.setIdProducto(model.getIdProducto());
+		entity.setIdBodega(model.getIdBodega());
+		entity.setIdEstadoInventario(model.getIdEstadoInventario());
+		entity.setVersion(model.getVersion());
+	}
+	
 	@Override
 	protected SolicitudDespacho newEntity() {
 		return new SolicitudDespacho();
 	}
 
+	
+	@Override
+	public List<SolicitudDespachoDto> findTopByEstado(String estado) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Slice<SolicitudDespachoDto> findByEstado(String estado, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	
+	
+	
 	@Autowired
 	private OrdStageLocalService ordStageService;
 
@@ -167,7 +270,6 @@ public class SolicitudDespachoCrudServiceImpl
 			ordStageService.ack(ord);
 		} catch (Exception e) {
 			val error = getErroresService().error(orden.getIntegracion(), orden.getIdExterno(), orden.getCorrelacion(), "", e);
-			log.debug("error:{}", error);
 			errores.add(error);
 		}
 
@@ -239,17 +341,5 @@ public class SolicitudDespachoCrudServiceImpl
 			lineas.add(linea);
 		}
 		return lineas;
-	}
-
-	@Override
-	public List<SolicitudDespachoDto> findTopByEstado(String estado) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Slice<SolicitudDespachoDto> findByEstado(String estado, Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

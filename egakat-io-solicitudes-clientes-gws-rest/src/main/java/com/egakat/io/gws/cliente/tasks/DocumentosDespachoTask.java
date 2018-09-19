@@ -5,7 +5,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.egakat.io.gws.commons.solicitudes.service.api.IntegrationService;
+import com.egakat.io.gws.cliente.service.api.IntegrationService;
 import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoCrudService;
 import com.egakat.io.gws.deprecated.core.service.api.SolicitudDespachoDataQualityService;
 import com.egakat.wms.maestros.client.service.api.OrdStageLocalService;

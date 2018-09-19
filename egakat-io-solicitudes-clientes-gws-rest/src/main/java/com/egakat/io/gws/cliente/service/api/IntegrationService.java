@@ -1,4 +1,4 @@
-package com.egakat.io.gws.commons.solicitudes.service.api;
+package com.egakat.io.gws.cliente.service.api;
 
 public interface IntegrationService {
 
