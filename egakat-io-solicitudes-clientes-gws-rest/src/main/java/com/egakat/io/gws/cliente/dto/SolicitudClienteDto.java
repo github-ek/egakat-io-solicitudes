@@ -11,7 +11,6 @@ import com.egakat.core.dto.EntityDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -105,33 +104,4 @@ public class SolicitudClienteDto extends EntityDto<Integer> {
 	private String nota;
 
 	private List<SolicitudClienteLineaDto> lineas;
-	
-	@Builder
-	public SolicitudClienteDto(Integer id, @NotNull @Size(max = 20) String clienteCodigoAlterno,
-			@NotNull @Size(max = 50) String servicioCodigoAlterno, @NotNull @Size(max = 20) String prefijo,
-			@NotNull @Size(max = 20) String numeroSolicitudSinPrefijo, @NotNull LocalDate femi, @NotNull LocalDate fema,
-			LocalTime homi, LocalTime homa, @NotNull @Size(max = 20) String terceroIdentificacion,
-			@NotNull @Size(max = 100) String terceroNombre, @NotNull @Size(max = 50) String canalCodigoAlterno,
-			@NotNull @Size(max = 50) String ciudadCodigoAlterno, @NotNull @Size(max = 150) String direccion,
-			@NotNull @Size(max = 50) String puntoCodigoAlterno, @NotNull @Size(max = 20) String numeroOrdenCompra,
-			@NotNull @Size(max = 200) String nota, List<SolicitudClienteLineaDto> lineas) {
-		super(id);
-		this.clienteCodigoAlterno = clienteCodigoAlterno;
-		this.servicioCodigoAlterno = servicioCodigoAlterno;
-		this.prefijo = prefijo;
-		this.numeroSolicitudSinPrefijo = numeroSolicitudSinPrefijo;
-		this.femi = femi;
-		this.fema = fema;
-		this.homi = homi;
-		this.homa = homa;
-		this.terceroIdentificacion = terceroIdentificacion;
-		this.terceroNombre = terceroNombre;
-		this.canalCodigoAlterno = canalCodigoAlterno;
-		this.ciudadCodigoAlterno = ciudadCodigoAlterno;
-		this.direccion = direccion;
-		this.puntoCodigoAlterno = puntoCodigoAlterno;
-		this.numeroOrdenCompra = numeroOrdenCompra;
-		this.nota = nota;
-		this.lineas = lineas;
-	}
 }

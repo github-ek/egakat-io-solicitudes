@@ -2,12 +2,9 @@ package com.egakat.io.gws.cliente.tasks;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.egakat.io.gws.cliente.service.api.IntegrationService;
 import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoCrudService;
-import com.egakat.io.gws.deprecated.core.service.api.SolicitudDespachoDataQualityService;
 import com.egakat.wms.maestros.client.service.api.OrdStageLocalService;
 
 import lombok.val;
@@ -17,11 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DocumentosDespachoTask {
 
-	@Autowired
-	private IntegrationService integrationService;
-
-	@Autowired
-	private SolicitudDespachoDataQualityService dqService;
 
 	@Autowired
 	private OrdStageLocalService ordStageService;
@@ -37,14 +29,11 @@ public class DocumentosDespachoTask {
 	}
 
 	protected void download() {
-		integrationService.execute();
+		//integrationService.execute();
 	}
 
 	protected void transformar() {
-		val correlaciones = dqService.getCorrelacionesPendientes();
-		for (val correlacion : correlaciones) {
-			dqService.transformar(correlacion);
-		}
+
 	}
 
 	private void upload() {

@@ -6,6 +6,7 @@ import com.egakat.io.gws.commons.core.domain.IntegrationEntity;
 import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
 import com.egakat.io.gws.commons.core.dto.IntegrationEntityDto;
 import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
+import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
 import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionCrudService;
 import com.egakat.io.gws.commons.core.service.api.crud.ExtendedIntegracionEntityCrudService;
 
@@ -22,10 +23,20 @@ public abstract class ExtendedIntegracionEntityCrudServiceImpl<E extends Integra
 	}
 
 	@Override
-	public M download(M model, ActualizacionIntegracionDto actualizacion) {
-		actualizacion.setEstadoIntegracion(EstadoIntegracionType.ESTRUCTURA_VALIDA);
+	public M create(M model, ActualizacionIntegracionDto actualizacion, EstadoIntegracionType estado) {
+		actualizacion.setEstadoIntegracion(estado);
+		actualizacion.setEstadoNotificacion(EstadoNotificacionType.NOTIFICAR);
 		getActualizacionesService().update(actualizacion);
 		val result = create(model);
+		return result;
+	}
+	
+	@Override
+	public M update(M model, ActualizacionIntegracionDto actualizacion, EstadoIntegracionType estado) {
+		actualizacion.setEstadoIntegracion(estado);
+		actualizacion.setEstadoNotificacion(EstadoNotificacionType.NOTIFICAR);
+		getActualizacionesService().update(actualizacion);
+		val result = update(model);
 		return result;
 	}
 }

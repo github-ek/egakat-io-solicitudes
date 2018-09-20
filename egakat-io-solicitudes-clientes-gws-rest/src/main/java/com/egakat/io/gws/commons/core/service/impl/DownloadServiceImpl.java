@@ -56,23 +56,45 @@ abstract public class DownloadServiceImpl<I, M extends IntegrationEntityDto, S> 
 		val actualizaciones = getActualizacionesService().findAllByEstadoIntegracionIn(getIntegracion(),
 				EstadoIntegracionType.NO_PROCESADO, EstadoIntegracionType.CORREGIDO);
 
+		int i = 1;
+		int n = actualizaciones.size();
 		for (val actualizacion : actualizaciones) {
-			try {
-				val errores = new ArrayList<ErrorIntegracionDto>();
+			log(actualizacion, i, n);
 
-				val input = getInput(actualizacion, errores);
-				if (errores.isEmpty()) {
-					validate(actualizacion, input, errores);
+			val errores = new ArrayList<ErrorIntegracionDto>();
 
-					if (errores.isEmpty()) {
-						val model = asModel(actualizacion, input);
-						getCrudService().download(model, actualizacion);
-					}
+			download(actualizacion, errores);
+
+			if (!errores.isEmpty()) {
+				onError(actualizacion, errores);
+				try {
+					getActualizacionesService().update(actualizacion, EstadoIntegracionType.ERROR_ESTRUCTURA, errores);
+				} catch (Exception e) {
+					log.error("Exception:", e);
 				}
-			} catch (RuntimeException e) {
-				getErroresService().create(actualizacion, "", e);
-				log.error("Exception:", e);
 			}
+
+			i++;
+		}
+	}
+
+	protected void download(ActualizacionIntegracionDto actualizacion, List<ErrorIntegracionDto> errores) {
+		try {
+			val input = getInput(actualizacion, errores);
+
+			if (errores.isEmpty()) {
+				validate(actualizacion, input, errores);
+
+				if (errores.isEmpty()) {
+					val model = asModel(actualizacion, input);
+					onSuccess(actualizacion, input, model);
+					getCrudService().create(model, actualizacion, EstadoIntegracionType.ESTRUCTURA_VALIDA);
+				}
+			}
+		} catch (RuntimeException e) {
+			val error = getErroresService().error(actualizacion, "", e);
+			errores.add(error);
+			log.error("Exception:", e);
 		}
 	}
 
@@ -84,8 +106,22 @@ abstract public class DownloadServiceImpl<I, M extends IntegrationEntityDto, S> 
 
 	abstract protected M asModel(ActualizacionIntegracionDto actualizacion, I input);
 
+	protected void onSuccess(ActualizacionIntegracionDto actualizacion, I input, M model) {
+
+	}
+
+	protected void onError(ActualizacionIntegracionDto actualizacion, ArrayList<ErrorIntegracionDto> errores) {
+
+	}
+
+	protected void log(ActualizacionIntegracionDto a, int i, int n) {
+		val format = "integracion={}, correlacion={}, id externo={}: {} de {}.";
+		log.debug(format, a.getIntegracion(), a.getCorrelacion(), a.getIdExterno(), i, n);
+	}
+
 	protected String normalizar(String str, int len) {
 		val result = left(defaultString(str), len);
 		return result;
 	}
+
 }

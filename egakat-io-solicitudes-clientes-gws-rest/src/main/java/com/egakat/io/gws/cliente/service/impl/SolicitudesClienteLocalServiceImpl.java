@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.core.web.client.configuration.RestProperties;
 import com.egakat.core.web.client.service.impl.LocalQueryServiceImpl;
+import com.egakat.io.gws.cliente.configuration.constants.SolicitudEstadoConstants;
 import com.egakat.io.gws.cliente.dto.SolicitudClienteDto;
 import com.egakat.io.gws.cliente.service.api.SolicitudesClienteLocalService;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
@@ -53,18 +54,18 @@ public class SolicitudesClienteLocalServiceImpl extends LocalQueryServiceImpl<So
 	@Override
 	public void confirmarRecibo(Integer id) {
 		val query = "/{id}?status={status}";
-		getRestClient().put(getResourcePath() + query, "", Object.class, id, "RECIBIDO");
+		getRestClient().put(getResourcePath() + query, "", Object.class, id, SolicitudEstadoConstants.RECIBIDA_OPL);
 	}
 
 	@Override
 	public void aceptar(Integer id) {
 		val query = "/{id}?status={status}";
-		getRestClient().put(getResourcePath() + query, "", Object.class, id, "ACEPTADO");
+		getRestClient().put(getResourcePath() + query, "", Object.class, id, SolicitudEstadoConstants.ACEPTADA_OPL);
 	}
 
 	@Override
 	public void rechazar(Integer id, List<ErrorIntegracionDto> errores) {
 		val query = "/{id}?status={status}";
-		getRestClient().put(getResourcePath() + query, errores, Object.class, id, "ERROR");
+		getRestClient().put(getResourcePath() + query, errores, Object.class, id, SolicitudEstadoConstants.RECHAZADA_OPL);
 	}
 }

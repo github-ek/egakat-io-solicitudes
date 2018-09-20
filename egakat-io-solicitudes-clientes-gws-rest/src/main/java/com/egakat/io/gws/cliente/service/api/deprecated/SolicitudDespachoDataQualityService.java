@@ -1,4 +1,4 @@
-package com.egakat.io.gws.deprecated.core.service.api;
+package com.egakat.io.gws.cliente.service.api.deprecated;
 
 import com.egakat.io.gws.commons.solicitudes.domain.SolicitudDespacho;
 

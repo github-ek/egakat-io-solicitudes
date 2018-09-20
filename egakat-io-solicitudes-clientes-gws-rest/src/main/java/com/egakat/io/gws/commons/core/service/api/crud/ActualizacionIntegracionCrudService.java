@@ -26,10 +26,11 @@ public interface ActualizacionIntegracionCrudService extends IntegracionEntityCr
 	void enqueue(ActualizacionIntegracionDto model);
 
 	@Transactional
-	void updateEstadoIntegracion(ActualizacionIntegracionDto model, List<ErrorIntegracionDto> errores,
-			EstadoIntegracionType ok, EstadoIntegracionType error);
+	ActualizacionIntegracionDto update(ActualizacionIntegracionDto model, EstadoIntegracionType estado,
+			List<ErrorIntegracionDto> errores);
 
 	@Transactional
 	void updateEstadoNotificacion(ActualizacionIntegracionDto model, List<ErrorIntegracionDto> errores,
 			EstadoNotificacionType ok, EstadoNotificacionType error);
+
 }

@@ -131,16 +131,19 @@ public class ActualizacionIntegracionCrudServiceImpl
 	}
 
 	@Override
-	public void updateEstadoIntegracion(ActualizacionIntegracionDto model, List<ErrorIntegracionDto> errores,
-			EstadoIntegracionType ok, EstadoIntegracionType error) {
-		if (errores.isEmpty()) {
-			model.setEstadoIntegracion(ok);
-		} else {
-			model.setEstadoIntegracion(error);
-		}
-		model.setEstadoNotificacion(EstadoNotificacionType.NOTIFICAR);
+	public ActualizacionIntegracionDto update(ActualizacionIntegracionDto model, EstadoIntegracionType estado,
+			List<ErrorIntegracionDto> errores) {
 
-		update(model, errores);
+		if (errores.isEmpty()) {
+			throw new RuntimeException(
+					"La colección de errores esta vacía. Se requiere de al menos un error para invoar este metodo");
+		}
+
+		getErroresService().create(errores);
+		model.setEstadoIntegracion(estado);
+		model.setEstadoNotificacion(EstadoNotificacionType.NOTIFICAR);
+		val result = update(model);
+		return result;
 	}
 
 	@Override
@@ -151,10 +154,9 @@ public class ActualizacionIntegracionCrudServiceImpl
 			// TODO ¿en este punto se debe programar una notificacion?
 		} else {
 			model.setEstadoNotificacion(error);
-			// TODO se debe hacer un manejo de re intento de notificacion en caso de error,
-			// esto se podria manejar mejor en las notificaciones
+			getErroresService().create(errores);
 		}
-
-		update(model, errores);
+		update(model);
 	}
+
 }

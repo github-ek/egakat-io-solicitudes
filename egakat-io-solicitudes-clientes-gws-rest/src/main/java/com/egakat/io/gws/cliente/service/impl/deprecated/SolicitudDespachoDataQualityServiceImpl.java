@@ -1,6 +1,5 @@
-package com.egakat.io.gws.deprecated.core.service.impl;
+package com.egakat.io.gws.cliente.service.impl.deprecated;
 
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.CORREGIDO;
 import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
 import static com.egakat.io.gws.configuration.constants.IntegracionesConstants.SOLICITUDES_SALIDAS;
 import static java.util.Arrays.asList;
@@ -14,32 +13,22 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.econnect.maestros.client.service.api.lookup.LookUpService;
 import com.egakat.integration.maps.client.service.api.MapaLocalService;
+import com.egakat.io.gws.cliente.service.api.deprecated.SolicitudDespachoDataQualityService;
+import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
-import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
 import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionCrudService;
 import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudService;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoLineaDto;
 import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoCrudService;
-import com.egakat.io.gws.deprecated.core.service.api.SolicitudDespachoDataQualityService;
 
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespachoDataQualityService {
-
-	protected static long MAPA_SERVICIO_CODIGO_ALTERNO = 200;
-	protected static long MAPA_CANAL_CODIGO_ALTERNO = 201;
-	protected static long MAPA_CIUDAD_CODIGO_ALTERNO = 209;
-	protected static long MAPA_BODEGA_CODIGO_ALTERNO = 202;
-	protected static long MAPA_ESTADO_INVENTARIO_CODIGO_ALTERNO = 203;
-
-	protected static List<EstadoIntegracionType> ESTADOS_REGISTROS = asList(ESTRUCTURA_VALIDA, CORREGIDO);
-
-	@Autowired
-	private SolicitudDespachoCrudService solicitudService;
-
 
 	@Autowired
 	private ActualizacionIntegracionCrudService actualizacionesService;
@@ -47,19 +36,38 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 	@Autowired
 	private ErrorIntegracionCrudService erroresService;
 
-	@Autowired
-	private MapaLocalService mapaLocalService;
+	protected ActualizacionIntegracionCrudService getActualizacionesService() {
+		return actualizacionesService;
+	}
+
+	protected ErrorIntegracionCrudService getErroresService() {
+		return erroresService;
+	}
 
 	@Autowired
-	private LookUpService lookUpService;
+	private SolicitudDespachoCrudService crudService;
+
+	protected SolicitudDespachoCrudService getCrudService() {
+		return crudService;
+	}
 
 	protected String getIntegracion() {
 		return SOLICITUDES_SALIDAS;
 	}
 
-	protected List<EstadoIntegracionType> getEstadosIntegracion() {
-		return ESTADOS_REGISTROS;
-	}
+	protected static List<EstadoIntegracionType> ESTADOS = asList(ESTRUCTURA_VALIDA);
+
+	protected static long MAPA_SERVICIO_CODIGO_ALTERNO = 200;
+	protected static long MAPA_CANAL_CODIGO_ALTERNO = 201;
+	protected static long MAPA_CIUDAD_CODIGO_ALTERNO = 209;
+	protected static long MAPA_BODEGA_CODIGO_ALTERNO = 202;
+	protected static long MAPA_ESTADO_INVENTARIO_CODIGO_ALTERNO = 203;
+
+	@Autowired
+	private MapaLocalService mapaLocalService;
+
+	@Autowired
+	private LookUpService lookUpService;
 
 	protected MapaLocalService getMapaService() {
 		return mapaLocalService;
@@ -69,75 +77,97 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		return lookUpService;
 	}
 
-	@Override
-	public void cacheEvict() {
-		getLookUpService().cacheEvict();
-	}
-
-	@Override
 	public List<String> getCorrelacionesPendientes() {
-		val result = actualizacionesService.findAllCorrelacionesByEstadoIntegracionIn(getEstadosIntegracion());
+		val result = getActualizacionesService().findAllCorrelacionesByEstadoIntegracionIn(ESTADOS);
 		return result;
 	}
 
 	@Override
-	public void transformar(String correlacion) {
-		val actualizaciones = actualizacionesService.findAllByEstadoIntegracionIn(getIntegracion(), ESTRUCTURA_VALIDA,
-				CORREGIDO);
+	public void validate() {
+		getLookUpService().cacheEvict();
 
-		for (val a : actualizaciones) {
-			val model = solicitudService.findOneByIntegracionAndIdExterno(a.getIntegracion(), a.getIdExterno());
+		val correlaciones = getCorrelacionesPendientes();
+		for (val correlacion : correlaciones) {
+			validate(correlacion);
+		}
+	}
+
+	protected void validate(String correlacion) {
+		val actualizaciones = actualizacionesService.findAllByEstadoIntegracionIn(getIntegracion(), ESTRUCTURA_VALIDA);
+
+		int i = 1;
+		int n = actualizaciones.size();
+		for (val actualizacion : actualizaciones) {
+			log(actualizacion, i, n);
 
 			val errores = new ArrayList<ErrorIntegracionDto>();
-			val entry = actualizacionesService.findOneByIntegracionAndIdExterno(model.getIntegracion(),
-					model.getIdExterno());
-			val lineas = model.getLineas();
 
-			transformar(model, lineas, errores);
-			if (errores.isEmpty()) {
-				validar(model, lineas, errores);
+			transformar(actualizacion, errores);
+
+			if (!errores.isEmpty()) {
+				onError(actualizacion, errores);
+				try {
+					getActualizacionesService().update(actualizacion, EstadoIntegracionType.ERROR_VALIDACION, errores);
+				} catch (Exception e) {
+					log.error("Exception:", e);
+				}
 			}
 
-			if (errores.isEmpty()) {
-				entry.setEstadoIntegracion(EstadoIntegracionType.VALIDADO);
-			} else {
-				entry.setEstadoIntegracion(EstadoIntegracionType.ERROR_VALIDACION);
-				entry.setEstadoNotificacion(EstadoNotificacionType.NOTIFICAR);
-			}
-
-			solicitudService.update(model);
-			actualizacionesService.update(entry);
-			erroresService.create(errores);
+			i++;
 		}
 	}
 
-	protected void transformar(SolicitudDespachoDto entry, List<SolicitudDespachoLineaDto> lineas,
-			List<ErrorIntegracionDto> errores) {
-		errores.clear();
-
+	protected void transformar(ActualizacionIntegracionDto actualizacion, List<ErrorIntegracionDto> errores) {
 		try {
+			val model = getCrudService().findOneByIntegracionAndIdExterno(actualizacion.getIntegracion(),
+					actualizacion.getIdExterno());
 
-			translateCliente(entry);
-			translateServicio(entry);
-			translateTercero(entry);
-			translateCanal(entry);
-			translateCiudad(entry);
-			translatePunto(entry);
+			transformar(model, errores);
 
-			lineas.parallelStream().forEach(linea -> {
-				translateProducto(entry, linea);
-				translateBodega(entry, linea);
-				translateEstadoInventario(entry, linea);
-			});
+			if (errores.isEmpty()) {
+				validate(model, errores);
+
+				if (errores.isEmpty()) {
+					onSuccess(actualizacion, model);
+					getCrudService().update(model, actualizacion, EstadoIntegracionType.VALIDADO);
+				} else {
+					getActualizacionesService().update(actualizacion, EstadoIntegracionType.ERROR_VALIDACION, errores);
+				}
+			}
 		} catch (RuntimeException e) {
-			errores.add(error(entry, e));
+			val error = getErroresService().error(actualizacion, "", e);
+			errores.add(error);
+			log.error("Exception:", e);
 		}
 	}
 
-	protected void validar(SolicitudDespachoDto entry, List<SolicitudDespachoLineaDto> lineas,
-			List<ErrorIntegracionDto> errores) {
+	protected void transformar(SolicitudDespachoDto model, List<ErrorIntegracionDto> errores) {
+		translateCliente(model);
+		translateServicio(model);
+		translateTercero(model);
+		translateCanal(model);
+		translateCiudad(model);
+		translatePunto(model);
+
+		model.getLineas().parallelStream().forEach(linea -> {
+			translateProducto(model, linea);
+			translateBodega(model, linea);
+			translateEstadoInventario(model, linea);
+		});
+	}
+
+	protected void onSuccess(ActualizacionIntegracionDto actualizacion, SolicitudDespachoDto model) {
+
+	}
+
+	protected void onError(ActualizacionIntegracionDto actualizacion, ArrayList<ErrorIntegracionDto> errores) {
+
+	}
+
+	protected void validate(SolicitudDespachoDto entry, List<ErrorIntegracionDto> errores) {
 		errores.clear();
 
+		List<SolicitudDespachoLineaDto> lineas = entry.getLineas();
 		if (entry.getIdCliente() == null) {
 			errores.add(errorAtributoNoHomologado(entry, "CLIENTE", entry.getClienteCodigoAlterno()));
 		}
@@ -305,7 +335,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		result[i++] = linea.getProductoCodigoAlterno();
 		result[i++] = linea.getProductoNombre();
 		result[i++] = String.valueOf(linea.getCantidad());
-		
+
 		for (val a : args) {
 			result[i++] = a;
 		}
@@ -359,4 +389,8 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		}
 	}
 
+	protected void log(ActualizacionIntegracionDto a, int i, int n) {
+		val format = "integracion={}, correlacion={}, id externo={}: {} de {}.";
+		log.debug(format, a.getIntegracion(), a.getCorrelacion(), a.getIdExterno(), i, n);
+	}
 }

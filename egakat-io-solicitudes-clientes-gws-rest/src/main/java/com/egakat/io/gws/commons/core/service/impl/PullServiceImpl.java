@@ -12,6 +12,7 @@ import com.egakat.core.web.client.configuration.RestProperties;
 import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.commons.core.dto.IntegrationEntityDto;
+import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
 import com.egakat.io.gws.commons.core.service.api.PullService;
 import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionCrudService;
 import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudService;
@@ -55,38 +56,40 @@ abstract public class PullServiceImpl<I, M extends IntegrationEntityDto> impleme
 	}
 
 	protected void enqueue(String correlacion, List<I> inputs) {
+
 		int i = 1;
 		int n = inputs.size();
-
 		for (val input : inputs) {
+			val model = asModel(correlacion, input);
+			val errores = new ArrayList<ErrorIntegracionDto>();
+			
+			log(model, i, n);
 			try {
-				val model = asModel(correlacion, input);
-
-				log(model, i, n);
-
-				val errores = new ArrayList<ErrorIntegracionDto>();
-
-				try {
-					validate(input, model, errores);
-					if (errores.isEmpty()) {
-						val discard = discard(input, model);
-						if (discard) {
-							onDiscarded(input, model);
-						} else {
-							onSuccess(input, model);
-							getActualizacionesService().enqueue(model);
-						}
+				validate(input, model, errores);
+				
+				if (errores.isEmpty()) {
+					val discard = discard(input, model);
+					
+					if (discard) {
+						onDiscarded(input, model);
+					} else {
+						onSuccess(input, model);
+						getActualizacionesService().enqueue(model);
 					}
-				} catch (RuntimeException e) {
-					errores.add(getErroresService().error(model, "", e));
-				}
-
-				if (errores.size() > 0) {
-					onError(input, model, errores);
-					getActualizacionesService().update(model, errores);
 				}
 			} catch (RuntimeException e) {
+				val error = getErroresService().error(model, "", e);
+				errores.add(error);
 				log.error("Exception:", e);
+			}
+
+			if (!errores.isEmpty()) {
+				onError(input, model, errores);
+				try {
+					getActualizacionesService().update(model, EstadoIntegracionType.ERROR_ESTRUCTURA, errores);
+				} catch (RuntimeException e) {
+					log.error("Exception:", e);
+				}
 			}
 
 			i++;
