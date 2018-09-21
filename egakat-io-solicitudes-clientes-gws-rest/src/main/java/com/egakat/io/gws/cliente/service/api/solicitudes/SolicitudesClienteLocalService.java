@@ -15,4 +15,6 @@ public interface SolicitudesClienteLocalService extends LocalQueryService<Solici
 	void aceptar(Integer id);
 
 	void rechazar(Integer id, List<ErrorIntegracionDto> errores);
+
+	void confirmarReciboDocumento(Integer id);
 }

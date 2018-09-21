@@ -22,7 +22,7 @@ import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoLineaDto;
 import com.egakat.io.gws.commons.solicitudes.service.api.SolicitudDespachoCrudService;
 import com.egakat.io.gws.configuration.constants.IntegracionesConstants;
 import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
-import com.egakat.io.gws.configuration.properties.SolicitudDespachoClienteRestProperties;
+import com.egakat.io.gws.configuration.properties.SolicitudesClienteRestProperties;
 
 import lombok.val;
 
@@ -34,7 +34,7 @@ public class SolicitudesDespachoDownloadServiceImpl
 	private SolicitudDespachoCrudService crudService;
 
 	@Autowired
-	private SolicitudDespachoClienteRestProperties properties;
+	private SolicitudesClienteRestProperties properties;
 
 	@Autowired
 	private RestClient restClient;
@@ -56,7 +56,7 @@ public class SolicitudesDespachoDownloadServiceImpl
 
 	@Override
 	protected String getIntegracion() {
-		return IntegracionesConstants.SOLICITUDES_SALIDAS;
+		return IntegracionesConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override
@@ -109,8 +109,6 @@ public class SolicitudesDespachoDownloadServiceImpl
 
 	@Override
 	protected SolicitudDespachoDto asModel(ActualizacionIntegracionDto actualizacion, SolicitudDespachoClienteDto input) {
-		val id = String.valueOf(input.getId());
-
 		val prefijo = defaultString(input.getPrefijo());
 		val numeroSolicitudSinPrefijo = String.valueOf(input.getNumeroSolicitudSinPrefijo());
 		val numeroSolicitud = String.format("%s-%s", prefijo, numeroSolicitudSinPrefijo);
@@ -124,8 +122,9 @@ public class SolicitudesDespachoDownloadServiceImpl
 		val model = new SolicitudDespachoDto();
 
 		model.setIntegracion(actualizacion.getIntegracion());
-		model.setIdExterno(id);
 		model.setCorrelacion(actualizacion.getCorrelacion());
+		model.setIdExterno(actualizacion.getIdExterno());
+		
 		model.setClienteCodigoAlterno(defaultString(input.getClienteCodigoAlterno()));
 		model.setServicioCodigoAlterno(defaultString(input.getServicioCodigoAlterno()));
 		model.setNumeroSolicitud(numeroSolicitud);

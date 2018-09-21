@@ -18,7 +18,7 @@ import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
 import com.egakat.io.gws.commons.solicitudes.service.api.SolicitudDespachoCrudService;
 import com.egakat.io.gws.configuration.constants.IntegracionesConstants;
 import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
-import com.egakat.io.gws.configuration.properties.SolicitudDespachoClienteRestProperties;
+import com.egakat.io.gws.configuration.properties.SolicitudesClienteRestProperties;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class SolicitudesDespachoPullServiceImpl extends PullServiceImpl<Integer,
 	private SolicitudDespachoCrudService crudService;
 
 	@Autowired
-	private SolicitudDespachoClienteRestProperties properties;
+	private SolicitudesClienteRestProperties properties;
 
 	@Autowired
 	private RestClient restClient;
@@ -54,7 +54,7 @@ public class SolicitudesDespachoPullServiceImpl extends PullServiceImpl<Integer,
 
 	@Override
 	protected String getIntegracion() {
-		return IntegracionesConstants.SOLICITUDES_SALIDAS;
+		return IntegracionesConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override

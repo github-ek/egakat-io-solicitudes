@@ -76,7 +76,7 @@ public class SolicitudesDespachoTask {
 
 	protected void ack() {
 		val entries = actualizacionesService.findAllNoNotificadasByEstadoIntegracionIn(
-				IntegracionesConstants.SOLICITUDES_SALIDAS, ESTRUCTURA_VALIDA);
+				IntegracionesConstants.SOLICITUDES_DESPACHO, ESTRUCTURA_VALIDA);
 
 		for (val entry : entries) {
 			try {
@@ -89,7 +89,7 @@ public class SolicitudesDespachoTask {
 
 	protected void reject() {
 		// @formatter:off
-		val entries = actualizacionesService.findAllNoNotificadasByEstadoIntegracionIn(IntegracionesConstants.SOLICITUDES_SALIDAS, 
+		val entries = actualizacionesService.findAllNoNotificadasByEstadoIntegracionIn(IntegracionesConstants.SOLICITUDES_DESPACHO, 
 		ERROR_ESTRUCTURA,
 	    ERROR_ENRIQUECIMIENTO,
 	    ERROR_HOMOLOGACION,
@@ -109,7 +109,7 @@ public class SolicitudesDespachoTask {
 
 	protected void accept() {
 		val entries = actualizacionesService
-				.findAllNoNotificadasByEstadoIntegracionIn(IntegracionesConstants.SOLICITUDES_SALIDAS, PROCESADO);
+				.findAllNoNotificadasByEstadoIntegracionIn(IntegracionesConstants.SOLICITUDES_DESPACHO, PROCESADO);
 
 		for (val entry : entries) {
 			try {

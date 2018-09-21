@@ -16,7 +16,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Validated
-public class SolicitudDespachoClienteRestProperties implements RestProperties {
+public class SolicitudesClienteRestProperties implements RestProperties {
 
 	private String basePath;
 }

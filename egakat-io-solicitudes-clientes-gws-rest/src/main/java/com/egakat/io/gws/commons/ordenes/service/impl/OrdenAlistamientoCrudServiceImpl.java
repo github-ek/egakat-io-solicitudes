@@ -49,7 +49,8 @@ public class OrdenAlistamientoCrudServiceImpl
 	protected OrdenAlistamientoDto asModel(OrdenAlistamiento entity) {
 		val model = new OrdenAlistamientoDto();
 
-		model.setIdOrden(entity.getId());
+		model.setId(entity.getId());
+		model.setIdOrden(entity.getIdOrden());
 		model.setIntegracion(entity.getIntegracion());
 		model.setIdExterno(entity.getIdExterno());
 		model.setCorrelacion(entity.getCorrelacion());
@@ -340,8 +341,7 @@ public class OrdenAlistamientoCrudServiceImpl
 
 			result = orden.getIdOrdenAlistamiento();
 		} catch (Exception e) {
-			val error = getErroresService().error(orden.getIntegracion(), orden.getIdExterno(), orden.getCorrelacion(),
-					"", e);
+			val error = getErroresService().error(ord, "", e);
 			errores.add(error);
 		}
 

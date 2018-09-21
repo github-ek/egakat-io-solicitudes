@@ -1,7 +1,7 @@
 package com.egakat.io.gws.cliente.service.impl.deprecated;
 
 import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
-import static com.egakat.io.gws.configuration.constants.IntegracionesConstants.SOLICITUDES_SALIDAS;
+import static com.egakat.io.gws.configuration.constants.IntegracionesConstants.SOLICITUDES_DESPACHO;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 	}
 
 	protected String getIntegracion() {
-		return SOLICITUDES_SALIDAS;
+		return SOLICITUDES_DESPACHO;
 	}
 
 	protected static List<EstadoIntegracionType> ESTADOS = asList(ESTRUCTURA_VALIDA);

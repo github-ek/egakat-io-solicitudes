@@ -13,9 +13,13 @@ public class Task {
 	@Autowired
 	private OrdenesAlistamientoTask ordenes;
 	
+	@Autowired
+	private DocumentosDespachoTask documentos;
+	
 	@Scheduled(cron = "${schedule.start}")
 	public void run() {
 		solicitudes.run();
 		ordenes.run();
+		documentos.run();
 	}
 }

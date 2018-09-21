@@ -27,16 +27,16 @@ public class DocumentoDespachoClienteDto extends EntityDto<Integer> {
 	public Long idSolicitud;
 
 	@JsonProperty("prefijoPedido")
-	public String prefijoPedido;
+	public String prefijo;
 
 	@JsonProperty("numeroPedido")
-	public String numeroPedido;
+	public String numeroSolicitudSinPrefijo;
 
 	@JsonProperty("prefijoFactura")
-	public String prefijoFactura;
+	public String prefijoDocumento;
 
 	@JsonProperty("numeroFactura")
-	public String numeroFactura;
+	public String numeroDocumentoSinPrefijo;
 
 	@JsonProperty("documentoLineas")
 	@Valid

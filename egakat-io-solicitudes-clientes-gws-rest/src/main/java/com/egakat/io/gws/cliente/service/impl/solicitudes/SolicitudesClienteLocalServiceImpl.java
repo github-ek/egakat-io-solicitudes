@@ -13,7 +13,7 @@ import com.egakat.io.gws.cliente.dto.SolicitudDespachoClienteDto;
 import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesClienteLocalService;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
-import com.egakat.io.gws.configuration.properties.SolicitudDespachoClienteRestProperties;
+import com.egakat.io.gws.configuration.properties.SolicitudesClienteRestProperties;
 
 import lombok.val;
 
@@ -22,7 +22,7 @@ public class SolicitudesClienteLocalServiceImpl extends LocalQueryServiceImpl<So
 		implements SolicitudesClienteLocalService {
 
 	@Autowired
-	private SolicitudDespachoClienteRestProperties properties;
+	private SolicitudesClienteRestProperties properties;
 
 	protected RestProperties getProperties() {
 		return properties;
@@ -67,5 +67,11 @@ public class SolicitudesClienteLocalServiceImpl extends LocalQueryServiceImpl<So
 	public void rechazar(Integer id, List<ErrorIntegracionDto> errores) {
 		val query = "/{id}?status={status}";
 		getRestClient().put(getResourcePath() + query, errores, Object.class, id, SolicitudEstadoConstants.RECHAZADA_OPL);
+	}
+	
+	@Override
+	public void confirmarReciboDocumento(Integer id) {
+		val query = "/{id}?status={status}";
+		getRestClient().put(getResourcePath() + query, "", Object.class, id, SolicitudEstadoConstants.DOC_RECIBIDO_OPL);
 	}
 }

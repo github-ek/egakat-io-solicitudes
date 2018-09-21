@@ -62,12 +62,12 @@ public class DocumentoSolicitudLinea extends SimpleAuditableEntity<Long> {
 	private int cantidad;
 
 	@Column(name = "bodega_codigo_alterno", length = 50)
-	@NotEmpty
+	@NotNull
 	@Size(max = 50)
 	private String bodegaCodigoAlterno;
 
 	@Column(name = "estado_inventario_codigo_alterno", length = 50)
-	@NotEmpty
+	@NotNull
 	@Size(max = 50)
 	private String estadoInventarioCodigoAlterno;
 

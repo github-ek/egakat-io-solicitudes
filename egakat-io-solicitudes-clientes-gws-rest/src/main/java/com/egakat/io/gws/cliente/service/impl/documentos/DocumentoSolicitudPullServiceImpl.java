@@ -9,36 +9,36 @@ import org.springframework.stereotype.Service;
 import com.egakat.core.web.client.components.RestClient;
 import com.egakat.core.web.client.configuration.RestProperties;
 import com.egakat.io.gws.cliente.configuration.constants.SolicitudEstadoConstants;
-import com.egakat.io.gws.cliente.service.api.documentos.DocumentoDespachoPullService;
+import com.egakat.io.gws.cliente.service.api.documentos.DocumentoSolicitudPullService;
 import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
 import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
 import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
 import com.egakat.io.gws.commons.core.service.impl.PullServiceImpl;
-import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
-import com.egakat.io.gws.commons.solicitudes.service.api.SolicitudDespachoCrudService;
+import com.egakat.io.gws.commons.documentos.dto.DocumentoSolicitudDto;
+import com.egakat.io.gws.commons.documentos.service.api.DocumentoSolicitudCrudService;
 import com.egakat.io.gws.configuration.constants.IntegracionesConstants;
 import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
-import com.egakat.io.gws.configuration.properties.SolicitudDespachoClienteRestProperties;
+import com.egakat.io.gws.configuration.properties.SolicitudesClienteRestProperties;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class DocumentoDespachoPullServiceImpl extends PullServiceImpl<Integer, SolicitudDespachoDto>
-		implements DocumentoDespachoPullService {
+public class DocumentoSolicitudPullServiceImpl extends PullServiceImpl<Integer, DocumentoSolicitudDto>
+		implements DocumentoSolicitudPullService {
 
 	@Autowired
-	private SolicitudDespachoCrudService crudService;
+	private DocumentoSolicitudCrudService crudService;
 
 	@Autowired
-	private SolicitudDespachoClienteRestProperties properties;
+	private SolicitudesClienteRestProperties properties;
 
 	@Autowired
 	private RestClient restClient;
 
 	@Override
-	protected SolicitudDespachoCrudService getCrudService() {
+	protected DocumentoSolicitudCrudService getCrudService() {
 		return crudService;
 	}
 
@@ -54,7 +54,7 @@ public class DocumentoDespachoPullServiceImpl extends PullServiceImpl<Integer, S
 
 	@Override
 	protected String getIntegracion() {
-		return IntegracionesConstants.SOLICITUDES_SALIDAS;
+		return IntegracionesConstants.DOCUMENTOS_SOLICITUDES_DESPACHO;
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class DocumentoDespachoPullServiceImpl extends PullServiceImpl<Integer, S
 	@Override
 	public void pull() {
 		val correlacion = defaultCorrelacion();
-		val status = SolicitudEstadoConstants.ENVIAR;
+		val status = SolicitudEstadoConstants.DOC_CREADO_SAP;
 
 		try {
 			val inputs = pull(status);
