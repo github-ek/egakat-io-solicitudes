@@ -163,12 +163,12 @@ public class SolicitudDespacho extends IntegrationEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "solicitud", cascade = CascadeType.ALL)
 	private List<SolicitudDespachoLinea> lineas = new ArrayList<>();
 
-	public void addLinea(SolicitudDespachoLinea item) {
+	public void add(SolicitudDespachoLinea item) {
 		lineas.add(item);
 		item.setSolicitud(this);
 	}
 
-	public void removeLinea(SolicitudDespachoLinea item) {
+	public void remove(SolicitudDespachoLinea item) {
 		lineas.remove(item);
 		item.setSolicitud(null);
 	}

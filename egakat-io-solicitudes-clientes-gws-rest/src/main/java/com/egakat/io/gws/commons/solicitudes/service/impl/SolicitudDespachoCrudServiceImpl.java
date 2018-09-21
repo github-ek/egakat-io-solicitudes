@@ -91,7 +91,6 @@ public class SolicitudDespachoCrudServiceImpl
 		val model = new SolicitudDespachoLineaDto();
 
 		model.setId(entity.getId());
-		model.setIdSolicitud(entity.getSolicitud().getId());
 		model.setNumeroLinea(entity.getNumeroLinea());
 		model.setNumeroLineaExterno(entity.getNumeroLineaExterno());
 		model.setNumeroSubLineaExterno(entity.getNumeroSubLineaExterno());
@@ -175,12 +174,12 @@ public class SolicitudDespachoCrudServiceImpl
 			}
 		});
 
-		deleted.stream().forEach(itemEntity -> entity.removeLinea(itemEntity));
+		deleted.stream().forEach(itemEntity -> entity.remove(itemEntity));
 
 		inserted.forEach(itemModel -> {
 			val itemEntity = new SolicitudDespachoLinea();
 			mergeItemEntity(itemModel, itemEntity);
-			entity.addLinea(itemEntity);
+			entity.add(itemEntity);
 		});
 	}
 

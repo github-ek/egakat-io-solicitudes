@@ -1,14 +1,15 @@
 package com.egakat.io.gws.cliente.dto;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.Valid;
 
 import com.egakat.core.dto.EntityDto;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -22,86 +23,36 @@ import lombok.ToString;
 @NoArgsConstructor
 public class DocumentoDespachoClienteDto extends EntityDto<Integer> {
 
-	private static final String DATE_FORMAT = "yyyy-MM-dd";
+	@JsonProperty("idSolicitud")
+	public Long idSolicitud;
 
-	private static final String TIME_FORMAT = "HH:mm";
+	@JsonProperty("prefijoPedido")
+	public String prefijoPedido;
 
-	@JsonProperty("codCliente")
-	@NotNull
-	@Size(max = 20)
-	private String clienteCodigoAlterno;
+	@JsonProperty("numeroPedido")
+	public String numeroPedido;
 
-	@JsonProperty("tipoServicio")
-	@NotNull
-	@Size(max = 50)
-	private String servicioCodigoAlterno;
+	@JsonProperty("prefijoFactura")
+	public String prefijoFactura;
 
-	@JsonProperty("seriesName")
-	@NotNull
-	@Size(max = 20)
-	private String prefijo;
+	@JsonProperty("numeroFactura")
+	public String numeroFactura;
 
-	@JsonProperty("docNum")
-	@NotNull
-	@Size(max = 20)
-	private String numeroSolicitudSinPrefijo;
+	@JsonProperty("documentoLineas")
+	@Valid
+	public List<DocumentoDespachoClienteLineaDto> lineas = null;
 
-	@JsonProperty("feMi")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
-	@NotNull
-	private LocalDate femi;
+	@JsonIgnore
+	@Valid
+	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-	@JsonProperty("feMa")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
-	@NotNull
-	private LocalDate fema;
+	@JsonAnyGetter
+	public Map<String, Object> getAdditionalProperties() {
+		return this.additionalProperties;
+	}
 
-	@JsonProperty("hoMi")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TIME_FORMAT)
-	private LocalTime homi;
-
-	@JsonProperty("hoMa")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TIME_FORMAT)
-	private LocalTime homa;
-
-	@JsonProperty("nit")
-	@NotNull
-	@Size(max = 20)
-	private String terceroIdentificacion;
-
-	@JsonProperty("razonSocial")
-	@NotNull
-	@Size(max = 100)
-	private String terceroNombre;
-
-	@JsonProperty("groupName")
-	@NotNull
-	@Size(max = 50)
-	private String canalCodigoAlterno;
-
-	@JsonProperty("codDane")
-	@NotNull
-	@Size(max = 50)
-	private String ciudadCodigoAlterno;
-
-	@NotNull
-	@Size(max = 150)
-	private String direccion;
-
-	@JsonProperty("shipToCode")
-	@NotNull
-	@Size(max = 50)
-	private String puntoCodigoAlterno;
-
-	@JsonProperty("numAtCard")
-	@NotNull
-	@Size(max = 20)
-	private String numeroOrdenCompra;
-
-	@JsonProperty("comments")
-	@NotNull
-	@Size(max = 200)
-	private String nota;
-
-	private List<SolicitudDespachoClienteLineaDto> lineas;
+	@JsonAnySetter
+	public void setAdditionalProperty(String name, Object value) {
+		this.additionalProperties.put(name, value);
+	}
 }

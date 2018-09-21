@@ -1,5 +1,6 @@
-package com.egakat.io.gws.commons.solicitudes.dto;
+package com.egakat.io.gws.commons.documentos.dto;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -16,10 +17,10 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class SolicitudDespachoLineaDto extends SimpleAuditableEntityDto<Long> {
-	
-	private int numeroLinea;
+public class DocumentoSolicitudLineaDto extends SimpleAuditableEntityDto<Long> {
 
+	private int numeroLinea;
+    
 	@NotNull
 	@Size(max = 50)
 	private String numeroLineaExterno;
@@ -28,7 +29,7 @@ public class SolicitudDespachoLineaDto extends SimpleAuditableEntityDto<Long> {
 	@Size(max = 50)
 	private String numeroSubLineaExterno;
 
-	@NotNull
+	@NotEmpty
 	@Size(max = 50)
 	private String productoCodigoAlterno;
 
@@ -38,28 +39,21 @@ public class SolicitudDespachoLineaDto extends SimpleAuditableEntityDto<Long> {
 
 	private int cantidad;
 
-	@NotNull
+	@NotEmpty
 	@Size(max = 50)
 	private String bodegaCodigoAlterno;
 
-	@NotNull
+	@NotEmpty
 	@Size(max = 50)
 	private String estadoInventarioCodigoAlterno;
 
 	@NotNull
 	@Size(max = 30)
 	private String lote;
-
-	@NotNull
-	@Size(max = 200)
-	private String predistribucion;
-
-	private Integer valorUnitarioDeclarado;
-
+	
 	private Long idProducto;
 
 	private Long idBodega;
 
-	@Size(max = 4)
 	private String idEstadoInventario;
 }

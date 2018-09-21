@@ -1,10 +1,16 @@
 package com.egakat.io.gws.cliente.dto;
 
-import javax.validation.constraints.NotEmpty;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.egakat.core.dto.EntityDto;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -23,31 +29,23 @@ public class DocumentoDespachoClienteLineaDto extends EntityDto<Integer> {
 	@Size(max = 50)
 	private String numeroLineaExterno;
 
-	@JsonProperty("subLineNum")
-	@NotNull
-	@Size(max = 50)
-	private String numeroSubLineaExterno;
-
 	@JsonProperty("itemCode")
-	@NotEmpty
-	@Size(max = 50)
-	private String productoCodigoAlterno;
-	
-	@JsonProperty("dscription")	
-	@NotNull
-	@Size(max = 50)
-	private String productoNombre;
+	public String productoCodigoAlterno;
 
-	@JsonProperty("quantityAsignada")	
-	private int cantidad;
+	@JsonProperty("quantity")
+	public Integer cantidad;
 
-	@JsonProperty("whsCode")	
-	@NotEmpty
-	@Size(max = 50)
-	private String bodegaCodigoAlterno;
+	@JsonIgnore
+	@Valid
+	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-	@NotNull
-	@Size(max = 200)
-	private String predistribucion;
-	
+	@JsonAnyGetter
+	public Map<String, Object> getAdditionalProperties() {
+		return this.additionalProperties;
+	}
+
+	@JsonAnySetter
+	public void setAdditionalProperty(String name, Object value) {
+		this.additionalProperties.put(name, value);
+	}
 }
