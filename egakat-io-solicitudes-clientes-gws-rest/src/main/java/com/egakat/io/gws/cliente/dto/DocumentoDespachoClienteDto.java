@@ -20,7 +20,7 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class SolicitudClienteDto extends EntityDto<Integer> {
+public class DocumentoDespachoClienteDto extends EntityDto<Integer> {
 
 	private static final String DATE_FORMAT = "yyyy-MM-dd";
 
@@ -103,5 +103,5 @@ public class SolicitudClienteDto extends EntityDto<Integer> {
 	@Size(max = 200)
 	private String nota;
 
-	private List<SolicitudClienteLineaDto> lineas;
+	private List<SolicitudDespachoClienteLineaDto> lineas;
 }

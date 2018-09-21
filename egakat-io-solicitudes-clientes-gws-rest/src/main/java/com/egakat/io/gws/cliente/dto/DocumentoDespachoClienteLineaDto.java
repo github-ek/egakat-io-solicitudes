@@ -16,7 +16,7 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class SolicitudClienteLineaDto extends EntityDto<Integer> {
+public class DocumentoDespachoClienteLineaDto extends EntityDto<Integer> {
 
 	@JsonProperty("lineNum")
 	@NotNull

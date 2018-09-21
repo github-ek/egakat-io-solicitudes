@@ -1,5 +1,5 @@
 
-package com.egakat.io.gws.ordenes.dto;
+package com.egakat.io.gws.cliente.dto;
 
 import java.util.List;
 

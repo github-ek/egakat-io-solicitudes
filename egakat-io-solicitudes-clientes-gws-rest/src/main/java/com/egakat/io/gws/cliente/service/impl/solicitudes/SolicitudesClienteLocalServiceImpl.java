@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.egakat.core.web.client.configuration.RestProperties;
 import com.egakat.core.web.client.service.impl.LocalQueryServiceImpl;
 import com.egakat.io.gws.cliente.configuration.constants.SolicitudEstadoConstants;
-import com.egakat.io.gws.cliente.dto.SolicitudClienteDto;
+import com.egakat.io.gws.cliente.dto.SolicitudDespachoClienteDto;
 import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesClienteLocalService;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
@@ -18,7 +18,7 @@ import com.egakat.io.gws.configuration.properties.SolicitudDespachoClienteRestPr
 import lombok.val;
 
 @Service
-public class SolicitudesClienteLocalServiceImpl extends LocalQueryServiceImpl<SolicitudClienteDto, Integer>
+public class SolicitudesClienteLocalServiceImpl extends LocalQueryServiceImpl<SolicitudDespachoClienteDto, Integer>
 		implements SolicitudesClienteLocalService {
 
 	@Autowired
@@ -34,13 +34,13 @@ public class SolicitudesClienteLocalServiceImpl extends LocalQueryServiceImpl<So
 	}
 
 	@Override
-	protected Class<SolicitudClienteDto> getResponseType() {
-		return SolicitudClienteDto.class;
+	protected Class<SolicitudDespachoClienteDto> getResponseType() {
+		return SolicitudDespachoClienteDto.class;
 	}
 
 	@Override
-	protected Class<SolicitudClienteDto[]> getArrayReponseType() {
-		return SolicitudClienteDto[].class;
+	protected Class<SolicitudDespachoClienteDto[]> getArrayReponseType() {
+		return SolicitudDespachoClienteDto[].class;
 	}
 
 	@Override

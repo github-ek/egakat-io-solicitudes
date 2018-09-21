@@ -9,6 +9,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
+import com.egakat.io.gws.cliente.dto.OrdenAlistamientoClienteCancelacionDto;
+import com.egakat.io.gws.cliente.dto.OrdenAlistamientoClienteDto;
+import com.egakat.io.gws.cliente.dto.OrdenAlistamientoClienteLineaDto;
+import com.egakat.io.gws.cliente.dto.OrdenAlistamientoClienteLoteDto;
+import com.egakat.io.gws.cliente.service.api.deprecated.OrdenAlistamientoClienteLocalService;
 import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
@@ -24,11 +29,6 @@ import com.egakat.io.gws.commons.ordenes.dto.OrdenAlistamientoLoteDto;
 import com.egakat.io.gws.commons.ordenes.repository.OrdenAlistamientoDummy;
 import com.egakat.io.gws.commons.ordenes.repository.OrdenAlistamientoRepository;
 import com.egakat.io.gws.commons.ordenes.service.api.OrdenAlistamientoCrudService;
-import com.egakat.io.gws.ordenes.dto.OrdenAlistamientoClienteCancelacionDto;
-import com.egakat.io.gws.ordenes.dto.OrdenAlistamientoClienteDto;
-import com.egakat.io.gws.ordenes.dto.OrdenAlistamientoClienteLineaDto;
-import com.egakat.io.gws.ordenes.dto.OrdenAlistamientoClienteLoteDto;
-import com.egakat.io.gws.ordenes.service.api.OrdenAlistamientoClienteLocalService;
 
 import lombok.val;
 

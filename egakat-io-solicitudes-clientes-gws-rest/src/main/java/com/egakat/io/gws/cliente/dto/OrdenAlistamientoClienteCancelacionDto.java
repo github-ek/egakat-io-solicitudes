@@ -1,4 +1,5 @@
-package com.egakat.io.gws.ordenes.dto;
+
+package com.egakat.io.gws.cliente.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,15 +16,11 @@ import lombok.ToString;
 @Builder
 @ToString
 @AllArgsConstructor
-public class OrdenAlistamientoClienteLoteDto {
+public class OrdenAlistamientoClienteCancelacionDto {
 
-    @JsonProperty("lote")
-    private String lote;
-
+    @JsonProperty("causalNoDespacho")
+    private String causal;
+    
     @JsonProperty("cantidad")
     private int cantidad;
-    
-    @JsonProperty("estadoOpl")
-    private String estadoInventario;
-
 }

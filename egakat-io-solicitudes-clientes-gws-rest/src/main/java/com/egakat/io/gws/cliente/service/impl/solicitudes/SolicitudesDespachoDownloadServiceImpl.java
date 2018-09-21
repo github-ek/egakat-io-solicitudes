@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.core.web.client.components.RestClient;
 import com.egakat.core.web.client.configuration.RestProperties;
-import com.egakat.io.gws.cliente.dto.SolicitudClienteDto;
-import com.egakat.io.gws.cliente.dto.SolicitudClienteLineaDto;
+import com.egakat.io.gws.cliente.dto.SolicitudDespachoClienteDto;
+import com.egakat.io.gws.cliente.dto.SolicitudDespachoClienteLineaDto;
 import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesDespachoDownloadService;
 import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
@@ -28,7 +28,7 @@ import lombok.val;
 
 @Service
 public class SolicitudesDespachoDownloadServiceImpl
-		extends DownloadServiceImpl<SolicitudClienteDto, SolicitudDespachoDto, String> implements SolicitudesDespachoDownloadService {
+		extends DownloadServiceImpl<SolicitudDespachoClienteDto, SolicitudDespachoDto, String> implements SolicitudesDespachoDownloadService {
 
 	@Autowired
 	private SolicitudDespachoCrudService crudService;
@@ -69,12 +69,12 @@ public class SolicitudesDespachoDownloadServiceImpl
 		return "/{id}";
 	}
 
-	protected Class<SolicitudClienteDto> getResponseType() {
-		return SolicitudClienteDto.class;
+	protected Class<SolicitudDespachoClienteDto> getResponseType() {
+		return SolicitudDespachoClienteDto.class;
 	}
 
 	@Override
-	protected SolicitudClienteDto getInput(ActualizacionIntegracionDto actualizacion,
+	protected SolicitudDespachoClienteDto getInput(ActualizacionIntegracionDto actualizacion,
 			List<ErrorIntegracionDto> errores) {
 		val url = getProperties().getBasePath() + getApiEndPoint();
 		val query = getQuery();
@@ -86,7 +86,7 @@ public class SolicitudesDespachoDownloadServiceImpl
 	}
 
 	@Override
-	protected void validate(ActualizacionIntegracionDto actualizacion, SolicitudClienteDto input,
+	protected void validate(ActualizacionIntegracionDto actualizacion, SolicitudDespachoClienteDto input,
 			List<ErrorIntegracionDto> errores) {
 		super.validate(actualizacion, input, errores);
 
@@ -108,7 +108,7 @@ public class SolicitudesDespachoDownloadServiceImpl
 	}
 
 	@Override
-	protected SolicitudDespachoDto asModel(ActualizacionIntegracionDto actualizacion, SolicitudClienteDto input) {
+	protected SolicitudDespachoDto asModel(ActualizacionIntegracionDto actualizacion, SolicitudDespachoClienteDto input) {
 		val id = String.valueOf(input.getId());
 
 		val prefijo = defaultString(input.getPrefijo());
@@ -155,7 +155,7 @@ public class SolicitudesDespachoDownloadServiceImpl
 		return model;
 	}
 
-	protected List<SolicitudDespachoLineaDto> asLineas(SolicitudClienteDto input) {
+	protected List<SolicitudDespachoLineaDto> asLineas(SolicitudDespachoClienteDto input) {
 		val result = new ArrayList<SolicitudDespachoLineaDto>();
 		int i = 0;
 		for (val e : input.getLineas()) {
@@ -165,7 +165,7 @@ public class SolicitudesDespachoDownloadServiceImpl
 		return result;
 	}
 
-	protected SolicitudDespachoLineaDto asLinea(int numeroLinea, SolicitudClienteLineaDto input) {
+	protected SolicitudDespachoLineaDto asLinea(int numeroLinea, SolicitudDespachoClienteLineaDto input) {
 		val model = new SolicitudDespachoLineaDto();
 
 		model.setNumeroLinea(numeroLinea);
