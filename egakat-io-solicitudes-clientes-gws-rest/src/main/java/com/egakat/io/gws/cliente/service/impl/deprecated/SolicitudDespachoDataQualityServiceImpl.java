@@ -21,7 +21,7 @@ import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionC
 import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudService;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoLineaDto;
-import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoCrudService;
+import com.egakat.io.gws.commons.solicitudes.service.api.SolicitudDespachoCrudService;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;

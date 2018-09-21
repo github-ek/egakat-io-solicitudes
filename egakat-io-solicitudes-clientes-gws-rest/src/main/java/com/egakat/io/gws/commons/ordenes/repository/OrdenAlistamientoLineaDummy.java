@@ -1,9 +1,8 @@
 package com.egakat.io.gws.commons.ordenes.repository;
 
-public interface OrdenAlistamientoLinea {
-
+public interface OrdenAlistamientoLineaDummy {
 	String getOrdlin();
-	
+
 	int getNumeroLinea();
 
 	String getNumeroLineaExterno();

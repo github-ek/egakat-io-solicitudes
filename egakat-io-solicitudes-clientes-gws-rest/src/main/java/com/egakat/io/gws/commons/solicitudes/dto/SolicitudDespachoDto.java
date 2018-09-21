@@ -11,7 +11,6 @@ import javax.validation.constraints.Size;
 import com.egakat.io.gws.commons.core.dto.IntegrationEntityDto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -107,56 +106,5 @@ public class SolicitudDespachoDto extends IntegrationEntityDto {
 	private LocalDateTime fechaCreacionExterna;
 
 	private List<SolicitudDespachoLineaDto> lineas;
-
-	@Builder
-	public SolicitudDespachoDto(Long id, int version, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
-			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String correlacion,
-			@NotNull @Size(max = 100) String idExterno, @NotNull @Size(max = 50) String clienteCodigoAlterno,
-			@NotNull @Size(max = 50) String servicioCodigoAlterno, @NotNull @Size(max = 20) String numeroSolicitud,
-			@NotNull @Size(max = 20) String prefijo, @NotNull @Size(max = 20) String numeroSolicitudSinPrefijo,
-			LocalDate femi, LocalDate fema, LocalTime homi, LocalTime homa, boolean requiereTransporte,
-			boolean requiereAgendamiento, boolean requiereDespacharCompleto,
-			@NotNull @Size(max = 20) String terceroIdentificacion, @NotNull @Size(max = 100) String terceroNombre,
-			@NotNull @Size(max = 50) String canalCodigoAlterno, @NotNull @Size(max = 50) String ciudadCodigoAlterno,
-			@NotNull @Size(max = 150) String direccion, @NotNull @Size(max = 50) String puntoCodigoAlterno,
-			@NotNull @Size(max = 100) String puntoNombre, @NotNull @Size(max = 20) String autorizadoIdentificacion,
-			@NotNull @Size(max = 100) String autorizadoNombres, @NotNull @Size(max = 20) String numeroOrdenCompra,
-			LocalDate fechaOrdenCompra, @NotNull @Size(max = 200) String nota, Long idCliente, Long idServicio,
-			Long idTercero, Long idCanal, Long idCiudad, Long idPunto, LocalDateTime fechaCreacionExterna,
-			List<SolicitudDespachoLineaDto> lineas) {
-		super(id, version, fechaCreacion, fechaModificacion, integracion, correlacion, idExterno);
-		this.clienteCodigoAlterno = clienteCodigoAlterno;
-		this.servicioCodigoAlterno = servicioCodigoAlterno;
-		this.numeroSolicitud = numeroSolicitud;
-		this.prefijo = prefijo;
-		this.numeroSolicitudSinPrefijo = numeroSolicitudSinPrefijo;
-		this.femi = femi;
-		this.fema = fema;
-		this.homi = homi;
-		this.homa = homa;
-		this.requiereTransporte = requiereTransporte;
-		this.requiereAgendamiento = requiereAgendamiento;
-		this.requiereDespacharCompleto = requiereDespacharCompleto;
-		this.terceroIdentificacion = terceroIdentificacion;
-		this.terceroNombre = terceroNombre;
-		this.canalCodigoAlterno = canalCodigoAlterno;
-		this.ciudadCodigoAlterno = ciudadCodigoAlterno;
-		this.direccion = direccion;
-		this.puntoCodigoAlterno = puntoCodigoAlterno;
-		this.puntoNombre = puntoNombre;
-		this.autorizadoIdentificacion = autorizadoIdentificacion;
-		this.autorizadoNombres = autorizadoNombres;
-		this.numeroOrdenCompra = numeroOrdenCompra;
-		this.fechaOrdenCompra = fechaOrdenCompra;
-		this.nota = nota;
-		this.idCliente = idCliente;
-		this.idServicio = idServicio;
-		this.idTercero = idTercero;
-		this.idCanal = idCanal;
-		this.idCiudad = idCiudad;
-		this.idPunto = idPunto;
-		this.fechaCreacionExterna = fechaCreacionExterna;
-		this.lineas = lineas;
-	}
 
 }

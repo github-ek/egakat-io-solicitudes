@@ -1,6 +1,6 @@
 package com.egakat.io.gws.commons.ordenes.repository;
 
-public interface OrdenAlistamiento {
+public interface OrdenAlistamientoDummy {
 	Long getId();
 
 	String getIntegracion();
@@ -8,6 +8,6 @@ public interface OrdenAlistamiento {
 	String getIdExterno();
 
 	String getCorrelacion();
-	
+
 	Long getIdOrdenAlistamiento();
 }

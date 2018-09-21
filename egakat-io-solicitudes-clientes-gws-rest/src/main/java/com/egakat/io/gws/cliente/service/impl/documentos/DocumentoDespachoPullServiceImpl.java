@@ -1,4 +1,4 @@
-package com.egakat.io.gws.cliente.service.impl;
+package com.egakat.io.gws.cliente.service.impl.documentos;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import com.egakat.core.web.client.components.RestClient;
 import com.egakat.core.web.client.configuration.RestProperties;
 import com.egakat.io.gws.cliente.configuration.constants.SolicitudEstadoConstants;
-import com.egakat.io.gws.cliente.service.api.SolicitudesDespachoPullService;
+import com.egakat.io.gws.cliente.service.api.documentos.DocumentoDespachoPullService;
 import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
 import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
 import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
 import com.egakat.io.gws.commons.core.service.impl.PullServiceImpl;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
-import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoCrudService;
+import com.egakat.io.gws.commons.solicitudes.service.api.SolicitudDespachoCrudService;
 import com.egakat.io.gws.configuration.constants.IntegracionesConstants;
 import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
 import com.egakat.io.gws.configuration.properties.SolicitudDespachoClienteRestProperties;
@@ -25,8 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class SolicitudesDespachoPullServiceImpl extends PullServiceImpl<Integer, SolicitudDespachoDto>
-		implements SolicitudesDespachoPullService {
+public class DocumentoDespachoPullServiceImpl extends PullServiceImpl<Integer, SolicitudDespachoDto>
+		implements DocumentoDespachoPullService {
 
 	@Autowired
 	private SolicitudDespachoCrudService crudService;

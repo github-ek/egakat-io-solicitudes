@@ -108,7 +108,7 @@ abstract public class PullServiceImpl<I, M extends IntegrationEntityDto> impleme
 			result = getActualizacionesService().exists(model.getIntegracion(), model.getIdExterno());
 		}
 
-		return false;
+		return result;
 	}
 
 	protected void onSuccess(I input, ActualizacionIntegracionDto model) {

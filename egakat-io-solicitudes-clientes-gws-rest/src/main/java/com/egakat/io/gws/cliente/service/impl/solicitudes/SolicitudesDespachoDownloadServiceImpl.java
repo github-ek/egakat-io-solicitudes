@@ -1,4 +1,4 @@
-package com.egakat.io.gws.cliente.service.impl;
+package com.egakat.io.gws.cliente.service.impl.solicitudes;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
@@ -13,13 +13,13 @@ import com.egakat.core.web.client.components.RestClient;
 import com.egakat.core.web.client.configuration.RestProperties;
 import com.egakat.io.gws.cliente.dto.SolicitudClienteDto;
 import com.egakat.io.gws.cliente.dto.SolicitudClienteLineaDto;
+import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesDespachoDownloadService;
 import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
-import com.egakat.io.gws.commons.core.service.api.DownloadService;
 import com.egakat.io.gws.commons.core.service.impl.DownloadServiceImpl;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoLineaDto;
-import com.egakat.io.gws.commons.solicitudes.service.api.crud.SolicitudDespachoCrudService;
+import com.egakat.io.gws.commons.solicitudes.service.api.SolicitudDespachoCrudService;
 import com.egakat.io.gws.configuration.constants.IntegracionesConstants;
 import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
 import com.egakat.io.gws.configuration.properties.SolicitudDespachoClienteRestProperties;
@@ -28,7 +28,7 @@ import lombok.val;
 
 @Service
 public class SolicitudesDespachoDownloadServiceImpl
-		extends DownloadServiceImpl<SolicitudClienteDto, SolicitudDespachoDto, String> implements DownloadService {
+		extends DownloadServiceImpl<SolicitudClienteDto, SolicitudDespachoDto, String> implements SolicitudesDespachoDownloadService {
 
 	@Autowired
 	private SolicitudDespachoCrudService crudService;
@@ -121,74 +121,66 @@ public class SolicitudesDespachoDownloadServiceImpl
 
 		val fechaCreacionExterna = LocalDateTime.now();
 
+		val model = new SolicitudDespachoDto();
+
+		model.setIntegracion(actualizacion.getIntegracion());
+		model.setIdExterno(id);
+		model.setCorrelacion(actualizacion.getCorrelacion());
+		model.setClienteCodigoAlterno(defaultString(input.getClienteCodigoAlterno()));
+		model.setServicioCodigoAlterno(defaultString(input.getServicioCodigoAlterno()));
+		model.setNumeroSolicitud(numeroSolicitud);
+		model.setPrefijo(prefijo);
+		model.setNumeroSolicitudSinPrefijo(numeroSolicitudSinPrefijo);
+		model.setFemi(input.getFemi());
+		model.setFema(input.getFema());
+		model.setHomi(input.getHomi());
+		model.setHoma(input.getHoma());
+		model.setRequiereTransporte(requiereTransporte);
+		model.setRequiereAgendamiento(requiereAgendamiento);
+		model.setRequiereDespacharCompleto(requiereDespacharCompleto);
+		model.setTerceroIdentificacion(defaultString(input.getTerceroIdentificacion()));
+		model.setTerceroNombre(defaultString(input.getTerceroNombre()));
+		model.setCanalCodigoAlterno(defaultString(input.getCanalCodigoAlterno()));
+		model.setCiudadCodigoAlterno(defaultString(input.getCiudadCodigoAlterno()));
+		model.setDireccion(defaultString(input.getDireccion()));
+		model.setPuntoCodigoAlterno(defaultString(input.getPuntoCodigoAlterno()));
+		model.setPuntoNombre("");
+		model.setAutorizadoIdentificacion("");
+		model.setAutorizadoNombres("");
+		model.setNumeroOrdenCompra(defaultString(input.getNumeroOrdenCompra()));
+		model.setNota(defaultString(input.getNota()));
+		model.setFechaCreacionExterna(fechaCreacionExterna);
+		model.setLineas(asLineas(input));
 		
-		val lineas = asLineas(input);
-
-		// @formatter:off
-		val result = SolicitudDespachoDto
-					.builder() 
-					.integracion(actualizacion.getIntegracion())
-					.idExterno(id)
-					.correlacion(actualizacion.getCorrelacion())
-					.clienteCodigoAlterno(defaultString(input.getClienteCodigoAlterno()))
-					.servicioCodigoAlterno(defaultString(input.getServicioCodigoAlterno()))
-					.numeroSolicitud(numeroSolicitud)
-					.prefijo(prefijo)
-					.numeroSolicitudSinPrefijo(numeroSolicitudSinPrefijo)
-					.femi(input.getFemi())
-					.fema(input.getFema())
-					.homi(input.getHomi())
-					.homa(input.getHoma())
-					.requiereTransporte(requiereTransporte)
-					.requiereAgendamiento(requiereAgendamiento)
-					.requiereDespacharCompleto(requiereDespacharCompleto)
-					.terceroIdentificacion(defaultString(input.getTerceroIdentificacion()))
-					.terceroNombre(defaultString(input.getTerceroNombre()))
-					.canalCodigoAlterno(defaultString(input.getCanalCodigoAlterno()))
-					.ciudadCodigoAlterno(defaultString(input.getCiudadCodigoAlterno()))
-					.direccion(defaultString(input.getDireccion()))
-					.puntoCodigoAlterno(defaultString(input.getPuntoCodigoAlterno()))
-					.puntoNombre("")
-					.autorizadoIdentificacion("")
-					.autorizadoNombres("")
-					.numeroOrdenCompra(defaultString(input.getNumeroOrdenCompra()))
-					.nota(defaultString(input.getNota()))
-					.fechaCreacionExterna(fechaCreacionExterna)
-					.lineas(lineas)
-					.build();
-			// @formatter:on
-
-		return result;
+		return model;
 	}
 
-	protected List<SolicitudDespachoLineaDto> asLineas(SolicitudClienteDto entity) {
-		val lineas = new ArrayList<SolicitudDespachoLineaDto>();
+	protected List<SolicitudDespachoLineaDto> asLineas(SolicitudClienteDto input) {
+		val result = new ArrayList<SolicitudDespachoLineaDto>();
 		int i = 0;
-		for (val external : entity.getLineas()) {
-			val model = asLinea(i++, external);
-			lineas.add(model);
+		for (val e : input.getLineas()) {
+			val model = asLinea(i++, e);
+			result.add(model);
 		}
-		return lineas;
+		return result;
 	}
 
-	protected SolicitudDespachoLineaDto asLinea(int numeroLinea, SolicitudClienteLineaDto external) {
-		// @formatter:off
-			val result = SolicitudDespachoLineaDto
-					.builder()
-					.numeroLinea(numeroLinea)
-					.numeroLineaExterno(external.getNumeroLineaExterno())
-					.numeroSubLineaExterno(external.getNumeroSubLineaExterno())
-					.productoCodigoAlterno(external.getProductoCodigoAlterno())
-					.productoNombre(external.getProductoNombre())
-					.cantidad(external.getCantidad())
-					.bodegaCodigoAlterno(external.getBodegaCodigoAlterno())
-					.estadoInventarioCodigoAlterno(external.getBodegaCodigoAlterno())
-					.lote("")
-					.predistribucion(external.getPredistribucion())
-					.valorUnitarioDeclarado(null)
-					.build();
-		// @formatter:on
-		return result;
+	protected SolicitudDespachoLineaDto asLinea(int numeroLinea, SolicitudClienteLineaDto input) {
+		val model = new SolicitudDespachoLineaDto();
+
+		model.setNumeroLinea(numeroLinea);
+		model.setNumeroLineaExterno(input.getNumeroLineaExterno());
+		model.setNumeroSubLineaExterno(input.getNumeroSubLineaExterno());
+		model.setProductoCodigoAlterno(input.getProductoCodigoAlterno());
+		model.setProductoNombre(input.getProductoNombre());
+		model.setCantidad(input.getCantidad());
+		model.setBodegaCodigoAlterno(input.getBodegaCodigoAlterno());
+		model.setEstadoInventarioCodigoAlterno(input.getBodegaCodigoAlterno());
+		model.setLote("");
+		model.setPredistribucion(input.getPredistribucion());
+		model.setValorUnitarioDeclarado(null);
+
+		return model;
 	}
 
 	protected ErrorIntegracionDto errorAtributoRequeridoNoSuministrado(ActualizacionIntegracionDto entry,

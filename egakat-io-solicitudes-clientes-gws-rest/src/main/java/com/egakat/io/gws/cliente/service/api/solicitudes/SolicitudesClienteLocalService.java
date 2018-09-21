@@ -1,4 +1,4 @@
-package com.egakat.io.gws.cliente.service.api;
+package com.egakat.io.gws.cliente.service.api.solicitudes;
 
 import java.util.List;
 

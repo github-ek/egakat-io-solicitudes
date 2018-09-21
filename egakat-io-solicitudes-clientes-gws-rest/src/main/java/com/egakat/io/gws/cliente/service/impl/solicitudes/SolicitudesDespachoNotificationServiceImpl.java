@@ -1,12 +1,12 @@
-package com.egakat.io.gws.cliente.service.impl;
+package com.egakat.io.gws.cliente.service.impl.solicitudes;
 
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.egakat.io.gws.cliente.service.api.NotificationService;
-import com.egakat.io.gws.cliente.service.api.SolicitudesClienteLocalService;
+import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesClienteLocalService;
+import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesDespachoNotificationService;
 import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
@@ -16,7 +16,7 @@ import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudServi
 import lombok.val;
 
 @Service
-public class NotificationServiceImpl implements NotificationService {
+public class SolicitudesDespachoNotificationServiceImpl implements SolicitudesDespachoNotificationService {
 
 	@Autowired
 	private SolicitudesClienteLocalService externalService;

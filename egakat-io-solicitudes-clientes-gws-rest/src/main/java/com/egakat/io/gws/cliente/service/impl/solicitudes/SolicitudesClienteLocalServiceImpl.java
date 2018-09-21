@@ -1,4 +1,4 @@
-package com.egakat.io.gws.cliente.service.impl;
+package com.egakat.io.gws.cliente.service.impl.solicitudes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,7 @@ import com.egakat.core.web.client.configuration.RestProperties;
 import com.egakat.core.web.client.service.impl.LocalQueryServiceImpl;
 import com.egakat.io.gws.cliente.configuration.constants.SolicitudEstadoConstants;
 import com.egakat.io.gws.cliente.dto.SolicitudClienteDto;
-import com.egakat.io.gws.cliente.service.api.SolicitudesClienteLocalService;
+import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesClienteLocalService;
 import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
 import com.egakat.io.gws.configuration.properties.SolicitudDespachoClienteRestProperties;
