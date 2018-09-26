@@ -10,7 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -141,31 +140,5 @@ public class ErrorIntegracionDto extends IntegrationEntityDto {
 			arg9 = "";
 		}
 		return arg9;
-	}
-
-	@Builder
-	public ErrorIntegracionDto(Long id, int version, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
-			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String correlacion,
-			@NotNull @Size(max = 100) String idExterno, @NotNull EstadoNotificacionType estadoNotificacion,
-			LocalDateTime fechaNotificacion, @NotNull @Size(max = 100) String codigo, @NotNull String mensaje,
-			@Size(max = 100) String arg0, @Size(max = 100) String arg1, @Size(max = 100) String arg2,
-			@Size(max = 100) String arg3, @Size(max = 100) String arg4, @Size(max = 100) String arg5,
-			@Size(max = 100) String arg6, @Size(max = 100) String arg7, @Size(max = 100) String arg8,
-			@Size(max = 100) String arg9) {
-		super(id, version, fechaCreacion, fechaModificacion, integracion, correlacion, idExterno);
-		this.estadoNotificacion = estadoNotificacion;
-		this.fechaNotificacion = fechaNotificacion;
-		this.codigo = codigo;
-		this.mensaje = mensaje;
-		this.arg0 = arg0;
-		this.arg1 = arg1;
-		this.arg2 = arg2;
-		this.arg3 = arg3;
-		this.arg4 = arg4;
-		this.arg5 = arg5;
-		this.arg6 = arg6;
-		this.arg7 = arg7;
-		this.arg8 = arg8;
-		this.arg9 = arg9;
 	}
 }

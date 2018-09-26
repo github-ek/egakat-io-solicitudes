@@ -19,9 +19,4 @@ public interface ActualizacionIntegracionRepository extends IntegrationEntityRep
 
 	@Query("SELECT DISTINCT a.correlacion FROM ActualizacionIntegracion a WHERE a.estadoIntegracion IN (:estados) ORDER BY a.correlacion")
 	List<String> findAllCorrelacionesByEstadoIntegracionIn(@Param("estados") List<EstadoIntegracionType> estados);
-
-	// Optional<ActualizacionIntegracion>
-	// findByIntegracionAndCorrelacionAndIdExterno(String integracion, String
-	// correlacion, String idExterno);
-
 }

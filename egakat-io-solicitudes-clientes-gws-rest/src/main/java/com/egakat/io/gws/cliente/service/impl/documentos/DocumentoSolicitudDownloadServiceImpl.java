@@ -27,7 +27,7 @@ import lombok.val;
 
 @Service
 public class DocumentoSolicitudDownloadServiceImpl
-		extends DownloadServiceImpl<DocumentoDespachoClienteDto, DocumentoSolicitudDto, String>
+		extends DownloadServiceImpl<DocumentoDespachoClienteDto, DocumentoSolicitudDto>
 		implements DocumentoSolicitudDownloadService {
 
 	@Autowired
@@ -86,15 +86,8 @@ public class DocumentoSolicitudDownloadServiceImpl
 	}
 
 	@Override
-	protected void validate(ActualizacionIntegracionDto actualizacion, DocumentoDespachoClienteDto input,
-			List<ErrorIntegracionDto> errores) {
-		super.validate(actualizacion, input, errores);
-
-	}
-
-	@Override
-	protected DocumentoSolicitudDto asModel(ActualizacionIntegracionDto actualizacion,
-			DocumentoDespachoClienteDto input) {
+	protected DocumentoSolicitudDto asModel(DocumentoDespachoClienteDto input,
+			ActualizacionIntegracionDto actualizacion) {
 
 		val prefijo = defaultString(input.getPrefijo());
 		val numeroSolicitudSinPrefijo = String.valueOf(input.getNumeroSolicitudSinPrefijo());

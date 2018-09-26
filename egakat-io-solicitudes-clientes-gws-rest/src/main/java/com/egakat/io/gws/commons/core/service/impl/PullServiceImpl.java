@@ -16,7 +16,7 @@ import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
 import com.egakat.io.gws.commons.core.service.api.PullService;
 import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionCrudService;
 import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudService;
-import com.egakat.io.gws.commons.core.service.api.crud.IntegracionEntityCrudService;
+import com.egakat.io.gws.commons.core.service.api.crud.ExtendedIntegracionEntityCrudService;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -38,17 +38,17 @@ abstract public class PullServiceImpl<I, M extends IntegrationEntityDto> impleme
 		return erroresService;
 	}
 
-	abstract protected IntegracionEntityCrudService<M> getCrudService();
+	abstract protected ExtendedIntegracionEntityCrudService<M> getCrudService();
 
 	abstract protected RestProperties getProperties();
 
 	abstract protected RestClient getRestClient();
 
-	abstract protected String getIntegracion();
-
 	abstract protected String getApiEndPoint();
 
 	abstract protected String getQuery();
+
+	abstract protected String getIntegracion();
 
 	protected String defaultCorrelacion() {
 		val result = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
@@ -56,43 +56,47 @@ abstract public class PullServiceImpl<I, M extends IntegrationEntityDto> impleme
 	}
 
 	protected void enqueue(String correlacion, List<I> inputs) {
-
 		int i = 1;
 		int n = inputs.size();
 		for (val input : inputs) {
-			val model = asModel(correlacion, input);
+
 			val errores = new ArrayList<ErrorIntegracionDto>();
-			
-			log(model, i, n);
-			try {
-				validate(input, model, errores);
-				
-				if (errores.isEmpty()) {
-					val discard = discard(input, model);
-					
-					if (discard) {
-						onDiscarded(input, model);
-					} else {
-						onSuccess(input, model);
-						getActualizacionesService().enqueue(model);
-					}
-				}
-			} catch (RuntimeException e) {
-				val error = getErroresService().error(model, "", e);
-				errores.add(error);
-				log.error("Exception:", e);
-			}
+			val actualizacion = asModel(correlacion, input);
+			log(actualizacion, i, n);
+
+			enqueue(input, actualizacion, errores);
 
 			if (!errores.isEmpty()) {
-				onError(input, model, errores);
+				onError(input, actualizacion, errores);
 				try {
-					getActualizacionesService().update(model, EstadoIntegracionType.ERROR_ESTRUCTURA, errores);
+					getActualizacionesService().update(actualizacion, EstadoIntegracionType.ERROR_ESTRUCTURA, errores);
 				} catch (RuntimeException e) {
 					log.error("Exception:", e);
 				}
 			}
 
 			i++;
+		}
+	}
+
+	protected void enqueue(I input, ActualizacionIntegracionDto actualizacion, List<ErrorIntegracionDto> errores) {
+		try {
+			validate(input, actualizacion, errores);
+
+			if (errores.isEmpty()) {
+				val discard = discard(input, actualizacion);
+
+				if (!discard) {
+					onSuccess(input, actualizacion);
+					getActualizacionesService().enqueue(actualizacion);
+				} else {
+					onDiscarded(input, actualizacion);
+				}
+			}
+		} catch (RuntimeException e) {
+			val error = getErroresService().error(actualizacion, "", e);
+			errores.add(error);
+			log.error("Exception:", e);
 		}
 	}
 
@@ -107,7 +111,6 @@ abstract public class PullServiceImpl<I, M extends IntegrationEntityDto> impleme
 		if (!result) {
 			result = getActualizacionesService().exists(model.getIntegracion(), model.getIdExterno());
 		}
-
 		return result;
 	}
 

@@ -28,7 +28,8 @@ import lombok.val;
 
 @Service
 public class SolicitudesDespachoDownloadServiceImpl
-		extends DownloadServiceImpl<SolicitudDespachoClienteDto, SolicitudDespachoDto, String> implements SolicitudesDespachoDownloadService {
+		extends DownloadServiceImpl<SolicitudDespachoClienteDto, SolicitudDespachoDto>
+		implements SolicitudesDespachoDownloadService {
 
 	@Autowired
 	private SolicitudDespachoCrudService crudService;
@@ -86,9 +87,9 @@ public class SolicitudesDespachoDownloadServiceImpl
 	}
 
 	@Override
-	protected void validate(ActualizacionIntegracionDto actualizacion, SolicitudDespachoClienteDto input,
+	protected void validate(SolicitudDespachoClienteDto input, ActualizacionIntegracionDto actualizacion,
 			List<ErrorIntegracionDto> errores) {
-		super.validate(actualizacion, input, errores);
+		super.validate(input, actualizacion, errores);
 
 		if (input.getFemi() == null) {
 			errores.add(errorAtributoRequeridoNoSuministrado(actualizacion, "femi"));
@@ -108,7 +109,8 @@ public class SolicitudesDespachoDownloadServiceImpl
 	}
 
 	@Override
-	protected SolicitudDespachoDto asModel(ActualizacionIntegracionDto actualizacion, SolicitudDespachoClienteDto input) {
+	protected SolicitudDespachoDto asModel(SolicitudDespachoClienteDto input,
+			ActualizacionIntegracionDto actualizacion) {
 		val prefijo = defaultString(input.getPrefijo());
 		val numeroSolicitudSinPrefijo = String.valueOf(input.getNumeroSolicitudSinPrefijo());
 		val numeroSolicitud = String.format("%s-%s", prefijo, numeroSolicitudSinPrefijo);
@@ -124,7 +126,7 @@ public class SolicitudesDespachoDownloadServiceImpl
 		model.setIntegracion(actualizacion.getIntegracion());
 		model.setCorrelacion(actualizacion.getCorrelacion());
 		model.setIdExterno(actualizacion.getIdExterno());
-		
+
 		model.setClienteCodigoAlterno(defaultString(input.getClienteCodigoAlterno()));
 		model.setServicioCodigoAlterno(defaultString(input.getServicioCodigoAlterno()));
 		model.setNumeroSolicitud(numeroSolicitud);
@@ -150,7 +152,7 @@ public class SolicitudesDespachoDownloadServiceImpl
 		model.setNota(defaultString(input.getNota()));
 		model.setFechaCreacionExterna(fechaCreacionExterna);
 		model.setLineas(asLineas(input));
-		
+
 		return model;
 	}
 

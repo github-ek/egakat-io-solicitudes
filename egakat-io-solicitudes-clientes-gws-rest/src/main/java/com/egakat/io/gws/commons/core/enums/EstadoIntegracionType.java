@@ -18,6 +18,19 @@ public enum EstadoIntegracionType {
     ERROR_CARGUE,
     PROCESADO,
 
-    DETENIDO,
+    DETENIDO;
 	// @formatter:on
+
+	public boolean isError() {
+		switch (this) {
+		case ERROR_ESTRUCTURA:
+		case ERROR_ENRIQUECIMIENTO:
+		case ERROR_HOMOLOGACION:
+		case ERROR_VALIDACION:
+		case ERROR_CARGUE:
+			return true;
+		default:
+			return false;
+		}
+	}
 }

@@ -23,7 +23,7 @@ import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-abstract public class DownloadServiceImpl<I, M extends IntegrationEntityDto, S> implements DownloadService {
+abstract public class DownloadServiceImpl<I, M extends IntegrationEntityDto> implements DownloadService {
 
 	@Autowired
 	private ActualizacionIntegracionCrudService actualizacionesService;
@@ -39,7 +39,7 @@ abstract public class DownloadServiceImpl<I, M extends IntegrationEntityDto, S> 
 		return erroresService;
 	}
 
-	abstract protected ExtendedIntegracionEntityCrudService<M, S> getCrudService();
+	abstract protected ExtendedIntegracionEntityCrudService<M> getCrudService();
 
 	abstract protected RestProperties getProperties();
 
@@ -69,7 +69,7 @@ abstract public class DownloadServiceImpl<I, M extends IntegrationEntityDto, S> 
 				onError(actualizacion, errores);
 				try {
 					getActualizacionesService().update(actualizacion, EstadoIntegracionType.ERROR_ESTRUCTURA, errores);
-				} catch (Exception e) {
+				} catch (RuntimeException e) {
 					log.error("Exception:", e);
 				}
 			}
@@ -83,11 +83,11 @@ abstract public class DownloadServiceImpl<I, M extends IntegrationEntityDto, S> 
 			val input = getInput(actualizacion, errores);
 
 			if (errores.isEmpty()) {
-				validate(actualizacion, input, errores);
+				validate(input, actualizacion, errores);
 
 				if (errores.isEmpty()) {
-					val model = asModel(actualizacion, input);
-					onSuccess(actualizacion, input, model);
+					val model = asModel(input, actualizacion);
+					onSuccess(input, model, actualizacion);
 					getCrudService().create(model, actualizacion, EstadoIntegracionType.ESTRUCTURA_VALIDA);
 				}
 			}
@@ -100,21 +100,21 @@ abstract public class DownloadServiceImpl<I, M extends IntegrationEntityDto, S> 
 
 	abstract protected I getInput(ActualizacionIntegracionDto actualizacion, List<ErrorIntegracionDto> errores);
 
-	protected void validate(ActualizacionIntegracionDto actualizacion, I input, List<ErrorIntegracionDto> errores) {
+	protected void validate(I input, ActualizacionIntegracionDto actualizacion, List<ErrorIntegracionDto> errores) {
 
 	}
 
-	abstract protected M asModel(ActualizacionIntegracionDto actualizacion, I input);
+	abstract protected M asModel(I input, ActualizacionIntegracionDto actualizacion);
 
-	protected void onSuccess(ActualizacionIntegracionDto actualizacion, I input, M model) {
-
-	}
-
-	protected void onError(ActualizacionIntegracionDto actualizacion, ArrayList<ErrorIntegracionDto> errores) {
+	protected void onSuccess(I input, M model, ActualizacionIntegracionDto actualizacion) {
 
 	}
 
-	protected void log(ActualizacionIntegracionDto a, int i, int n) {
+	protected void onError(ActualizacionIntegracionDto actualizacion, List<ErrorIntegracionDto> errores) {
+
+	}
+
+	private void log(ActualizacionIntegracionDto a, int i, int n) {
 		val format = "integracion={}, correlacion={}, id externo={}: {} de {}.";
 		log.debug(format, a.getIntegracion(), a.getCorrelacion(), a.getIdExterno(), i, n);
 	}
@@ -123,5 +123,4 @@ abstract public class DownloadServiceImpl<I, M extends IntegrationEntityDto, S> 
 		val result = left(defaultString(str), len);
 		return result;
 	}
-
 }
