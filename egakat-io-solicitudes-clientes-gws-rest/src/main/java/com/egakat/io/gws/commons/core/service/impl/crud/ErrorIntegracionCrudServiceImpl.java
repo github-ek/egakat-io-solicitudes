@@ -167,27 +167,25 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 			String mensaje, String... arg) {
 		val argumentos = normalizarArgumentos(arg);
 
-		// @formatter:off
-		val result = ErrorIntegracionDto
-				.builder()
-				.integracion(integracion)
-				.correlacion(correlacion)
-				.idExterno(idExterno)
-				.estadoNotificacion(EstadoNotificacionType.NOTIFICAR)
-				.codigo(left(codigo, 100))
-				.mensaje(mensaje)
-				.arg0(argumentos[0])
-				.arg1(argumentos[1])
-				.arg2(argumentos[2])
-				.arg3(argumentos[3])
-				.arg4(argumentos[4])
-				.arg5(argumentos[5])
-				.arg6(argumentos[6])
-				.arg7(argumentos[7])
-				.arg8(argumentos[8])
-				.arg9(argumentos[9])				
-				.build();
-		// @formatter:on
+		val result = new ErrorIntegracionDto();
+
+		result.setIntegracion(integracion);
+		result.setCorrelacion(correlacion);
+		result.setIdExterno(idExterno);
+		result.setEstadoNotificacion(EstadoNotificacionType.NOTIFICAR);
+		result.setCodigo(left(codigo, 100));
+		result.setMensaje(mensaje);
+		result.setArg0(argumentos[0]);
+		result.setArg1(argumentos[1]);
+		result.setArg2(argumentos[2]);
+		result.setArg3(argumentos[3]);
+		result.setArg4(argumentos[4]);
+		result.setArg5(argumentos[5]);
+		result.setArg6(argumentos[6]);
+		result.setArg7(argumentos[7]);
+		result.setArg8(argumentos[8]);
+		result.setArg9(argumentos[9]);
+
 		return result;
 	}
 
