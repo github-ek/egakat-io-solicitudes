@@ -35,11 +35,12 @@ public class SolicitudesDespachoNotificationServiceImpl implements SolicitudesDe
 			val id = Integer.parseInt(entry.getIdExterno());
 			externalService.confirmarRecibo(id);
 		} catch (RuntimeException e) {
-			val error = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), "", e);
+			val error = erroresService.error(entry, "", e);
 			errores.add(error);
 		}
 
-		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA, EstadoNotificacionType.ERROR);
+		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA,
+				EstadoNotificacionType.ERROR);
 	}
 
 	@Override
@@ -48,15 +49,15 @@ public class SolicitudesDespachoNotificationServiceImpl implements SolicitudesDe
 
 		try {
 			val id = Integer.parseInt(entry.getIdExterno());
-			val list = erroresService.findAllByIntegracionAndIdExternoAndCorrelacion(entry.getIntegracion(),
-					entry.getIdExterno(), entry.getCorrelacion());
+			val list = erroresService.findAll(entry);
 			externalService.rechazar(id, list);
 		} catch (RuntimeException e) {
-			val error = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), "", e);
+			val error = erroresService.error(entry, "", e);
 			errores.add(error);
 		}
 
-		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA, EstadoNotificacionType.ERROR);
+		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA,
+				EstadoNotificacionType.ERROR);
 	}
 
 	@Override
@@ -67,10 +68,11 @@ public class SolicitudesDespachoNotificationServiceImpl implements SolicitudesDe
 			val id = Integer.parseInt(entry.getIdExterno());
 			externalService.aceptar(id);
 		} catch (RuntimeException e) {
-			val error = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), "", e);
+			val error = erroresService.error(entry, "", e);
 			errores.add(error);
 		}
 
-		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA, EstadoNotificacionType.ERROR);
+		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA,
+				EstadoNotificacionType.ERROR);
 	}
 }

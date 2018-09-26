@@ -36,12 +36,13 @@ public class DocumentoSolicitudNotificationServiceImpl implements DocumentoSolic
 			val id = Integer.parseInt(entry.getIdExterno());
 			externalService.confirmarReciboDocumento(id);
 		} catch (RuntimeException e) {
-			val error = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), "", e);
+			val error = erroresService.error(entry, "", e);
 			errores.add(error);
 		}
 
 		entry.setEstadoIntegracion(EstadoIntegracionType.PROCESADO);
-		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA, EstadoNotificacionType.ERROR);
+		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA,
+				EstadoNotificacionType.ERROR);
 	}
 
 	@Override
@@ -50,15 +51,15 @@ public class DocumentoSolicitudNotificationServiceImpl implements DocumentoSolic
 
 		try {
 			val id = Integer.parseInt(entry.getIdExterno());
-			val list = erroresService.findAllByIntegracionAndIdExternoAndCorrelacion(entry.getIntegracion(),
-					entry.getIdExterno(), entry.getCorrelacion());
+			val list = erroresService.findAll(entry);
 			externalService.rechazar(id, list);
 		} catch (RuntimeException e) {
-			val error = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), "", e);
+			val error = erroresService.error(entry, "", e);
 			errores.add(error);
 		}
 
-		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA, EstadoNotificacionType.ERROR);
+		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA,
+				EstadoNotificacionType.ERROR);
 	}
 
 	@Override
@@ -73,6 +74,7 @@ public class DocumentoSolicitudNotificationServiceImpl implements DocumentoSolic
 //			errores.add(error);
 //		}
 
-		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA, EstadoNotificacionType.ERROR);
+		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA,
+				EstadoNotificacionType.ERROR);
 	}
 }

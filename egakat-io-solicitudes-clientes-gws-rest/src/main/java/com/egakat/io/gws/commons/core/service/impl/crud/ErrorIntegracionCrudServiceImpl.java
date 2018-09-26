@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientResponseException;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import com.egakat.core.services.crud.impl.CrudServiceImpl;
 import com.egakat.io.gws.commons.core.domain.ErrorIntegracion;
@@ -39,10 +39,13 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 		model.setIntegracion(entity.getIntegracion());
 		model.setCorrelacion(entity.getCorrelacion());
 		model.setIdExterno(entity.getIdExterno());
+
 		model.setEstadoNotificacion(entity.getEstadoNotificacion());
 		model.setFechaNotificacion(entity.getFechaNotificacion());
+
 		model.setCodigo(entity.getCodigo());
 		model.setMensaje(entity.getMensaje());
+
 		model.setArg0(entity.getArg0());
 		model.setArg1(entity.getArg1());
 		model.setArg2(entity.getArg2());
@@ -53,6 +56,7 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 		model.setArg7(entity.getArg7());
 		model.setArg8(entity.getArg8());
 		model.setArg9(entity.getArg9());
+
 		model.setVersion(entity.getVersion());
 		model.setFechaCreacion(entity.getFechaCreacion());
 		model.setFechaModificacion(entity.getFechaModificacion());
@@ -66,10 +70,13 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 		entity.setIntegracion(model.getIntegracion());
 		entity.setCorrelacion(model.getCorrelacion());
 		entity.setIdExterno(model.getIdExterno());
+
 		entity.setEstadoNotificacion(model.getEstadoNotificacion());
 		entity.setFechaNotificacion(model.getFechaNotificacion());
+
 		entity.setCodigo(model.getCodigo());
 		entity.setMensaje(model.getMensaje());
+
 		entity.setArg0(model.getArg0());
 		entity.setArg1(model.getArg1());
 		entity.setArg2(model.getArg2());
@@ -90,10 +97,9 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 	}
 
 	@Override
-	public List<ErrorIntegracionDto> findAllByIntegracionAndIdExternoAndCorrelacion(String integracion,
-			String idExterno, String correlacion) {
-		val entities = getRepository().findAllByIntegracionAndIdExternoAndCorrelacion(integracion, idExterno,
-				correlacion);
+	public List<ErrorIntegracionDto> findAll(IntegrationEntityDto model) {
+		val entities = getRepository().findAllByIntegracionAndIdExternoAndCorrelacion(model.getIntegracion(),
+				model.getIdExterno(), model.getCorrelacion());
 		val result = asModels(entities);
 		return result;
 	}
@@ -107,7 +113,57 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 	}
 
 	@Override
-	public ErrorIntegracionDto error(String integracion, String correlacion, String idExterno, String codigo,
+	public void create(String integracion, String correlacion, String codigo, String mensaje, String... arg) {
+		val error = error(integracion, correlacion, "", codigo, mensaje, arg);
+		create(error);
+	}
+
+	@Override
+	public void create(String integracion, String correlacion, String codigo, Throwable t) {
+		val error = error(integracion, correlacion, "", codigo, t);
+		create(error);
+	}
+
+	@Override
+	public void create(IntegrationEntityDto model, String codigo, String mensaje, String... arg) {
+		val error = error(model, codigo, mensaje, arg);
+		create(error);
+	}
+
+	@Override
+	public void create(IntegrationEntityDto model, String codigo, Throwable t) {
+		val error = error(model, codigo, t);
+		create(error);
+	}
+
+	@Override
+	public ErrorIntegracionDto error(IntegrationEntityDto model, String codigo, String mensaje, String... arg) {
+		val result = error(model.getIntegracion(), model.getCorrelacion(), model.getIdExterno(), codigo, mensaje, arg);
+		return result;
+	}
+
+	@Override
+	public ErrorIntegracionDto error(IntegrationEntityDto model, String codigo, Throwable t) {
+		val result = error(model.getIntegracion(), model.getCorrelacion(), model.getIdExterno(), codigo, t);
+		return result;
+	}
+
+	protected ErrorIntegracionDto error(String integracion, String correlacion, String idExterno, String codigo,
+			Throwable t) {
+		String c = isEmpty(codigo) ? t.getClass().getName() : codigo;
+		String msg = t.getMessage();
+
+		if (t instanceof HttpStatusCodeException) {
+			val e = (HttpStatusCodeException) t;
+			c = e.getStatusCode().toString();
+			msg = e.getResponseBodyAsString();
+		}
+
+		val result = error(integracion, correlacion, idExterno, c, msg);
+		return result;
+	}
+
+	protected ErrorIntegracionDto error(String integracion, String correlacion, String idExterno, String codigo,
 			String mensaje, String... arg) {
 		val argumentos = normalizarArgumentos(arg);
 
@@ -135,57 +191,6 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 		return result;
 	}
 
-	@Override
-	public ErrorIntegracionDto error(IntegrationEntityDto model, String codigo, String mensaje, String... arg) {
-		val result = error(model.getIntegracion(), model.getCorrelacion(), model.getIdExterno(), codigo, mensaje, arg);
-		return result;
-	}
-
-	@Override
-	public ErrorIntegracionDto error(String integracion, String correlacion, String idExterno, String codigo,
-			Throwable t) {
-		val c = isEmpty(codigo) ? t.getClass().getName() : codigo;
-		String msg = t.getMessage();
-		if (t instanceof RestClientResponseException) {
-			msg = ((RestClientResponseException) t).getResponseBodyAsString();
-		}
-		val result = error(integracion, correlacion, idExterno, c, msg);
-		return result;
-	}
-
-	@Override
-	public ErrorIntegracionDto error(IntegrationEntityDto model, String codigo, Throwable t) {
-		val result = error(model.getIntegracion(), model.getCorrelacion(), model.getIdExterno(), codigo, t);
-		return result;
-	}
-
-	@Override
-	public void create(String integracion, String correlacion, String idExterno, String codigo, String mensaje,
-			String... arg) {
-		val model = error(integracion, correlacion, idExterno, codigo, mensaje, arg);
-		create(model);
-	}
-
-	@Override
-	public void create(IntegrationEntityDto model, String codigo, String mensaje, String... arg) {
-		create(model.getIntegracion(), model.getCorrelacion(), model.getIdExterno(), codigo, mensaje, arg);
-	}
-
-	@Override
-	public void create(String integracion, String correlacion, String idExterno, String codigo, Throwable t) {
-		val c = isEmpty(codigo) ? t.getClass().getName() : codigo;
-		String msg = t.getMessage();
-		if (t instanceof RestClientResponseException) {
-			msg = ((RestClientResponseException) t).getResponseBodyAsString();
-		}
-		create(integracion, correlacion, idExterno, c, msg);
-	}
-
-	@Override
-	public void create(IntegrationEntityDto model, String codigo, Throwable t) {
-		create(model.getIntegracion(), model.getCorrelacion(), model.getIdExterno(), codigo, t);
-	}
-
 	protected static String[] normalizarArgumentos(String... arg) {
 		val result = new String[10];
 
@@ -200,5 +205,4 @@ public class ErrorIntegracionCrudServiceImpl extends CrudServiceImpl<ErrorIntegr
 
 		return result;
 	}
-
 }
