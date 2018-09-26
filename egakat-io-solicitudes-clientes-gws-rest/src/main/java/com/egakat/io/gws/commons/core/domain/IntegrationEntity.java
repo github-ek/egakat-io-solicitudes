@@ -1,7 +1,5 @@
 package com.egakat.io.gws.commons.core.domain;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
@@ -35,13 +33,4 @@ abstract public class IntegrationEntity extends SimpleAuditableEntity<Long> {
 	@NotNull
 	@Size(max = 100)
 	private String idExterno;
-
-	public IntegrationEntity(Long id, int version, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
-			@NotNull @Size(max = 50) String integracion, @NotNull @Size(max = 100) String correlacion,
-			@NotNull @Size(max = 100) String idExterno) {
-		super(id, version, fechaCreacion, fechaModificacion);
-		this.integracion = integracion;
-		this.correlacion = correlacion;
-		this.idExterno = idExterno;
-	}
 }
