@@ -346,8 +346,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 	protected ErrorIntegracionDto errorAtributoRequeridoNoSuministrado(SolicitudDespachoDto entry, String codigo,
 			String... arg) {
 		val mensaje = "Este atributo no admite valores nulos o vacios";
-		val result = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), codigo,
-				mensaje, arg);
+		val result = erroresService.error(entry, codigo, mensaje, arg);
 		return result;
 	}
 
@@ -355,8 +354,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 			String... arg) {
 		val format = "Este atributo requiere ser homologado. Contiene el valor [%s], pero este valor no pudo ser homologado.";
 		val mensaje = String.format(format, valor);
-		val result = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), codigo,
-				mensaje, arg);
+		val result = erroresService.error(entry, codigo, mensaje, arg);
 		return result;
 	}
 
@@ -364,13 +362,12 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 			String valor, long idMapa, String... arg) {
 		val format = "Este atributo esta asociado al mapa de homologación con id=%d.Verifique que el valor [%s] exista en dicho mapa.";
 		val mensaje = String.format(format, idMapa, valor);
-		val result = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), codigo,
-				mensaje, arg);
+		val result = erroresService.error(entry, codigo, mensaje, arg);
 		return result;
 	}
 
 	protected ErrorIntegracionDto error(SolicitudDespachoDto entry, RuntimeException e) {
-		val result = erroresService.error(entry.getIntegracion(), entry.getIdExterno(), entry.getCorrelacion(), "", e);
+		val result = erroresService.error(entry, "", e);
 		return result;
 	}
 

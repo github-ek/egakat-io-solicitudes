@@ -77,7 +77,7 @@ public class DocumentoSolicitudPullServiceImpl extends PullServiceImpl<Integer, 
 
 			enqueue(correlacion, inputs);
 		} catch (RuntimeException e) {
-			getErroresService().create(getIntegracion(), correlacion, "", "", e);
+			getErroresService().create(getIntegracion(), correlacion, "", e);
 			log.error("Exception:", e);
 		}
 	}

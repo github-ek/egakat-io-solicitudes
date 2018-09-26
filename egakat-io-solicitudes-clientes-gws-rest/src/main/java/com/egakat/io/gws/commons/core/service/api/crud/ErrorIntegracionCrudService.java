@@ -12,31 +12,26 @@ import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
 public interface ErrorIntegracionCrudService extends CrudService<ErrorIntegracionDto, Long> {
 
 	@Transactional(readOnly = true)
-	List<ErrorIntegracionDto> findAllByIntegracionAndIdExternoAndCorrelacion(String integracion, String idExterno,
-			String correlacion);
+	List<ErrorIntegracionDto> findAll(IntegrationEntityDto model);
 
 	@Transactional(readOnly = true)
 	List<ErrorIntegracionDto> findAllByEstadoNotificacionIn(String integracion,
 			EstadoNotificacionType... estadosNotificacion);
 
 	@Transactional
-	void create(String integracion, String correlacion, String idExterno, String codigo, String mensaje, String... arg);
+	void create(String integracion, String correlacion, String codigo, String mensaje, String... arg);
+
+	@Transactional
+	void create(String integracion, String correlacion, String codigo, Throwable t);
 
 	@Transactional
 	void create(IntegrationEntityDto model, String codigo, String mensaje, String... arg);
 
 	@Transactional
-	void create(String integracion, String correlacion, String idExterno, String codigo, Throwable t);
-
-	@Transactional
 	void create(IntegrationEntityDto model, String codigo, Throwable t);
-
-	ErrorIntegracionDto error(String integracion, String correlacion, String idExterno, String codigo, String mensaje,
-			String... arg);
 
 	ErrorIntegracionDto error(IntegrationEntityDto model, String codigo, String mensaje, String... arg);
 
-	ErrorIntegracionDto error(String integracion, String correlacion, String idExterno, String codigo, Throwable t);
-
 	ErrorIntegracionDto error(IntegrationEntityDto model, String codigo, Throwable t);
+
 }

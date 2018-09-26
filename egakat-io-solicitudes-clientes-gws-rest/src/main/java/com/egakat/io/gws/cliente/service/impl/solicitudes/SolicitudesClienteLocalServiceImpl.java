@@ -65,7 +65,7 @@ public class SolicitudesClienteLocalServiceImpl extends LocalQueryServiceImpl<So
 
 	@Override
 	public void rechazar(Integer id, List<ErrorIntegracionDto> errores) {
-		val query = "/{id}?status={status}";
+		val query = "/{id}/error?status={status}";
 		getRestClient().put(getResourcePath() + query, errores, Object.class, id, SolicitudEstadoConstants.RECHAZADA_OPL);
 	}
 	
