@@ -30,32 +30,30 @@ public class ActualizacionIntegracionCrudServiceImpl
 
 	@Override
 	protected ActualizacionIntegracionDto asModel(ActualizacionIntegracion entity) {
-		// @formatter:off
-		val result = ActualizacionIntegracionDto
-				.builder()
-				.id(entity.getId())
-				.integracion(entity.getIntegracion())
-				.idExterno(entity.getIdExterno())
-				.correlacion(entity.getCorrelacion())
-				.estadoIntegracion(entity.getEstadoIntegracion())
-				.estadoNotificacion(entity.getEstadoNotificacion())
-				.entradasEnCola(entity.getEntradasEnCola())
-				.arg0(entity.getArg0())
-				.arg1(entity.getArg1())
-				.arg2(entity.getArg2())
-				.arg3(entity.getArg3())
-				.arg4(entity.getArg4())
-				.arg5(entity.getArg5())
-				.arg6(entity.getArg6())
-				.arg7(entity.getArg7())
-				.arg8(entity.getArg8())
-				.arg9(entity.getArg9())
-				.datos(entity.getDatos())
-				.version(entity.getVersion())
-				.fechaCreacion(entity.getFechaCreacion())
-				.fechaModificacion(entity.getFechaModificacion())
-				.build();
-		// @formatter:on
+		val result = new ActualizacionIntegracionDto();
+
+		result.setId(entity.getId());
+		result.setIntegracion(entity.getIntegracion());
+		result.setIdExterno(entity.getIdExterno());
+		result.setCorrelacion(entity.getCorrelacion());
+		result.setEstadoIntegracion(entity.getEstadoIntegracion());
+		result.setEstadoNotificacion(entity.getEstadoNotificacion());
+		result.setEntradasEnCola(entity.getEntradasEnCola());
+		result.setArg0(entity.getArg0());
+		result.setArg1(entity.getArg1());
+		result.setArg2(entity.getArg2());
+		result.setArg3(entity.getArg3());
+		result.setArg4(entity.getArg4());
+		result.setArg5(entity.getArg5());
+		result.setArg6(entity.getArg6());
+		result.setArg7(entity.getArg7());
+		result.setArg8(entity.getArg8());
+		result.setArg9(entity.getArg9());
+		result.setDatos(entity.getDatos());
+		result.setVersion(entity.getVersion());
+		result.setFechaCreacion(entity.getFechaCreacion());
+		result.setFechaModificacion(entity.getFechaModificacion());
+
 		return result;
 	}
 
@@ -134,21 +132,26 @@ public class ActualizacionIntegracionCrudServiceImpl
 	public ActualizacionIntegracionDto update(ActualizacionIntegracionDto model, EstadoIntegracionType estado,
 			List<ErrorIntegracionDto> errores) {
 
-		if (errores.isEmpty()) {
-			throw new RuntimeException(
-					"La colección de errores esta vacía. Se requiere de al menos un error para invoar este metodo");
+		if (!estado.isError()) {
+			val format = "Se esta intentado actualizar al estado %s. Esta operación no admite estados que no sean de error";
+			throw new RuntimeException(String.format(format, estado.toString()));
 		}
 
-		getErroresService().create(errores);
+		if (errores.isEmpty()) {
+			throw new RuntimeException(
+					"La colección de errores esta vacía. Se requiere al menos de un error para realizar esta operación");
+		}
+
 		model.setEstadoIntegracion(estado);
 		model.setEstadoNotificacion(EstadoNotificacionType.NOTIFICAR);
+		getErroresService().create(errores);
 		val result = update(model);
 		return result;
 	}
 
 	@Override
-	public void updateEstadoNotificacion(ActualizacionIntegracionDto model, List<ErrorIntegracionDto> errores,
-			EstadoNotificacionType ok, EstadoNotificacionType error) {
+	public ActualizacionIntegracionDto updateEstadoNotificacion(ActualizacionIntegracionDto model,
+			List<ErrorIntegracionDto> errores, EstadoNotificacionType ok, EstadoNotificacionType error) {
 		if (errores.isEmpty()) {
 			model.setEstadoNotificacion(ok);
 			// TODO ¿en este punto se debe programar una notificacion?
@@ -156,7 +159,8 @@ public class ActualizacionIntegracionCrudServiceImpl
 			model.setEstadoNotificacion(error);
 			getErroresService().create(errores);
 		}
-		update(model);
-	}
 
+		val result = update(model);
+		return result;
+	}
 }

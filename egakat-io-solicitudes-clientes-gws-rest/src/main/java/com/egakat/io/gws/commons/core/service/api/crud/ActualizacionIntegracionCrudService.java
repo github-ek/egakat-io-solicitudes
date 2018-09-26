@@ -30,7 +30,7 @@ public interface ActualizacionIntegracionCrudService extends IntegracionEntityCr
 			List<ErrorIntegracionDto> errores);
 
 	@Transactional
-	void updateEstadoNotificacion(ActualizacionIntegracionDto model, List<ErrorIntegracionDto> errores,
-			EstadoNotificacionType ok, EstadoNotificacionType error);
+	ActualizacionIntegracionDto updateEstadoNotificacion(ActualizacionIntegracionDto model,
+			List<ErrorIntegracionDto> errores, EstadoNotificacionType ok, EstadoNotificacionType error);
 
 }
