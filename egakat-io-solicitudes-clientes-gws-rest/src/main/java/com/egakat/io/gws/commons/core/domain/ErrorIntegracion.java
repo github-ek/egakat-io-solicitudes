@@ -86,5 +86,4 @@ public class ErrorIntegracion extends IntegrationEntity {
 	@Column(name = "arg9", length = 100, nullable = true)
 	@Size(max = 100)
 	private String arg9;
-
 }
