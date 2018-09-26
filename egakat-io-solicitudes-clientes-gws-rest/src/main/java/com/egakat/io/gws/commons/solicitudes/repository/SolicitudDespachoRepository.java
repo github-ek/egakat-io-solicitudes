@@ -5,5 +5,4 @@ import com.egakat.io.gws.commons.solicitudes.domain.SolicitudDespacho;
 
 public interface SolicitudDespachoRepository extends IntegrationEntityRepository<SolicitudDespacho> {
 
-	
 }

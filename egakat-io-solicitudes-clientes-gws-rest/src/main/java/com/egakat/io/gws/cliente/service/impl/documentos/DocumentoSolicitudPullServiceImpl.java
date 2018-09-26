@@ -93,18 +93,14 @@ public class DocumentoSolicitudPullServiceImpl extends PullServiceImpl<Integer, 
 
 	@Override
 	protected ActualizacionIntegracionDto asModel(String correlacion, Integer input) {
-		// @formatter:off
-		val result = ActualizacionIntegracionDto
-				.builder()
-				.integracion(getIntegracion())
-				.idExterno(input.toString())
-				.correlacion(correlacion)
-				.estadoIntegracion(EstadoIntegracionType.NO_PROCESADO)
-				.estadoNotificacion(EstadoNotificacionType.SIN_NOVEDAD)
-				.build();				
-		// @formatter:on
+		val result = new ActualizacionIntegracionDto();
+
+		result.setIntegracion(getIntegracion());
+		result.setIdExterno(input.toString());
+		result.setCorrelacion(correlacion);
+		result.setEstadoIntegracion(EstadoIntegracionType.NO_PROCESADO);
+		result.setEstadoNotificacion(EstadoNotificacionType.SIN_NOVEDAD);
 
 		return result;
 	}
-
 }

@@ -1,6 +1,6 @@
 package com.egakat.io.gws.cliente.configuration.constants;
 
-public class SolicitudDespachoClienteEstadoConstants {
+public class SolicitudEstadoConstants {
 
 	public static final String ENVIAR = "ENVIAR";
 

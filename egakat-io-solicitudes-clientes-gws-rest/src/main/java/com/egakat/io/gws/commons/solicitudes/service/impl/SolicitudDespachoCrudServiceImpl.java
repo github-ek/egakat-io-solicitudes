@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import com.egakat.io.gws.commons.core.service.impl.crud.ExtendedIntegracionEntityCrudServiceImpl;
@@ -21,7 +19,7 @@ import lombok.val;
 
 @Service
 public class SolicitudDespachoCrudServiceImpl
-		extends ExtendedIntegracionEntityCrudServiceImpl<SolicitudDespacho, SolicitudDespachoDto, String>
+		extends ExtendedIntegracionEntityCrudServiceImpl<SolicitudDespacho, SolicitudDespachoDto>
 		implements SolicitudDespachoCrudService {
 
 	@Autowired
@@ -205,15 +203,5 @@ public class SolicitudDespachoCrudServiceImpl
 	@Override
 	protected SolicitudDespacho newEntity() {
 		return new SolicitudDespacho();
-	}
-
-	@Override
-	public List<SolicitudDespachoDto> findTopByEstado(String estado) {
-		return null;
-	}
-
-	@Override
-	public Slice<SolicitudDespachoDto> findByEstado(String estado, Pageable pageable) {
-		return null;
 	}
 }

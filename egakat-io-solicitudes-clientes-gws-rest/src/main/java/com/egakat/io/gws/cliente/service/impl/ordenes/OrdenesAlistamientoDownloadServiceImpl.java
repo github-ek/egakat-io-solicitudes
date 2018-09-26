@@ -28,8 +28,7 @@ import com.egakat.wms.maestros.dto.ordenes.OrdShipmentLineLoteDto;
 import lombok.val;
 
 @Service
-public class OrdenesAlistamientoDownloadServiceImpl
-		extends DownloadServiceImpl<OrdShipmentDto, OrdenAlistamientoDto, String>
+public class OrdenesAlistamientoDownloadServiceImpl extends DownloadServiceImpl<OrdShipmentDto, OrdenAlistamientoDto>
 		implements OrdenesAlistamientoDownloadService {
 
 	@Autowired
@@ -87,7 +86,7 @@ public class OrdenesAlistamientoDownloadServiceImpl
 	}
 
 	@Override
-	protected OrdenAlistamientoDto asModel(ActualizacionIntegracionDto actualizacion, OrdShipmentDto input) {
+	protected OrdenAlistamientoDto asModel(OrdShipmentDto input, ActualizacionIntegracionDto actualizacion) {
 		val model = new OrdenAlistamientoDto();
 
 		model.setIntegracion(actualizacion.getIntegracion());

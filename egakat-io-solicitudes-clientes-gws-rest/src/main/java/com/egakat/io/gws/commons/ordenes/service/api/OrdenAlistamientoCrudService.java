@@ -11,7 +11,7 @@ import com.egakat.io.gws.commons.core.service.api.crud.ExtendedIntegracionEntity
 import com.egakat.io.gws.commons.ordenes.dto.OrdenAlistamientoDto;
 
 public interface OrdenAlistamientoCrudService
-		extends ExtendedIntegracionEntityCrudService<OrdenAlistamientoDto, String> {
+		extends ExtendedIntegracionEntityCrudService<OrdenAlistamientoDto> {
 
 	//TODO ELIMINAR
 	@Transactional(readOnly = false)

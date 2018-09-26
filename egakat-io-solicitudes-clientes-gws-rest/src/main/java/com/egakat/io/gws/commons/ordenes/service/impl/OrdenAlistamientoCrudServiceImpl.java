@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import com.egakat.io.gws.cliente.dto.OrdenAlistamientoClienteCancelacionDto;
@@ -34,7 +32,7 @@ import lombok.val;
 
 @Service
 public class OrdenAlistamientoCrudServiceImpl
-		extends ExtendedIntegracionEntityCrudServiceImpl<OrdenAlistamiento, OrdenAlistamientoDto, String>
+		extends ExtendedIntegracionEntityCrudServiceImpl<OrdenAlistamiento, OrdenAlistamientoDto>
 		implements OrdenAlistamientoCrudService {
 
 	@Autowired
@@ -311,16 +309,6 @@ public class OrdenAlistamientoCrudServiceImpl
 	@Override
 	protected OrdenAlistamiento newEntity() {
 		return new OrdenAlistamiento();
-	}
-
-	@Override
-	public List<OrdenAlistamientoDto> findTopByEstado(String estado) {
-		return null;
-	}
-
-	@Override
-	public Slice<OrdenAlistamientoDto> findByEstado(String estado, Pageable pageable) {
-		return null;
 	}
 
 	@Autowired
