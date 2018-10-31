@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.egakat.io.gws.commons.core.service.impl.crud.ExtendedIntegracionEntityCrudServiceImpl;
+import com.egakat.core.io.stage.service.impl.crud.ExtendedIntegracionEntityCrudServiceImpl;
 import com.egakat.io.gws.commons.documentos.domain.DocumentoSolicitud;
 import com.egakat.io.gws.commons.documentos.domain.DocumentoSolicitudLinea;
 import com.egakat.io.gws.commons.documentos.dto.DocumentoSolicitudDto;
@@ -163,5 +163,10 @@ public class DocumentoSolicitudCrudServiceImpl
 	@Override
 	protected DocumentoSolicitud newEntity() {
 		return new DocumentoSolicitud();
+	}
+
+	@Override
+	protected DocumentoSolicitudDto newModel() {
+		return new DocumentoSolicitudDto();
 	}
 }

@@ -3,11 +3,13 @@ package com.egakat.io.gws.commons.ordenes.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -19,8 +21,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.egakat.commons.domain.SimpleAuditableEntity;
+import com.egakat.core.data.jpa.domain.SimpleAuditableEntity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,13 +31,19 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "ordenes_alistamiento_lineas")
-@AttributeOverride(name = "id", column = @Column(name = "id_orden_alistamiento_linea"))
+//@AttributeOverride(name = "id", column = @Column(name = "id_orden_alistamiento_linea"))
 @DynamicUpdate
 @Getter
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
 public class OrdenAlistamientoLinea extends SimpleAuditableEntity<Long> {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name = "id_orden_alistamiento_linea", updatable = false, nullable = false)
+	@Setter(value = AccessLevel.PROTECTED)
+	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_orden_alistamiento", nullable = false)

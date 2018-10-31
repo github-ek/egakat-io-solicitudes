@@ -9,26 +9,26 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.egakat.core.io.stage.dto.ActualizacionIntegracionDto;
+import com.egakat.core.io.stage.dto.ErrorIntegracionDto;
+import com.egakat.core.io.stage.service.impl.RestDownloadServiceImpl;
 import com.egakat.core.web.client.components.RestClient;
-import com.egakat.core.web.client.configuration.RestProperties;
+import com.egakat.core.web.client.properties.RestProperties;
+import com.egakat.io.gws.cliente.configuration.constants.IntegracionesConstants;
+import com.egakat.io.gws.cliente.configuration.constants.IntegracionesRestConstants;
+import com.egakat.io.gws.cliente.configuration.properties.SolicitudesClienteRestProperties;
 import com.egakat.io.gws.cliente.dto.SolicitudDespachoClienteDto;
 import com.egakat.io.gws.cliente.dto.SolicitudDespachoClienteLineaDto;
 import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesDespachoDownloadService;
-import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
-import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
-import com.egakat.io.gws.commons.core.service.impl.DownloadServiceImpl;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoLineaDto;
 import com.egakat.io.gws.commons.solicitudes.service.api.SolicitudDespachoCrudService;
-import com.egakat.io.gws.configuration.constants.IntegracionesConstants;
-import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
-import com.egakat.io.gws.configuration.properties.SolicitudesClienteRestProperties;
 
 import lombok.val;
 
 @Service
 public class SolicitudesDespachoDownloadServiceImpl
-		extends DownloadServiceImpl<SolicitudDespachoClienteDto, SolicitudDespachoDto>
+		extends RestDownloadServiceImpl<SolicitudDespachoClienteDto, SolicitudDespachoDto>
 		implements SolicitudesDespachoDownloadService {
 
 	@Autowired
@@ -87,9 +87,9 @@ public class SolicitudesDespachoDownloadServiceImpl
 	}
 
 	@Override
-	protected void validate(SolicitudDespachoClienteDto input, ActualizacionIntegracionDto actualizacion,
+	protected void validateInput(SolicitudDespachoClienteDto input, ActualizacionIntegracionDto actualizacion,
 			List<ErrorIntegracionDto> errores) {
-		super.validate(input, actualizacion, errores);
+		super.validateInput(input, actualizacion, errores);
 
 		if (input.getFemi() == null) {
 			errores.add(errorAtributoRequeridoNoSuministrado(actualizacion, "femi"));

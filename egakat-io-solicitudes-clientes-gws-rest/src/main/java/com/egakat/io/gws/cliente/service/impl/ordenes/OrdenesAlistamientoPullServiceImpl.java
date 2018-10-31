@@ -6,29 +6,25 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.egakat.core.io.stage.dto.ActualizacionIntegracionDto;
+import com.egakat.core.io.stage.enums.EstadoIntegracionType;
+import com.egakat.core.io.stage.enums.EstadoNotificacionType;
+import com.egakat.core.io.stage.service.impl.RestPullServiceImpl;
 import com.egakat.core.web.client.components.RestClient;
-import com.egakat.core.web.client.configuration.RestProperties;
+import com.egakat.core.web.client.properties.RestProperties;
 import com.egakat.io.gws.cliente.service.api.ordenes.OrdenesAlistamientoPullService;
-import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
-import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
-import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
-import com.egakat.io.gws.commons.core.service.impl.PullServiceImpl;
-import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
-import com.egakat.io.gws.commons.solicitudes.service.api.SolicitudDespachoCrudService;
-import com.egakat.io.gws.configuration.constants.IntegracionesConstants;
-import com.egakat.wms.maestros.client.configuration.properties.WmsRestProperties;
-import com.egakat.wms.maestros.configuration.constants.RestConstants;
+import com.egakat.io.gws.commons.configuration.constants.IntegracionesConstants;
+import com.egakat.wms.maestros.constants.RestConstants;
+import com.egakat.wms.maestros.properties.WmsRestProperties;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class OrdenesAlistamientoPullServiceImpl extends PullServiceImpl<Integer, SolicitudDespachoDto>
+public class OrdenesAlistamientoPullServiceImpl extends RestPullServiceImpl<Integer>
 		implements OrdenesAlistamientoPullService {
 
-	@Autowired
-	private SolicitudDespachoCrudService crudService;
 
 	@Autowired
 	private WmsRestProperties properties;
@@ -36,10 +32,6 @@ public class OrdenesAlistamientoPullServiceImpl extends PullServiceImpl<Integer,
 	@Autowired
 	private RestClient restClient;
 
-	@Override
-	protected SolicitudDespachoCrudService getCrudService() {
-		return crudService;
-	}
 
 	@Override
 	protected RestProperties getProperties() {

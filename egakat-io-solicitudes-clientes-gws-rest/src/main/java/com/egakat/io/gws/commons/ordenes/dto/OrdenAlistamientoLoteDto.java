@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.egakat.commons.dto.SimpleAuditableEntityDto;
+import com.egakat.core.dto.SimpleAuditableEntityDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

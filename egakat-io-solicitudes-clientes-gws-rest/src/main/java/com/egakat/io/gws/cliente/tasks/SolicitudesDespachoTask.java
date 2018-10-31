@@ -1,23 +1,22 @@
 package com.egakat.io.gws.cliente.tasks;
 
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.DESCARTADO;
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.ERROR_CARGUE;
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.ERROR_ENRIQUECIMIENTO;
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.ERROR_ESTRUCTURA;
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.ERROR_HOMOLOGACION;
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.ERROR_VALIDACION;
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.PROCESADO;
+import static com.egakat.core.io.stage.enums.EstadoIntegracionType.DESCARTADO;
+import static com.egakat.core.io.stage.enums.EstadoIntegracionType.ERROR_CARGUE;
+import static com.egakat.core.io.stage.enums.EstadoIntegracionType.ERROR_ESTRUCTURA;
+import static com.egakat.core.io.stage.enums.EstadoIntegracionType.ERROR_HOMOLOGACION;
+import static com.egakat.core.io.stage.enums.EstadoIntegracionType.ERROR_VALIDACION;
+import static com.egakat.core.io.stage.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
+import static com.egakat.core.io.stage.enums.EstadoIntegracionType.PROCESADO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.egakat.core.io.stage.service.api.crud.ActualizacionIntegracionCrudService;
+import com.egakat.io.gws.cliente.configuration.constants.IntegracionesConstants;
 import com.egakat.io.gws.cliente.service.api.deprecated.SolicitudDespachoDataQualityService;
 import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesDespachoDownloadService;
 import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesDespachoNotificationService;
 import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesDespachoPullService;
-import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionCrudService;
-import com.egakat.io.gws.configuration.constants.IntegracionesConstants;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -91,7 +90,6 @@ public class SolicitudesDespachoTask {
 		// @formatter:off
 		val entries = actualizacionesService.findAllNoNotificadasByEstadoIntegracionIn(IntegracionesConstants.SOLICITUDES_DESPACHO, 
 		ERROR_ESTRUCTURA,
-	    ERROR_ENRIQUECIMIENTO,
 	    ERROR_HOMOLOGACION,
 	    ERROR_VALIDACION,
 	    ERROR_CARGUE,

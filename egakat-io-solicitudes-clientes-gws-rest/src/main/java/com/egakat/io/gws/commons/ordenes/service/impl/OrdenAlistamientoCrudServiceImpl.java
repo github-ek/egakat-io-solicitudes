@@ -7,15 +7,15 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.egakat.core.io.stage.dto.ActualizacionIntegracionDto;
+import com.egakat.core.io.stage.dto.ErrorIntegracionDto;
+import com.egakat.core.io.stage.enums.EstadoIntegracionType;
+import com.egakat.core.io.stage.service.impl.crud.ExtendedIntegracionEntityCrudServiceImpl;
 import com.egakat.io.gws.cliente.dto.OrdenAlistamientoClienteCancelacionDto;
 import com.egakat.io.gws.cliente.dto.OrdenAlistamientoClienteDto;
 import com.egakat.io.gws.cliente.dto.OrdenAlistamientoClienteLineaDto;
 import com.egakat.io.gws.cliente.dto.OrdenAlistamientoClienteLoteDto;
 import com.egakat.io.gws.cliente.service.api.deprecated.OrdenAlistamientoClienteLocalService;
-import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
-import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
-import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
-import com.egakat.io.gws.commons.core.service.impl.crud.ExtendedIntegracionEntityCrudServiceImpl;
 import com.egakat.io.gws.commons.ordenes.domain.OrdenAlistamiento;
 import com.egakat.io.gws.commons.ordenes.domain.OrdenAlistamientoCancelacion;
 import com.egakat.io.gws.commons.ordenes.domain.OrdenAlistamientoLinea;
@@ -408,5 +408,10 @@ public class OrdenAlistamientoCrudServiceImpl
 		update(model, actualizacion, estado);
 		getRepository().updateEstadoNoficacion(id);
 		getRepository().flush();
+	}
+
+	@Override
+	protected OrdenAlistamientoDto newModel() {
+		return new OrdenAlistamientoDto();
 	}
 }

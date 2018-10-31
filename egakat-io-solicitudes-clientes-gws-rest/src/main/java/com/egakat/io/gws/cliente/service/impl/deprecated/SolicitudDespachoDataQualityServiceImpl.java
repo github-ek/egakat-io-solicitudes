@@ -1,7 +1,6 @@
 package com.egakat.io.gws.cliente.service.impl.deprecated;
 
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
-import static com.egakat.io.gws.configuration.constants.IntegracionesConstants.SOLICITUDES_DESPACHO;
+import static com.egakat.core.io.stage.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
@@ -11,17 +10,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.egakat.econnect.maestros.client.service.api.lookup.LookUpService;
-import com.egakat.integration.maps.client.service.api.MapaLocalService;
+import com.egakat.core.io.stage.dto.ActualizacionIntegracionDto;
+import com.egakat.core.io.stage.dto.ErrorIntegracionDto;
+import com.egakat.core.io.stage.enums.EstadoIntegracionType;
+import com.egakat.core.io.stage.service.api.crud.ActualizacionIntegracionCrudService;
+import com.egakat.core.io.stage.service.api.crud.ErrorIntegracionCrudService;
+import com.egakat.integration.commons.mapas.service.api.MapaCrudService;
 import com.egakat.io.gws.cliente.service.api.deprecated.SolicitudDespachoDataQualityService;
-import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
-import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
-import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
-import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionCrudService;
-import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudService;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoLineaDto;
 import com.egakat.io.gws.commons.solicitudes.service.api.SolicitudDespachoCrudService;
+import com.egakat.io.gws.cliente.configuration.constants.IntegracionesConstants;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +51,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 	}
 
 	protected String getIntegracion() {
-		return SOLICITUDES_DESPACHO;
+		return IntegracionesConstants.SOLICITUDES_DESPACHO;
 	}
 
 	protected static List<EstadoIntegracionType> ESTADOS = asList(ESTRUCTURA_VALIDA);
@@ -64,17 +63,10 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 	protected static long MAPA_ESTADO_INVENTARIO_CODIGO_ALTERNO = 203;
 
 	@Autowired
-	private MapaLocalService mapaLocalService;
+	private MapaCrudService mapaLocalService;
 
-	@Autowired
-	private LookUpService lookUpService;
-
-	protected MapaLocalService getMapaService() {
+	protected MapaCrudService getMapaService() {
 		return mapaLocalService;
-	}
-
-	protected LookUpService getLookUpService() {
-		return lookUpService;
 	}
 
 	public List<String> getCorrelacionesPendientes() {
@@ -84,7 +76,8 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 
 	@Override
 	public void validate() {
-		getLookUpService().cacheEvict();
+		// TODO getLookUpService().cacheEvict();
+		// getLookUpService().cacheEvict();
 
 		val correlaciones = getCorrelacionesPendientes();
 		for (val correlacion : correlaciones) {
@@ -93,7 +86,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 	}
 
 	protected void validate(String correlacion) {
-		val actualizaciones = actualizacionesService.findAllByEstadoIntegracionIn(getIntegracion(), ESTRUCTURA_VALIDA);
+		val actualizaciones = actualizacionesService.findAllByIntegracionAndEstadoIntegracionIn(getIntegracion(), ESTRUCTURA_VALIDA);
 
 		int i = 1;
 		int n = actualizaciones.size();
@@ -225,7 +218,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		String key = defaultKey(registro.getClienteCodigoAlterno());
 
 		registro.setIdCliente(null);
-		val id = getLookUpService().findClienteIdByCodigo(key);
+		val id = findClienteIdByCodigo(key);
 		registro.setIdCliente(id);
 	}
 
@@ -234,7 +227,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		key = getValueFromMapOrDefault(MAPA_SERVICIO_CODIGO_ALTERNO, key);
 
 		registro.setIdServicio(null);
-		val id = getLookUpService().findServicioIdByCodigo(key);
+		val id = findServicioIdByCodigo(key);
 		registro.setIdServicio(id);
 	}
 
@@ -245,7 +238,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		if (cliente != null) {
 			String key = defaultKey(registro.getTerceroIdentificacion());
 
-			val id = getLookUpService().findTerceroIdByIdAndNumeroIdentificacion(cliente.longValue(), key);
+			val id = findTerceroIdByIdAndNumeroIdentificacion(cliente.longValue(), key);
 			registro.setIdTercero(id);
 		}
 	}
@@ -255,7 +248,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		key = getValueFromMapOrDefault(MAPA_CANAL_CODIGO_ALTERNO, key);
 
 		registro.setIdCanal(null);
-		val id = getLookUpService().findCanalIdByCodigo(key);
+		val id = findCanalIdByCodigo(key);
 		registro.setIdCanal(id);
 	}
 
@@ -264,9 +257,9 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		key = getValueFromMapOrDefault(MAPA_CIUDAD_CODIGO_ALTERNO, key);
 
 		registro.setIdCiudad(null);
-		Long id = getLookUpService().findCiudadIdByNombreAlterno(key);
+		Long id = findCiudadIdByNombreAlterno(key);
 		if (id == null) {
-			id = getLookUpService().findCiudadIdByCodigo(key);
+			id = findCiudadIdByCodigo(key);
 		}
 		registro.setIdCiudad(id);
 	}
@@ -277,10 +270,11 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		if (tercero != null) {
 			String key = defaultKey(registro.getPuntoCodigoAlterno());
 
-			val id = getLookUpService().findPuntoIdByTerceroIdAndPuntoCodigo(tercero.longValue(), key);
+			val id = findPuntoIdByTerceroIdAndPuntoCodigo(tercero.longValue(), key);
 			registro.setIdPunto(id);
 		}
 	}
+
 
 	protected void translateProducto(SolicitudDespachoDto registro, SolicitudDespachoLineaDto linea) {
 		linea.setIdProducto(null);
@@ -288,7 +282,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		if (cliente != null) {
 			String key = defaultKey(linea.getProductoCodigoAlterno());
 
-			val id = getLookUpService().findProductoIdByClienteIdAndCodigo(cliente.longValue(), key);
+			val id = findProductoIdByClienteIdAndCodigo(cliente.longValue(), key);
 			linea.setIdProducto(id);
 		}
 	}
@@ -298,7 +292,7 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		key = getValueFromMapOrDefault(MAPA_BODEGA_CODIGO_ALTERNO, key);
 
 		linea.setIdBodega(null);
-		val id = getLookUpService().findBodegaIdByCodigo(key);
+		val id = findBodegaIdByCodigo(key);
 		linea.setIdBodega(id);
 	}
 
@@ -307,16 +301,69 @@ public class SolicitudDespachoDataQualityServiceImpl implements SolicitudDespach
 		key = getValueFromMapOrDefault(MAPA_ESTADO_INVENTARIO_CODIGO_ALTERNO, key);
 
 		linea.setIdEstadoInventario(null);
-		val id = getLookUpService().findEstadoInventarioIdByCodigo(key);
+		val id = findEstadoInventarioIdByCodigo(key);
 		linea.setIdEstadoInventario(id);
+	}
+
+	private Long findBodegaIdByCodigo(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Long findPuntoIdByTerceroIdAndPuntoCodigo(long longValue, String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Long findProductoIdByClienteIdAndCodigo(long longValue, String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String findEstadoInventarioIdByCodigo(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Long findClienteIdByCodigo(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Long findServicioIdByCodigo(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Long findTerceroIdByIdAndNumeroIdentificacion(long longValue, String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Long findCanalIdByCodigo(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Long findCiudadIdByCodigo(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Long findCiudadIdByNombreAlterno(String key) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	final protected String getValueFromMapOrDefault(Long id, String _default) {
 		String result = _default;
 		if (id != null) {
-			result = getMapaService().findMapaValorByMapaIdAndMapaClave(id, _default);
-			if (result == null) {
-				result = _default;
+			val optional = getMapaService().findById(id);
+			if (optional.isPresent()) {
+				val value = optional.get().getValores().get(_default);
+				if (value != null) {
+					result = value;
+				}
 			}
 		}
 		return result;

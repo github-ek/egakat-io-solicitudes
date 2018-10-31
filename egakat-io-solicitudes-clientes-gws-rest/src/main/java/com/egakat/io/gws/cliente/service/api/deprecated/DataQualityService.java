@@ -1,6 +1,6 @@
 package com.egakat.io.gws.cliente.service.api.deprecated;
 
-import com.egakat.io.gws.commons.core.domain.IntegrationEntity;
+import com.egakat.core.io.stage.domain.IntegrationEntity;
 
 public interface DataQualityService<T extends IntegrationEntity> {
 

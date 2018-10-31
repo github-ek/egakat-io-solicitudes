@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.egakat.io.gws.commons.core.service.impl.crud.ExtendedIntegracionEntityCrudServiceImpl;
+import com.egakat.core.io.stage.service.impl.crud.ExtendedIntegracionEntityCrudServiceImpl;
 import com.egakat.io.gws.commons.solicitudes.domain.SolicitudDespacho;
 import com.egakat.io.gws.commons.solicitudes.domain.SolicitudDespachoLinea;
 import com.egakat.io.gws.commons.solicitudes.dto.SolicitudDespachoDto;
@@ -203,5 +203,11 @@ public class SolicitudDespachoCrudServiceImpl
 	@Override
 	protected SolicitudDespacho newEntity() {
 		return new SolicitudDespacho();
+	}
+
+	@Override
+	protected SolicitudDespachoDto newModel() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.egakat.core.io.stage.dto.ActualizacionIntegracionDto;
+import com.egakat.core.io.stage.dto.ErrorIntegracionDto;
+import com.egakat.core.io.stage.enums.EstadoIntegracionType;
+import com.egakat.core.io.stage.enums.EstadoNotificacionType;
+import com.egakat.core.io.stage.service.api.crud.ActualizacionIntegracionCrudService;
+import com.egakat.core.io.stage.service.api.crud.ErrorIntegracionCrudService;
 import com.egakat.io.gws.cliente.service.api.documentos.DocumentoSolicitudNotificationService;
 import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesClienteLocalService;
-import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
-import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
-import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
-import com.egakat.io.gws.commons.core.enums.EstadoNotificacionType;
-import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionCrudService;
-import com.egakat.io.gws.commons.core.service.api.crud.ErrorIntegracionCrudService;
 
 import lombok.val;
 

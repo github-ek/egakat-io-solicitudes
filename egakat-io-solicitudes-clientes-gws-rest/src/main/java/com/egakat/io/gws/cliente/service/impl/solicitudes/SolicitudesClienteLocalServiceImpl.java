@@ -6,14 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.egakat.core.web.client.configuration.RestProperties;
+import com.egakat.core.io.stage.dto.ErrorIntegracionDto;
+import com.egakat.core.web.client.properties.RestProperties;
 import com.egakat.core.web.client.service.impl.LocalQueryServiceImpl;
+import com.egakat.io.gws.cliente.configuration.constants.IntegracionesRestConstants;
 import com.egakat.io.gws.cliente.configuration.constants.SolicitudEstadoConstants;
+import com.egakat.io.gws.cliente.configuration.properties.SolicitudesClienteRestProperties;
 import com.egakat.io.gws.cliente.dto.SolicitudDespachoClienteDto;
 import com.egakat.io.gws.cliente.service.api.solicitudes.SolicitudesClienteLocalService;
-import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
-import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
-import com.egakat.io.gws.configuration.properties.SolicitudesClienteRestProperties;
 
 import lombok.val;
 

@@ -6,29 +6,29 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.egakat.core.io.stage.dto.ActualizacionIntegracionDto;
+import com.egakat.core.io.stage.dto.ErrorIntegracionDto;
+import com.egakat.core.io.stage.service.impl.RestDownloadServiceImpl;
 import com.egakat.core.web.client.components.RestClient;
-import com.egakat.core.web.client.configuration.RestProperties;
+import com.egakat.core.web.client.properties.RestProperties;
 import com.egakat.io.gws.cliente.service.api.ordenes.OrdenesAlistamientoDownloadService;
-import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
-import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
-import com.egakat.io.gws.commons.core.service.impl.DownloadServiceImpl;
+import com.egakat.io.gws.commons.configuration.constants.IntegracionesConstants;
 import com.egakat.io.gws.commons.ordenes.dto.OrdenAlistamientoCancelacionDto;
 import com.egakat.io.gws.commons.ordenes.dto.OrdenAlistamientoDto;
 import com.egakat.io.gws.commons.ordenes.dto.OrdenAlistamientoLineaDto;
 import com.egakat.io.gws.commons.ordenes.dto.OrdenAlistamientoLoteDto;
 import com.egakat.io.gws.commons.ordenes.service.api.OrdenAlistamientoCrudService;
-import com.egakat.io.gws.configuration.constants.IntegracionesConstants;
-import com.egakat.wms.maestros.client.configuration.properties.WmsRestProperties;
-import com.egakat.wms.maestros.configuration.constants.RestConstants;
+import com.egakat.wms.maestros.constants.RestConstants;
 import com.egakat.wms.maestros.dto.ordenes.OrdShipmentDto;
 import com.egakat.wms.maestros.dto.ordenes.OrdShipmentLineCancelacionDto;
 import com.egakat.wms.maestros.dto.ordenes.OrdShipmentLineDto;
 import com.egakat.wms.maestros.dto.ordenes.OrdShipmentLineLoteDto;
+import com.egakat.wms.maestros.properties.WmsRestProperties;
 
 import lombok.val;
 
 @Service
-public class OrdenesAlistamientoDownloadServiceImpl extends DownloadServiceImpl<OrdShipmentDto, OrdenAlistamientoDto>
+public class OrdenesAlistamientoDownloadServiceImpl extends RestDownloadServiceImpl<OrdShipmentDto, OrdenAlistamientoDto>
 		implements OrdenesAlistamientoDownloadService {
 
 	@Autowired

@@ -8,26 +8,26 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.egakat.core.io.stage.dto.ActualizacionIntegracionDto;
+import com.egakat.core.io.stage.dto.ErrorIntegracionDto;
+import com.egakat.core.io.stage.service.impl.RestDownloadServiceImpl;
 import com.egakat.core.web.client.components.RestClient;
-import com.egakat.core.web.client.configuration.RestProperties;
+import com.egakat.core.web.client.properties.RestProperties;
+import com.egakat.io.gws.cliente.configuration.constants.IntegracionesRestConstants;
+import com.egakat.io.gws.cliente.configuration.properties.SolicitudesClienteRestProperties;
 import com.egakat.io.gws.cliente.dto.DocumentoDespachoClienteDto;
 import com.egakat.io.gws.cliente.dto.DocumentoDespachoClienteLineaDto;
 import com.egakat.io.gws.cliente.service.api.documentos.DocumentoSolicitudDownloadService;
-import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
-import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
-import com.egakat.io.gws.commons.core.service.impl.DownloadServiceImpl;
+import com.egakat.io.gws.commons.configuration.constants.IntegracionesConstants;
 import com.egakat.io.gws.commons.documentos.dto.DocumentoSolicitudDto;
 import com.egakat.io.gws.commons.documentos.dto.DocumentoSolicitudLineaDto;
 import com.egakat.io.gws.commons.documentos.service.api.DocumentoSolicitudCrudService;
-import com.egakat.io.gws.configuration.constants.IntegracionesConstants;
-import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
-import com.egakat.io.gws.configuration.properties.SolicitudesClienteRestProperties;
 
 import lombok.val;
 
 @Service
 public class DocumentoSolicitudDownloadServiceImpl
-		extends DownloadServiceImpl<DocumentoDespachoClienteDto, DocumentoSolicitudDto>
+		extends RestDownloadServiceImpl<DocumentoDespachoClienteDto, DocumentoSolicitudDto>
 		implements DocumentoSolicitudDownloadService {
 
 	@Autowired

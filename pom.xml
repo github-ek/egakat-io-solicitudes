@@ -51,33 +51,18 @@
 				</artifactId>
 				<version>${egakat.integration.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>com.egakat</groupId>
-				<artifactId>egakat-integration-maps-client</artifactId>
-				<version>${egakat.integration.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.egakat</groupId>
-				<artifactId>egakat-e-connect-maestros-client</artifactId>
-				<version>${egakat.e-connect.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.egakat</groupId>
-				<artifactId>egakat-wms-maestros-client</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<modules>
-		<module>egakat-io-solicitudes-commons</module>
-		<module>egakat-io-solicitudes-cedis-manufacturas</module>
-		<module>egakat-io-solicitudes-cedis-recibos</module>
-		<module>egakat-io-solicitudes-cedis-salidas</module>
 		
 		
-		<module>egakat-io-solicitudes-clientes-gws</module>
-		<module>egakat-io-solicitudes-clientes-heinz</module>
-		<module>egakat-io-solicitudes-transformation</module>
+		
+		
+		
+		
+		
+		
+		
 		<module>egakat-io-solicitudes-clientes-gws-rest</module>
 	</modules>
 </project>

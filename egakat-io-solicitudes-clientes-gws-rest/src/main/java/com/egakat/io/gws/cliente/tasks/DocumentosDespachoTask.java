@@ -1,15 +1,15 @@
 package com.egakat.io.gws.cliente.tasks;
 
-import static com.egakat.io.gws.commons.core.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
+import static com.egakat.core.io.stage.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.egakat.core.io.stage.service.api.crud.ActualizacionIntegracionCrudService;
 import com.egakat.io.gws.cliente.service.api.documentos.DocumentoSolicitudDownloadService;
 import com.egakat.io.gws.cliente.service.api.documentos.DocumentoSolicitudNotificationService;
 import com.egakat.io.gws.cliente.service.api.documentos.DocumentoSolicitudPullService;
-import com.egakat.io.gws.commons.core.service.api.crud.ActualizacionIntegracionCrudService;
-import com.egakat.io.gws.configuration.constants.IntegracionesConstants;
+import com.egakat.io.gws.commons.configuration.constants.IntegracionesConstants;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;

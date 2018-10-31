@@ -3,6 +3,9 @@ package com.egakat.io.gws.commons.documentos.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -14,8 +17,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.egakat.commons.domain.SimpleAuditableEntity;
+import com.egakat.core.data.jpa.domain.SimpleAuditableEntity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +34,12 @@ import lombok.ToString;
 @NoArgsConstructor
 public class DocumentoSolicitudLinea extends SimpleAuditableEntity<Long> {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name = "id", updatable = false, nullable = false)
+	@Setter(value = AccessLevel.PROTECTED)
+	private Long id;
+	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_documento_solicitud", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)

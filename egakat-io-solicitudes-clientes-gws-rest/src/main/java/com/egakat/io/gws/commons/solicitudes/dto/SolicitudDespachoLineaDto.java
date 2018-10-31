@@ -3,7 +3,7 @@ package com.egakat.io.gws.commons.solicitudes.dto;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.egakat.commons.dto.SimpleAuditableEntityDto;
+import com.egakat.core.dto.SimpleAuditableEntityDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

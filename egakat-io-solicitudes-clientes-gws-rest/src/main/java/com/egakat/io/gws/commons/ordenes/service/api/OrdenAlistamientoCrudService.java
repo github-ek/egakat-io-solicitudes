@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.egakat.io.gws.commons.core.dto.ActualizacionIntegracionDto;
-import com.egakat.io.gws.commons.core.dto.ErrorIntegracionDto;
-import com.egakat.io.gws.commons.core.enums.EstadoIntegracionType;
-import com.egakat.io.gws.commons.core.service.api.crud.ExtendedIntegracionEntityCrudService;
+import com.egakat.core.io.stage.dto.ActualizacionIntegracionDto;
+import com.egakat.core.io.stage.dto.ErrorIntegracionDto;
+import com.egakat.core.io.stage.enums.EstadoIntegracionType;
+import com.egakat.core.io.stage.service.api.crud.ExtendedIntegracionEntityCrudService;
 import com.egakat.io.gws.commons.ordenes.dto.OrdenAlistamientoDto;
 
 public interface OrdenAlistamientoCrudService
