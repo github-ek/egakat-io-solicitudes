@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.core.web.client.components.RestClient;
 import com.egakat.core.web.client.properties.RestProperties;
-import com.egakat.io.commons.configuration.constants.IntegracionesConstants;
+import com.egakat.io.commons.constants.IntegracionesConstants;
 import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.enums.EstadoIntegracionType;
 import com.egakat.io.core.enums.EstadoNotificacionType;
 import com.egakat.io.core.service.impl.rest.RestPullServiceImpl;
+import com.egakat.io.gws.client.constants.IntegracionesRestConstants;
+import com.egakat.io.gws.client.constants.SolicitudEstadoConstants;
 import com.egakat.io.gws.client.properties.GwsSolicitudesDespachoRestProperties;
-import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
-import com.egakat.io.gws.configuration.constants.SolicitudEstadoConstants;
 import com.egakat.io.gws.service.api.documentos.DocumentoSolicitudPullService;
 
 import lombok.val;

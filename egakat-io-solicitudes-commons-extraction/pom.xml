@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<artifactId>egakat-io-solicitudes-commons</artifactId>
 	<packaging>jar</packaging>
+
 	<name>egakat-io-solicitudes-commons</name>
 	<description></description>
-	
+
 	<parent>
 		<groupId>com.egakat</groupId>
 		<artifactId>egakat-io-solicitudes</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>..</relativePath>
-		<!-- lookup parent from repository -->
+		<relativePath>..</relativePath> <!-- lookup parent from repository -->
 	</parent>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -43,12 +42,11 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>com.egakat</groupId>
-			<artifactId>egakat-integration-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<artifactId>egakat-integration-core-files</artifactId>
 		</dependency>
 	</dependencies>
 </project>

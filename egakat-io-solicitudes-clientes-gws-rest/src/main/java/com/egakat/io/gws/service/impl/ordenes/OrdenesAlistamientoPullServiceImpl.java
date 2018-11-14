@@ -1,61 +1,69 @@
 package com.egakat.io.gws.service.impl.ordenes;
 
+import java.util.HashMap;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.egakat.io.commons.constants.IntegracionesConstants;
+import com.egakat.io.core.dto.ActualizacionDto;
+import com.egakat.io.core.service.impl.jdbc.JdbcPullServiceImpl;
 import com.egakat.io.gws.service.api.ordenes.OrdenesAlistamientoPullService;
 
+import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class OrdenesAlistamientoPullServiceImpl implements OrdenesAlistamientoPullService {@Override
-	public void pull() {
-		// TODO Auto-generated method stub
-		
+public class OrdenesAlistamientoPullServiceImpl extends JdbcPullServiceImpl<String>
+		implements OrdenesAlistamientoPullService {
+
+	@Autowired
+	private NamedParameterJdbcTemplate jdbcTemplate;
+
+	@Override
+	protected NamedParameterJdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
 	}
 
-	/*
-	 * @Autowired private WmsRestProperties properties;
-	 * 
-	 * @Autowired private RestClient restClient;
-	 * 
-	 * 
-	 * @Override protected RestProperties getProperties() { return properties; }
-	 * 
-	 * @Override protected RestClient getRestClient() { return restClient; }
-	 * 
-	 * @Override protected String getIntegracion() { return
-	 * IntegracionesConstants.ORDENES_DE_ALISTAMIENTO_EN_STAGE; }
-	 * 
-	 * @Override protected String getApiEndPoint() { return
-	 * RestConstants.ordenes_alistamiento +
-	 * RestConstants.ordenes_alistamiento_suscripciones; }
-	 * 
-	 * @Override protected String getQuery() { return ""; }
-	 * 
-	 * @Override public void pull() { val correlacion = defaultCorrelacion();
-	 * 
-	 * try { val inputs = pullSuscripciones();
-	 * 
-	 * enqueue(correlacion, inputs); } catch (RuntimeException e) {
-	 * getErroresService().create(getIntegracion(), correlacion, "", e);
-	 * log.error("Exception:", e); } }
-	 * 
-	 * protected List<Integer> pullSuscripciones(Object... arg) { val url =
-	 * getProperties().getBasePath() + getApiEndPoint(); val query = getQuery();
-	 * 
-	 * val response = getRestClient().getAllQuery(url, query, Integer[].class, arg);
-	 * val result = Arrays.asList(response.getBody()); return result; }
-	 * 
-	 * @Override protected ActualizacionDto asModel(String correlacion, Integer
-	 * input) { val result = new ActualizacionDto();
-	 * 
-	 * result.setIntegracion(getIntegracion());
-	 * result.setIdExterno(input.toString()); result.setCorrelacion(correlacion);
-	 * result.setEstadoIntegracion(EstadoIntegracionType.NO_PROCESADO);
-	 * result.setEstadoNotificacion(EstadoNotificacionType.SIN_NOVEDAD);
-	 * 
-	 * return result; }
-	 * 
-	 */
+	@Override
+	protected String getIntegracion() {
+		return IntegracionesConstants.ORDENES_DE_ALISTAMIENTO_EN_STAGE;
+	}
+
+	@Override
+	public void pull() {
+		val correlacion = defaultCorrelacion();
+
+//		try {
+//			val sql = getSql();
+//			val result = getJdbcTemplate().queryForObject(sql, paramMap, getRowMapper());
+//			return Optional.of(result);
+//		} catch (DataAccessException e) {
+//			return Optional.empty();
+//		}
+	}
+
+	@Override
+	protected String getSql() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected RowMapper<String> getRowMapper() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ActualizacionDto asModel(String correlacion, String input) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

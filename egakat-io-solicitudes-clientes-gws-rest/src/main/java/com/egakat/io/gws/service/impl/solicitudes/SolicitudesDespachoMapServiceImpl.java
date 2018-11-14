@@ -1,6 +1,7 @@
 package com.egakat.io.gws.service.impl.solicitudes;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ import com.egakat.io.core.dto.ErrorIntegracionDto;
 import com.egakat.io.core.enums.EstadoIntegracionType;
 import com.egakat.io.core.service.api.crud.ExtendedIntegracionEntityCrudService;
 import com.egakat.io.core.service.impl.MapServiceImpl;
-import com.egakat.io.gws.configuration.constants.IntegracionesConstants;
-import com.egakat.io.gws.configuration.constants.SolicitudEstadoConstants;
+import com.egakat.io.gws.client.constants.SolicitudEstadoConstants;
+import com.egakat.io.gws.constants.IntegracionesConstants;
 
 import lombok.val;
 
@@ -124,7 +125,7 @@ public class SolicitudesDespachoMapServiceImpl extends MapServiceImpl<SolicitudD
 
 		model.setIdCiudad(null);
 		Long id = null;
-		if(!StringUtils.isNumeric(key)) {
+		if (!StringUtils.isNumeric(key)) {
 			id = getLookUpService().findCiudadIdByNombreAlterno(key);
 		}
 
@@ -189,7 +190,7 @@ public class SolicitudesDespachoMapServiceImpl extends MapServiceImpl<SolicitudD
 		}
 		return result;
 	}
-	
+
 	@Override
 	protected void validate(SolicitudDespachoDto model, List<ErrorIntegracionDto> errores) {
 		errores.clear();
@@ -225,7 +226,7 @@ public class SolicitudesDespachoMapServiceImpl extends MapServiceImpl<SolicitudD
 		}
 
 		// TODO VALIDAR ID punto
-		
+
 		lineas.parallelStream().forEach(linea -> {
 			// TODO VALIDAR LINEAS Y SUBLINEAS EXTERNAS UNICAS
 			if (linea.getIdProducto() == null) {
@@ -243,6 +244,14 @@ public class SolicitudesDespachoMapServiceImpl extends MapServiceImpl<SolicitudD
 						MAPA_ESTADO_INVENTARIO_CODIGO_ALTERNO, asArg(linea)));
 			}
 		});
+
+		val bodegas = lineas.stream().filter(a -> a.getIdBodega() != null).map(a -> a.getIdBodega()).distinct()
+				.collect(Collectors.toList());
+
+		if (bodegas.size() > 1) {
+			errores.add(errorMultiplesBodegasDetectadas(model, "BODEGA"));
+
+		}
 	}
 
 	protected String[] asArg(SolicitudDespachoLineaDto linea, String... args) {
@@ -281,6 +290,13 @@ public class SolicitudesDespachoMapServiceImpl extends MapServiceImpl<SolicitudD
 			String valor, long idMapa, String... arg) {
 		val format = "Este atributo esta asociado al mapa de homologación con id=%d.Verifique que el valor [%s] exista en dicho mapa.";
 		val mensaje = String.format(format, idMapa, valor);
+		val result = getErroresService().error(entry, codigo, mensaje, arg);
+		return result;
+	}
+
+	protected ErrorIntegracionDto errorMultiplesBodegasDetectadas(SolicitudDespachoDto entry, String codigo,
+			String... arg) {
+		val mensaje = "Se detecto que esta solicitud esta asociada a mas de una bodega.";
 		val result = getErroresService().error(entry, codigo, mensaje, arg);
 		return result;
 	}

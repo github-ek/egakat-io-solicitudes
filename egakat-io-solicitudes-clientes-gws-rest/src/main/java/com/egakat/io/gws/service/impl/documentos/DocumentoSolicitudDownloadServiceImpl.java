@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.core.web.client.components.RestClient;
 import com.egakat.core.web.client.properties.RestProperties;
-import com.egakat.io.commons.configuration.constants.IntegracionesConstants;
+import com.egakat.io.commons.constants.IntegracionesConstants;
 import com.egakat.io.commons.documentos.dto.DocumentoSolicitudDto;
 import com.egakat.io.commons.documentos.dto.DocumentoSolicitudLineaDto;
 import com.egakat.io.commons.documentos.service.api.DocumentoSolicitudCrudService;
 import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.dto.ErrorIntegracionDto;
 import com.egakat.io.core.service.impl.rest.RestDownloadServiceImpl;
+import com.egakat.io.gws.client.constants.IntegracionesRestConstants;
 import com.egakat.io.gws.client.properties.GwsSolicitudesDespachoRestProperties;
-import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
 import com.egakat.io.gws.dto.DocumentoDespachoClienteDto;
 import com.egakat.io.gws.dto.DocumentoDespachoClienteLineaDto;
 import com.egakat.io.gws.service.api.documentos.DocumentoSolicitudDownloadService;

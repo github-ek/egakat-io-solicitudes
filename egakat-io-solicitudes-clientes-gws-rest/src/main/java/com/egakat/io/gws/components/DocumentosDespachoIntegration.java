@@ -5,7 +5,7 @@ import static com.egakat.io.core.enums.EstadoIntegracionType.ESTRUCTURA_VALIDA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.egakat.io.commons.configuration.constants.IntegracionesConstants;
+import com.egakat.io.commons.constants.IntegracionesConstants;
 import com.egakat.io.core.service.api.crud.ActualizacionCrudService;
 import com.egakat.io.gws.service.api.documentos.DocumentoSolicitudDownloadService;
 import com.egakat.io.gws.service.api.documentos.DocumentoSolicitudNotificationService;

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.egakat.io.commons.configuration.constants.IntegracionesConstants;
+import com.egakat.io.commons.constants.IntegracionesConstants;
 import com.egakat.io.commons.ordenes.dto.OrdenAlistamientoDto;
 import com.egakat.io.commons.ordenes.service.api.OrdenAlistamientoCrudService;
 import com.egakat.io.core.dto.ActualizacionDto;
@@ -125,12 +125,12 @@ public class OrdenesAlistamientoIntegration {
 				// validate(actualizacion, input, errores);
 
 				if (errores.isEmpty()) {
-					Long id = crudService.upload(input, errores);
+					//Long id = crudService.upload(input, errores);
 					// val model = asModel(actualizacion, input);
 					// onSuccess(actualizacion, input, model);
 					if (errores.isEmpty()) {
-						crudService.updateEstadoNoficacionOrdenAlistamiento(input, actualizacion,
-								EstadoIntegracionType.PROCESADO, id);
+						//crudService.updateEstadoNoficacionOrdenAlistamiento(input, actualizacion,
+						//		EstadoIntegracionType.PROCESADO, id);
 					}
 				}
 			}

@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.egakat.core.web.client.components.RestClient;
 import com.egakat.core.web.client.properties.RestProperties;
 import com.egakat.core.web.client.service.impl.LocalQueryServiceImpl;
+import com.egakat.io.gws.client.constants.IntegracionesRestConstants;
 import com.egakat.io.gws.client.properties.GwsSolicitudesDespachoRestProperties;
 import com.egakat.io.gws.client.service.api.OrdenAlistamientoClienteLocalService;
-import com.egakat.io.gws.configuration.constants.IntegracionesRestConstants;
 import com.egakat.io.gws.dto.OrdenAlistamientoClienteDto;
 
 import lombok.val;

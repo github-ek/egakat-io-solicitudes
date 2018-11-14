@@ -11,16 +11,12 @@ import com.egakat.io.core.enums.EstadoIntegracionType;
 import com.egakat.io.core.enums.EstadoNotificacionType;
 import com.egakat.io.core.service.api.crud.ActualizacionCrudService;
 import com.egakat.io.core.service.api.crud.ErrorIntegracionCrudService;
-import com.egakat.io.gws.client.service.api.SolicitudesClienteLocalService;
 import com.egakat.io.gws.service.api.documentos.DocumentoSolicitudNotificationService;
 
 import lombok.val;
 
 @Service
 public class DocumentoSolicitudNotificationServiceImpl implements DocumentoSolicitudNotificationService {
-
-	@Autowired
-	private SolicitudesClienteLocalService externalService;
 
 	@Autowired
 	private ActualizacionCrudService actualizacionesService;
@@ -34,15 +30,15 @@ public class DocumentoSolicitudNotificationServiceImpl implements DocumentoSolic
 
 		try {
 			val id = Integer.parseInt(entry.getIdExterno());
-			externalService.confirmarReciboDocumento(id);
+			//externalService.confirmarReciboDocumento(id);
 		} catch (RuntimeException e) {
 			val error = erroresService.error(entry, "", e);
 			errores.add(error);
 		}
 
 		entry.setEstadoIntegracion(EstadoIntegracionType.PROCESADO);
-		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA,
-				EstadoNotificacionType.ERROR);
+		entry.setEstadoNotificacion(EstadoNotificacionType.NOTIFICADA);
+		actualizacionesService.updateNotificacion(entry, errores);
 	}
 
 	@Override
@@ -52,14 +48,14 @@ public class DocumentoSolicitudNotificationServiceImpl implements DocumentoSolic
 		try {
 			val id = Integer.parseInt(entry.getIdExterno());
 			val list = erroresService.findAll(entry);
-			externalService.rechazar(id, list);
+			//externalService.rechazar(id, list);
 		} catch (RuntimeException e) {
 			val error = erroresService.error(entry, "", e);
 			errores.add(error);
 		}
 
-		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA,
-				EstadoNotificacionType.ERROR);
+		entry.setEstadoNotificacion(EstadoNotificacionType.NOTIFICADA);
+		actualizacionesService.updateNotificacion(entry, errores);
 	}
 
 	@Override
@@ -74,7 +70,6 @@ public class DocumentoSolicitudNotificationServiceImpl implements DocumentoSolic
 //			errores.add(error);
 //		}
 
-		actualizacionesService.updateEstadoNotificacion(entry, errores, EstadoNotificacionType.NOTIFICADA,
-				EstadoNotificacionType.ERROR);
+		actualizacionesService.updateNotificacion(entry, errores);
 	}
 }

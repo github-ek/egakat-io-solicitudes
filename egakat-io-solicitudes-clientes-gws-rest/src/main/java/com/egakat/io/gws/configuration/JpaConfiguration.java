@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -23,6 +24,12 @@ public class JpaConfiguration extends HikariConfig {
 	@ConfigurationProperties(prefix = DATASOURCE_PROPERTIES_PREFIX)
 	public DataSource dataSource() {
 		val result = DataSourceBuilder.create().type(HikariDataSource.class).build();
+		return result;
+	}
+
+	@Bean
+	public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
+		val result = new NamedParameterJdbcTemplate(dataSource);
 		return result;
 	}
 }
