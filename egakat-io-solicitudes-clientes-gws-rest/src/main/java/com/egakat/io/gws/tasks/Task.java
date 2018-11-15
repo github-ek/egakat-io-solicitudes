@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.egakat.io.gws.service.impl.solicitudes.SolicitudesDespachoIntegrationService;
+import com.egakat.io.gws.service.impl.OrdenesAlistamientoIntegrationService;
+import com.egakat.io.gws.service.impl.SolicitudesDespachoIntegrationService;
 
 @Component
 public class Task {
@@ -12,9 +13,14 @@ public class Task {
 	@Autowired
 	private SolicitudesDespachoIntegrationService solicitudesDespachoService;
 
+	@Autowired
+	private OrdenesAlistamientoIntegrationService ordenesAlistamientoIntegrationService; 
+	
+	
 	@Scheduled(cron = "${schedule.start}")
 	public void run() {
-		solicitudesDespachoService.run();
+		//solicitudesDespachoService.run();
+		ordenesAlistamientoIntegrationService.run();
 		
 		//CREAR SUSCRIPCION PARA DETECTAR CREACION DE ORDEN DE ALISTAMIENTO
 		//WMS CREA SUSCRIPCION

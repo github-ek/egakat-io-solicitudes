@@ -19,7 +19,7 @@ import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.dto.ErrorIntegracionDto;
 import com.egakat.io.core.service.impl.rest.RestDownloadServiceImpl;
 import com.egakat.io.gws.client.components.GwsRestClient;
-import com.egakat.io.gws.client.constants.IntegracionesRestConstants;
+import com.egakat.io.gws.client.constants.RestConstants;
 import com.egakat.io.gws.client.properties.GwsSolicitudesDespachoRestProperties;
 import com.egakat.io.gws.constants.IntegracionesConstants;
 import com.egakat.io.gws.dto.SolicitudDespachoClienteDto;
@@ -64,7 +64,7 @@ public class SolicitudesDespachoDownloadServiceImpl
 
 	@Override
 	protected String getApiEndPoint() {
-		return IntegracionesRestConstants.SOLICITUDES_DESPACHO;
+		return RestConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override

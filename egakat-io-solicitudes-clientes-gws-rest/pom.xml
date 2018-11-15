@@ -34,7 +34,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.egakat</groupId>
-			<artifactId>egakat-e-connect-maestros-client</artifactId>
+			<artifactId>egakat-io-solicitudes-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -44,7 +44,19 @@
 		</dependency>
 		<dependency>
 			<groupId>com.egakat</groupId>
-			<artifactId>egakat-io-solicitudes-commons</artifactId>
+			<artifactId>egakat-e-connect-maestros-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.egakat</groupId>
+			<artifactId>egakat-wms-ordenes-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.egakat</groupId>
+			<artifactId>
+				egakat-integration-commons-suscripciones-dto
+			</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

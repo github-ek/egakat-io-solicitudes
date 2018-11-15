@@ -17,7 +17,7 @@ import com.egakat.io.commons.documentos.service.api.DocumentoSolicitudCrudServic
 import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.dto.ErrorIntegracionDto;
 import com.egakat.io.core.service.impl.rest.RestDownloadServiceImpl;
-import com.egakat.io.gws.client.constants.IntegracionesRestConstants;
+import com.egakat.io.gws.client.constants.RestConstants;
 import com.egakat.io.gws.client.properties.GwsSolicitudesDespachoRestProperties;
 import com.egakat.io.gws.dto.DocumentoDespachoClienteDto;
 import com.egakat.io.gws.dto.DocumentoDespachoClienteLineaDto;
@@ -61,7 +61,7 @@ public class DocumentoSolicitudDownloadServiceImpl
 
 	@Override
 	protected String getApiEndPoint() {
-		return IntegracionesRestConstants.DOCUMENTOS_SOLICITUDES_DESPACHO;
+		return RestConstants.DOCUMENTOS_SOLICITUDES_DESPACHO;
 	}
 
 	@Override

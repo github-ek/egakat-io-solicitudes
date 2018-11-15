@@ -13,7 +13,7 @@ import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.enums.EstadoIntegracionType;
 import com.egakat.io.core.enums.EstadoNotificacionType;
 import com.egakat.io.core.service.impl.rest.RestPullServiceImpl;
-import com.egakat.io.gws.client.constants.IntegracionesRestConstants;
+import com.egakat.io.gws.client.constants.RestConstants;
 import com.egakat.io.gws.client.constants.SolicitudEstadoConstants;
 import com.egakat.io.gws.client.properties.GwsSolicitudesDespachoRestProperties;
 import com.egakat.io.gws.service.api.documentos.DocumentoSolicitudPullService;
@@ -49,7 +49,7 @@ public class DocumentoSolicitudPullServiceImpl extends RestPullServiceImpl<Integ
 
 	@Override
 	protected String getApiEndPoint() {
-		return IntegracionesRestConstants.SOLICITUDES_DESPACHO;
+		return RestConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override

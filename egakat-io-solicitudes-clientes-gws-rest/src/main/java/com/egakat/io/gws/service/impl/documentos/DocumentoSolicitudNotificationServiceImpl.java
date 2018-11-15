@@ -24,7 +24,6 @@ public class DocumentoSolicitudNotificationServiceImpl implements DocumentoSolic
 	@Autowired
 	private ErrorIntegracionCrudService erroresService;
 
-	@Override
 	public void ack(ActualizacionDto entry) {
 		val errores = new ArrayList<ErrorIntegracionDto>();
 
@@ -41,7 +40,6 @@ public class DocumentoSolicitudNotificationServiceImpl implements DocumentoSolic
 		actualizacionesService.updateNotificacion(entry, errores);
 	}
 
-	@Override
 	public void reject(ActualizacionDto entry) {
 		val errores = new ArrayList<ErrorIntegracionDto>();
 
@@ -58,7 +56,6 @@ public class DocumentoSolicitudNotificationServiceImpl implements DocumentoSolic
 		actualizacionesService.updateNotificacion(entry, errores);
 	}
 
-	@Override
 	public void accept(ActualizacionDto entry) {
 		val errores = new ArrayList<ErrorIntegracionDto>();
 

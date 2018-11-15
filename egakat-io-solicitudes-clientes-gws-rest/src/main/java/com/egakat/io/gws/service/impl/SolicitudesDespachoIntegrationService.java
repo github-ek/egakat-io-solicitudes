@@ -1,10 +1,14 @@
-package com.egakat.io.gws.service.impl.solicitudes;
+package com.egakat.io.gws.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.egakat.io.gws.service.api.solicitudes.SolicitudesDespachoDownloadService;
 import com.egakat.io.gws.service.api.solicitudes.SolicitudesDespachoPullService;
+import com.egakat.io.gws.service.impl.solicitudes.SolicitudesDespachoMapServiceImpl;
+import com.egakat.io.gws.service.impl.solicitudes.SolicitudesDespachoNotificacionAceptacionPushServiceImpl;
+import com.egakat.io.gws.service.impl.solicitudes.SolicitudesDespachoNotificacionRechazoPushServiceImpl;
+import com.egakat.io.gws.service.impl.solicitudes.SolicitudesDespachoNotificacionReciboPushServiceImpl;
 
 @Service
 public class SolicitudesDespachoIntegrationService {

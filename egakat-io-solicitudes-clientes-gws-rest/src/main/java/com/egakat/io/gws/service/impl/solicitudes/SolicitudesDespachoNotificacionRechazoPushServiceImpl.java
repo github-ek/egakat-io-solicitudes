@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.egakat.io.commons.solicitudes.dto.SolicitudDespachoDto;
 import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.dto.ErrorIntegracionDto;
 import com.egakat.io.gws.client.constants.SolicitudEstadoConstants;
@@ -35,27 +34,25 @@ public class SolicitudesDespachoNotificacionRechazoPushServiceImpl
 	}
 
 	@Override
-	protected List<ErrorIntegracionDto> asOutput(SolicitudDespachoDto model, ActualizacionDto actualizacion,
-			List<ErrorIntegracionDto> errores) {
-		val result = getErroresService().findAll(model);
+	protected List<ErrorIntegracionDto> asOutput(ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
+		val result = getErroresService().findAll(actualizacion);
 		return result;
 	}
 
 	@Override
-	protected Object push(List<ErrorIntegracionDto> output, SolicitudDespachoDto model, ActualizacionDto actualizacion,
+	protected Object push(List<ErrorIntegracionDto> output, ActualizacionDto actualizacion,
 			List<ErrorIntegracionDto> errores) {
 		val url = getUrl();
 		val query = "/{id}/error?status={status}";
 
-		getRestClient().put(url + query, output, Object.class, model.getIdExterno(),
+		getRestClient().put(url + query, output, Object.class, actualizacion.getIdExterno(),
 				SolicitudEstadoConstants.RECHAZADA_OPL);
 		return "";
 	}
 
 	@Override
-	protected void onSuccess(Object response, List<ErrorIntegracionDto> output, SolicitudDespachoDto model,
-			ActualizacionDto actualizacion) {
-		super.onSuccess(response, output, model, actualizacion);
+	protected void onSuccess(Object response, List<ErrorIntegracionDto> output, ActualizacionDto actualizacion) {
+		super.onSuccess(response, output, actualizacion);
 		actualizacion.setSubEstadoIntegracion(SolicitudEstadoConstants.RECHAZADA_OPL);
 	}
 }

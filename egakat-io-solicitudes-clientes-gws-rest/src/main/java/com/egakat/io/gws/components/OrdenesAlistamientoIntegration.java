@@ -92,7 +92,7 @@ public class OrdenesAlistamientoIntegration {
 
 	private void push() {
 		val actualizaciones = actualizacionesService.findAllByIntegracionAndEstadoIntegracionIn(
-				IntegracionesConstants.ORDENES_DE_ALISTAMIENTO_EN_STAGE, EstadoIntegracionType.ESTRUCTURA_VALIDA);
+				IntegracionesConstants.ORDENES_DE_ALISTAMIENTO, EstadoIntegracionType.ESTRUCTURA_VALIDA);
 
 //		int i = 1;
 //		int n = actualizaciones.size();

@@ -32,27 +32,6 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 		</dependency>
 	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.egakat</groupId>
-				<artifactId>egakat-integration-files-commons</artifactId>
-				<version>${egakat.integration.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.egakat</groupId>
-				<artifactId>egakat-integration-core-files</artifactId>
-				<version>${egakat.integration.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.egakat</groupId>
-				<artifactId>
-					egakat-integration-core-transformation
-				</artifactId>
-				<version>${egakat.integration.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 	<modules>
 		
 		

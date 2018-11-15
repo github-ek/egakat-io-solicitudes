@@ -72,7 +72,7 @@ public class DocumentosDespachoIntegration {
 
 		for (val actualizacion : actualizaciones) {
 			try {
-				notificationService.ack(actualizacion);
+				//notificationService.notify(actualizacion);
 			} catch (RuntimeException e) {
 				log.error("", e);
 			}

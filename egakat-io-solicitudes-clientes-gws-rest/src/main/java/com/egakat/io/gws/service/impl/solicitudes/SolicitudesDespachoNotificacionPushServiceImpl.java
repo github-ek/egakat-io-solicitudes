@@ -6,31 +6,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.egakat.core.web.client.components.RestClient;
 import com.egakat.core.web.client.properties.RestProperties;
-import com.egakat.io.commons.solicitudes.dto.SolicitudDespachoDto;
-import com.egakat.io.commons.solicitudes.service.api.SolicitudDespachoCrudService;
 import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.dto.ErrorIntegracionDto;
 import com.egakat.io.core.enums.EstadoNotificacionType;
-import com.egakat.io.core.service.api.crud.ExtendedIntegracionEntityCrudService;
-import com.egakat.io.core.service.impl.rest.RestPushServiceImpl;
+import com.egakat.io.core.service.impl.rest.RestNotificationPushServiceImpl;
 import com.egakat.io.gws.client.components.GwsRestClient;
-import com.egakat.io.gws.client.constants.IntegracionesRestConstants;
+import com.egakat.io.gws.client.constants.RestConstants;
 import com.egakat.io.gws.client.properties.GwsSolicitudesDespachoRestProperties;
 import com.egakat.io.gws.constants.IntegracionesConstants;
 
-import lombok.val;
-
 public abstract class SolicitudesDespachoNotificacionPushServiceImpl<O>
-		extends RestPushServiceImpl<SolicitudDespachoDto, O, Object> {
+		extends RestNotificationPushServiceImpl<O, Object> {
 
 	@Autowired
 	private GwsSolicitudesDespachoRestProperties properties;
 
 	@Autowired
 	private GwsRestClient restClient;
-
-	@Autowired
-	private SolicitudDespachoCrudService crudService;
 
 	@Override
 	protected RestProperties getProperties() {
@@ -44,7 +36,7 @@ public abstract class SolicitudesDespachoNotificacionPushServiceImpl<O>
 
 	@Override
 	protected String getApiEndPoint() {
-		return IntegracionesRestConstants.SOLICITUDES_DESPACHO;
+		return RestConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override
@@ -53,26 +45,13 @@ public abstract class SolicitudesDespachoNotificacionPushServiceImpl<O>
 	}
 
 	@Override
-	protected ExtendedIntegracionEntityCrudService<SolicitudDespachoDto> getCrudService() {
-		return crudService;
-	}
-
-	@Override
-	protected SolicitudDespachoDto getModel(ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
-		val result = getCrudService().findOneByIntegracionAndIdExterno(actualizacion.getIntegracion(),
-				actualizacion.getIdExterno());
-		return result;
-	}
-
-	@Override
-	protected void onSuccess(Object response, O output, SolicitudDespachoDto model,
-			ActualizacionDto actualizacion) {
+	protected void onSuccess(Object response, O output, ActualizacionDto actualizacion) {
 		actualizacion.setEstadoNotificacion(EstadoNotificacionType.NOTIFICADA);
 		actualizacion.setReintentos(0);
 	}
-	
+
 	@Override
-	protected void onDiscard(O output, SolicitudDespachoDto model, ActualizacionDto actualizacion) {
+	protected void onDiscard(O output, ActualizacionDto actualizacion) {
 		actualizacion.setEstadoNotificacion(EstadoNotificacionType.DESCARTADA);
 	}
 
@@ -81,15 +60,14 @@ public abstract class SolicitudesDespachoNotificacionPushServiceImpl<O>
 		actualizacion.setEstadoNotificacion(EstadoNotificacionType.ERROR);
 		actualizacion.setReintentos(0);
 	}
-	
+
 	@Override
-	protected void updateOnSuccess(Object response, O output, SolicitudDespachoDto model,
-			ActualizacionDto actualizacion) {
+	protected void updateOnSuccess(Object response, O output, ActualizacionDto actualizacion) {
 		getActualizacionesService().update(actualizacion);
 	}
 
 	@Override
-	protected void updateOnDiscard(O output, SolicitudDespachoDto model, ActualizacionDto actualizacion) {
+	protected void updateOnDiscard(O output, ActualizacionDto actualizacion) {
 		getActualizacionesService().update(actualizacion);
 	}
 
