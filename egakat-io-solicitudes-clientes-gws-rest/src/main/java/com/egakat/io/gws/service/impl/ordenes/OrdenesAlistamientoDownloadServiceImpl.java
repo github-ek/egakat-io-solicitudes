@@ -1,34 +1,46 @@
 package com.egakat.io.gws.service.impl.ordenes;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.egakat.core.web.client.components.RestClient;
+import com.egakat.core.web.client.properties.RestProperties;
+import com.egakat.io.commons.constants.IntegracionesConstants;
+import com.egakat.io.commons.ordenes.dto.OrdenAlistamientoCancelacionDto;
+import com.egakat.io.commons.ordenes.dto.OrdenAlistamientoDto;
+import com.egakat.io.commons.ordenes.dto.OrdenAlistamientoLineaDto;
+import com.egakat.io.commons.ordenes.dto.OrdenAlistamientoLoteDto;
+import com.egakat.io.commons.ordenes.service.api.OrdenAlistamientoCrudService;
+import com.egakat.io.core.dto.ActualizacionDto;
+import com.egakat.io.core.dto.ErrorIntegracionDto;
+import com.egakat.io.core.enums.EstadoIntegracionType;
+import com.egakat.io.core.service.impl.rest.RestDownloadServiceImpl;
 import com.egakat.io.gws.service.api.ordenes.OrdenesAlistamientoDownloadService;
+import com.egakat.wms.ordenes.client.components.WmsOrdenesRestClient;
+import com.egakat.wms.ordenes.client.properties.WmsOrdenesRestProperties;
+import com.egakat.wms.ordenes.constants.RestConstants;
+import com.egakat.wms.ordenes.dto.alistamientos.OrdShipmentDto;
+import com.egakat.wms.ordenes.dto.alistamientos.OrdShipmentLineCancelacionDto;
+import com.egakat.wms.ordenes.dto.alistamientos.OrdShipmentLineDto;
+import com.egakat.wms.ordenes.dto.alistamientos.OrdShipmentLineLoteDto;
+
+import lombok.val;
 
 @Service
-public class OrdenesAlistamientoDownloadServiceImpl implements OrdenesAlistamientoDownloadService{
-
-	@Override
-	public void download() {
-		// TODO Auto-generated method stub
-		
-	}
-/*
-extends
+public class OrdenesAlistamientoDownloadServiceImpl extends
 		RestDownloadServiceImpl<OrdShipmentDto, OrdenAlistamientoDto> implements OrdenesAlistamientoDownloadService {
 
 	@Autowired
+	private WmsOrdenesRestProperties properties;
+
+	@Autowired
+	private WmsOrdenesRestClient restClient;
+
+	@Autowired
 	private OrdenAlistamientoCrudService crudService;
-
-	@Autowired
-	private WmsRestProperties properties;
-
-	@Autowired
-	private RestClient restClient;
-
-	@Override
-	protected OrdenAlistamientoCrudService getCrudService() {
-		return crudService;
-	}
 
 	@Override
 	protected RestProperties getProperties() {
@@ -41,22 +53,30 @@ extends
 	}
 
 	@Override
-	protected String getIntegracion() {
-		return IntegracionesConstants.ORDENES_DE_ALISTAMIENTO_EN_STAGE;
-	}
-
-	@Override
 	protected String getApiEndPoint() {
-		return RestConstants.ordenes_alistamiento + RestConstants.ordenes_alistamiento_suscripciones;
+		return RestConstants.suscripciones_ordenes_alistamiento;
 	}
 
 	@Override
 	protected String getQuery() {
-		return "/{id}";
+		return RestConstants.suscripciones_ordenes_alistamiento_by_pk;
 	}
 
-	protected Class<OrdShipmentDto> getResponseType() {
-		return OrdShipmentDto.class;
+	@Override
+	protected String getIntegracion() {
+		return IntegracionesConstants.ORDENES_DE_ALISTAMIENTO;
+	}
+
+	@Override
+	protected OrdenAlistamientoCrudService getCrudService() {
+		return crudService;
+	}
+
+	@Override
+	protected List<ActualizacionDto> getPendientes() {
+		val result = getActualizacionesService().findAllByIntegracionAndEstadoIntegracionAndSubEstadoIntegracionIn(
+				getIntegracion(), EstadoIntegracionType.NO_PROCESADO, "DESCARGAR");
+		return result;
 	}
 
 	@Override
@@ -64,7 +84,8 @@ extends
 		val url = getProperties().getBasePath() + getApiEndPoint();
 		val query = getQuery();
 
-		val response = getRestClient().getOneQuery(url, query, getResponseType(), actualizacion.getIdExterno());
+		val response = getRestClient().getOneQuery(url, query, OrdShipmentDto.class, actualizacion.getArg1(),
+				actualizacion.getArg0(), actualizacion.getArg2());
 
 		val result = response.getBody();
 		return result;
@@ -86,6 +107,7 @@ extends
 
 		model.setLineas(asLineas(input));
 		return model;
+
 	}
 
 	protected List<OrdenAlistamientoLineaDto> asLineas(OrdShipmentDto input) {
@@ -160,5 +182,4 @@ extends
 
 		return model;
 	}
-	*/
 }

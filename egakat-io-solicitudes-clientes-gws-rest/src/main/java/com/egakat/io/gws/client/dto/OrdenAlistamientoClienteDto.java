@@ -1,5 +1,5 @@
 
-package com.egakat.io.gws.dto;
+package com.egakat.io.gws.client.dto;
 
 import java.util.List;
 
@@ -7,23 +7,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Getter
-@Setter
-@Builder
-@ToString
+@Data
 public class OrdenAlistamientoClienteDto {
+
+	@JsonProperty("idSolicitud")
+	private String id;
 
 	@JsonIgnore
 	private long idOrdenAlistamiento;
-	
-	@JsonProperty("idSolicitud")
-	private String id;
 
 	@JsonProperty("numeroOrdenAlistamiento")
 	private String numeroOrden;

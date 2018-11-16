@@ -1,6 +1,6 @@
 package com.egakat.io.gws.client.constants;
 
-public class RestConstants {
+public class GwsRestConstants {
 
 	final public static String BASE = "/api/v1/integraciones";
 	

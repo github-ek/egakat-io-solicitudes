@@ -9,14 +9,14 @@ import com.egakat.core.web.client.properties.RestProperties;
 import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.dto.ErrorIntegracionDto;
 import com.egakat.io.core.enums.EstadoNotificacionType;
-import com.egakat.io.core.service.impl.rest.RestNotificationPushServiceImpl;
+import com.egakat.io.core.service.impl.rest.RestPushNotificationServiceImpl;
 import com.egakat.io.gws.client.components.GwsRestClient;
-import com.egakat.io.gws.client.constants.RestConstants;
+import com.egakat.io.gws.client.constants.GwsRestConstants;
+import com.egakat.io.gws.client.constants.GwsIntegracionesConstants;
 import com.egakat.io.gws.client.properties.GwsSolicitudesDespachoRestProperties;
-import com.egakat.io.gws.constants.IntegracionesConstants;
 
 public abstract class SolicitudesDespachoNotificacionPushServiceImpl<O>
-		extends RestNotificationPushServiceImpl<O, Object> {
+		extends RestPushNotificationServiceImpl<O, Object> {
 
 	@Autowired
 	private GwsSolicitudesDespachoRestProperties properties;
@@ -36,12 +36,12 @@ public abstract class SolicitudesDespachoNotificacionPushServiceImpl<O>
 
 	@Override
 	protected String getApiEndPoint() {
-		return RestConstants.SOLICITUDES_DESPACHO;
+		return GwsRestConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override
 	protected String getIntegracion() {
-		return IntegracionesConstants.SOLICITUDES_DESPACHO;
+		return GwsIntegracionesConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override

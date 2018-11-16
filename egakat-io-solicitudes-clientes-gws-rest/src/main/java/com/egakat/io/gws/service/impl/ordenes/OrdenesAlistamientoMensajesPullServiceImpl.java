@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class OrdenesAlistamientoPullServiceImpl extends JdbcPullServiceImpl<Map<String, Object>>
+public class OrdenesAlistamientoMensajesPullServiceImpl extends JdbcPullServiceImpl<Map<String, Object>>
 		implements OrdenesAlistamientoPullService {
 
 	@Autowired

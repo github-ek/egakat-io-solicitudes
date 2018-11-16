@@ -1,4 +1,4 @@
-package com.egakat.io.gws.dto;
+package com.egakat.io.gws.client.dto;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

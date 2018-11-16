@@ -113,8 +113,6 @@ public class OrdenAlistamientoCrudServiceImpl
 		model.setRemqty(entity.getRemqty());
 		model.setCanUsrId(entity.getCanUsrId());
 		model.setCanDte(entity.getCanDte());
-		model.setIdProducto(entity.getIdProducto());
-		model.setIdCausalCancelacion(entity.getIdCausalCancelacion());
 
 		model.setVersion(entity.getVersion());
 		model.setFechaCreacion(entity.getFechaCreacion());
@@ -143,8 +141,6 @@ public class OrdenAlistamientoCrudServiceImpl
 		model.setLotnum(entity.getLotnum());
 		model.setOrgcod(entity.getOrgcod());
 		model.setExpireDte(entity.getExpireDte());
-		model.setIdProducto(entity.getIdProducto());
-		model.setIdEstadoInventario(entity.getIdEstadoInventario());
 
 		model.setVersion(entity.getVersion());
 		model.setFechaCreacion(entity.getFechaCreacion());
@@ -252,9 +248,6 @@ public class OrdenAlistamientoCrudServiceImpl
 		entity.setCanUsrId(model.getCanUsrId());
 		entity.setCanDte(model.getCanDte());
 
-		entity.setIdProducto(model.getIdProducto());
-		entity.setIdCausalCancelacion(model.getIdCausalCancelacion());
-
 		entity.setVersion(model.getVersion());
 	}
 
@@ -283,16 +276,12 @@ public class OrdenAlistamientoCrudServiceImpl
 	}
 
 	private void mergeLote(OrdenAlistamientoLoteDto model, OrdenAlistamientoLote entity) {
-
 		entity.setPrtnum(model.getPrtnum());
 		entity.setInvsts(model.getInvsts());
 		entity.setUntqty(model.getUntqty());
 		entity.setLotnum(model.getLotnum());
 		entity.setOrgcod(model.getOrgcod());
 		entity.setExpireDte(model.getExpireDte());
-
-		entity.setIdProducto(model.getIdProducto());
-		entity.setIdEstadoInventario(model.getIdEstadoInventario());
 
 		entity.setVersion(model.getVersion());
 	}

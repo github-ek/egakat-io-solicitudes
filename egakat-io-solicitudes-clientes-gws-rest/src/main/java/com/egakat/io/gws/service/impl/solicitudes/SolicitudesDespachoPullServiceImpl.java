@@ -13,10 +13,10 @@ import com.egakat.io.core.enums.EstadoIntegracionType;
 import com.egakat.io.core.enums.EstadoNotificacionType;
 import com.egakat.io.core.service.impl.rest.RestPullServiceImpl;
 import com.egakat.io.gws.client.components.GwsRestClient;
-import com.egakat.io.gws.client.constants.RestConstants;
-import com.egakat.io.gws.client.constants.SolicitudEstadoConstants;
+import com.egakat.io.gws.client.constants.GwsRestConstants;
+import com.egakat.io.gws.client.constants.GwsIntegracionesConstants;
+import com.egakat.io.gws.client.constants.SolicitudDespachoClienteEstadoConstants;
 import com.egakat.io.gws.client.properties.GwsSolicitudesDespachoRestProperties;
-import com.egakat.io.gws.constants.IntegracionesConstants;
 import com.egakat.io.gws.service.api.solicitudes.SolicitudesDespachoPullService;
 
 import lombok.val;
@@ -45,12 +45,12 @@ public class SolicitudesDespachoPullServiceImpl extends RestPullServiceImpl<Inte
 
 	@Override
 	protected String getIntegracion() {
-		return IntegracionesConstants.SOLICITUDES_DESPACHO;
+		return GwsIntegracionesConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override
 	protected String getApiEndPoint() {
-		return RestConstants.SOLICITUDES_DESPACHO;
+		return GwsRestConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class SolicitudesDespachoPullServiceImpl extends RestPullServiceImpl<Inte
 	@Override
 	public void pull() {
 		val correlacion = defaultCorrelacion();
-		val status = SolicitudEstadoConstants.ENVIAR;
+		val status = SolicitudDespachoClienteEstadoConstants.ENVIAR;
 
 		try {
 			val format = "integracion={}, correlacion= {}";

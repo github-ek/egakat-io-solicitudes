@@ -47,7 +47,9 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.egakat</groupId>
-			<artifactId>egakat-integration-core</artifactId>
+			<artifactId>
+				egakat-integration-commons-actualizaciones
+			</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

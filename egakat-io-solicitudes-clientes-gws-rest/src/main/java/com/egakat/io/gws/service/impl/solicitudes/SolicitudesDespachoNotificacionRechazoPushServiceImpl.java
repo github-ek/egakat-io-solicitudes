@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.dto.ErrorIntegracionDto;
-import com.egakat.io.gws.client.constants.SolicitudEstadoConstants;
-import com.egakat.io.gws.constants.IntegracionesConstants;
+import com.egakat.io.gws.client.constants.GwsIntegracionesConstants;
+import com.egakat.io.gws.client.constants.SolicitudDespachoClienteEstadoConstants;
 
 import lombok.val;
 
@@ -24,7 +24,7 @@ public class SolicitudesDespachoNotificacionRechazoPushServiceImpl
 	protected List<ActualizacionDto> getPendientes() {
 		// @formatter:off
 		val result = getActualizacionesService().findAllNoNotificadasByEstadoIntegracionIn(
-		IntegracionesConstants.SOLICITUDES_DESPACHO, 
+		GwsIntegracionesConstants.SOLICITUDES_DESPACHO, 
 		ERROR_ESTRUCTURA,
 	    ERROR_HOMOLOGACION,
 	    ERROR_VALIDACION,
@@ -46,13 +46,13 @@ public class SolicitudesDespachoNotificacionRechazoPushServiceImpl
 		val query = "/{id}/error?status={status}";
 
 		getRestClient().put(url + query, output, Object.class, actualizacion.getIdExterno(),
-				SolicitudEstadoConstants.RECHAZADA_OPL);
+				SolicitudDespachoClienteEstadoConstants.RECHAZADA_OPL);
 		return "";
 	}
 
 	@Override
 	protected void onSuccess(Object response, List<ErrorIntegracionDto> output, ActualizacionDto actualizacion) {
 		super.onSuccess(response, output, actualizacion);
-		actualizacion.setSubEstadoIntegracion(SolicitudEstadoConstants.RECHAZADA_OPL);
+		actualizacion.setSubEstadoIntegracion(SolicitudDespachoClienteEstadoConstants.RECHAZADA_OPL);
 	}
 }

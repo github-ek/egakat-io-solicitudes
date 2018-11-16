@@ -31,7 +31,6 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "ordenes_alistamiento_lineas")
-//@AttributeOverride(name = "id", column = @Column(name = "id_orden_alistamiento_linea"))
 @DynamicUpdate
 @Getter
 @Setter
@@ -41,12 +40,12 @@ public class OrdenAlistamientoLinea extends SimpleAuditableEntity<Long> {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Column(name = "id_orden_alistamiento_linea", updatable = false, nullable = false)
+	@Column(name = "id_orden_linea", updatable = false, nullable = false)
 	@Setter(value = AccessLevel.PROTECTED)
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id_orden_alistamiento", nullable = false)
+	@JoinColumn(name = "id_orden", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private OrdenAlistamiento orden;
 

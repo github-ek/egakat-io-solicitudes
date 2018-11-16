@@ -1,4 +1,4 @@
-package com.egakat.io.gws.dto;
+package com.egakat.io.gws.client.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

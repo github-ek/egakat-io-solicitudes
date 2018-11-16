@@ -32,7 +32,7 @@ public class SolicitudDespachoCrudServiceImpl
 
 	@Override
 	protected SolicitudDespachoDto asModel(SolicitudDespacho entity) {
-		val model = new SolicitudDespachoDto();
+		val model = newModel();
 
 		model.setId(entity.getId());
 		model.setIntegracion(entity.getIntegracion());
@@ -207,7 +207,6 @@ public class SolicitudDespachoCrudServiceImpl
 
 	@Override
 	protected SolicitudDespachoDto newModel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new SolicitudDespachoDto();
 	}
 }

@@ -24,7 +24,7 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "ordenes_alistamiento")
-@AttributeOverride(name = "id", column = @Column(name = "id_orden_alistamiento"))
+@AttributeOverride(name = "id", column = @Column(name = "id_orden"))
 @DynamicUpdate
 @Getter
 @Setter
@@ -58,7 +58,7 @@ public class OrdenAlistamiento extends IntegracionEntity {
 	@Column(name = "id_bodega")
 	private Long idBodega;
 
-	@Column(name = "id_orden")
+	@Column(name = "id_orden_alistamiento")
 	private Long idOrden;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orden", cascade = CascadeType.ALL)

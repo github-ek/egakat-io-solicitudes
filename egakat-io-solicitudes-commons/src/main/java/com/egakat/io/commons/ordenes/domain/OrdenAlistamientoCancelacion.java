@@ -43,7 +43,7 @@ public class OrdenAlistamientoCancelacion extends SimpleAuditableEntity<Long> {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id_orden_alistamiento_linea", nullable = false)
+	@JoinColumn(name = "id_orden_linea", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private OrdenAlistamientoLinea linea;
 
@@ -73,10 +73,4 @@ public class OrdenAlistamientoCancelacion extends SimpleAuditableEntity<Long> {
 	@Column(name = "candte")
 	@DateTimeFormat(style = "M-")
 	private LocalDateTime canDte;
-
-	@Column(name = "id_producto")
-	private Long idProducto;
-
-	@Column(name = "id_causal_cancelacion", length = 4)
-	private String idCausalCancelacion;
 }

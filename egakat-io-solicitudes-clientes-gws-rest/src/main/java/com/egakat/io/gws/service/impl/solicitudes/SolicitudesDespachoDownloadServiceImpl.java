@@ -19,11 +19,11 @@ import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.dto.ErrorIntegracionDto;
 import com.egakat.io.core.service.impl.rest.RestDownloadServiceImpl;
 import com.egakat.io.gws.client.components.GwsRestClient;
-import com.egakat.io.gws.client.constants.RestConstants;
+import com.egakat.io.gws.client.constants.GwsRestConstants;
+import com.egakat.io.gws.client.constants.GwsIntegracionesConstants;
+import com.egakat.io.gws.client.dto.SolicitudDespachoClienteDto;
+import com.egakat.io.gws.client.dto.SolicitudDespachoClienteLineaDto;
 import com.egakat.io.gws.client.properties.GwsSolicitudesDespachoRestProperties;
-import com.egakat.io.gws.constants.IntegracionesConstants;
-import com.egakat.io.gws.dto.SolicitudDespachoClienteDto;
-import com.egakat.io.gws.dto.SolicitudDespachoClienteLineaDto;
 import com.egakat.io.gws.service.api.solicitudes.SolicitudesDespachoDownloadService;
 
 import lombok.val;
@@ -59,12 +59,12 @@ public class SolicitudesDespachoDownloadServiceImpl
 
 	@Override
 	protected String getIntegracion() {
-		return IntegracionesConstants.SOLICITUDES_DESPACHO;
+		return GwsIntegracionesConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override
 	protected String getApiEndPoint() {
-		return RestConstants.SOLICITUDES_DESPACHO;
+		return GwsRestConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override

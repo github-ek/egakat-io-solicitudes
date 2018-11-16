@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.dto.ErrorIntegracionDto;
 import com.egakat.io.core.enums.EstadoIntegracionType;
-import com.egakat.io.gws.client.constants.SolicitudEstadoConstants;
+import com.egakat.io.gws.client.constants.SolicitudDespachoClienteEstadoConstants;
 
 import lombok.val;
 
@@ -18,7 +18,7 @@ public class SolicitudesDespachoNotificacionAceptacionPushServiceImpl
 	@Override
 	protected List<ActualizacionDto> getPendientes() {
 		val result = getActualizacionesService().findAllByIntegracionAndEstadoIntegracionAndSubEstadoIntegracionIn(
-				getIntegracion(), EstadoIntegracionType.CARGADO, SolicitudEstadoConstants.RECIBIDA_OPL);
+				getIntegracion(), EstadoIntegracionType.CARGADO, SolicitudDespachoClienteEstadoConstants.RECIBIDA_OPL);
 		return result;
 	}
 
@@ -33,13 +33,13 @@ public class SolicitudesDespachoNotificacionAceptacionPushServiceImpl
 		val query = "/{id}?status={status}";
 
 		getRestClient().put(url + query, output, Object.class, actualizacion.getIdExterno(),
-				SolicitudEstadoConstants.ACEPTADA_OPL);
+				SolicitudDespachoClienteEstadoConstants.ACEPTADA_OPL);
 		return "";
 	}
 
 	@Override
 	protected void onSuccess(Object response, String output, ActualizacionDto actualizacion) {
 		super.onSuccess(response, output, actualizacion);
-		actualizacion.setSubEstadoIntegracion(SolicitudEstadoConstants.ACEPTADA_OPL);
+		actualizacion.setSubEstadoIntegracion(SolicitudDespachoClienteEstadoConstants.ACEPTADA_OPL);
 	}
 }

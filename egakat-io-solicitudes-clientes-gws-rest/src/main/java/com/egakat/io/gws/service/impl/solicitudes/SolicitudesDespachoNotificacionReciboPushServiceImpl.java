@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.dto.ErrorIntegracionDto;
 import com.egakat.io.core.enums.EstadoIntegracionType;
-import com.egakat.io.gws.client.constants.SolicitudEstadoConstants;
+import com.egakat.io.gws.client.constants.SolicitudDespachoClienteEstadoConstants;
 
 import lombok.val;
 
@@ -33,13 +33,13 @@ public class SolicitudesDespachoNotificacionReciboPushServiceImpl
 		val query = "/{id}?status={status}";
 
 		getRestClient().put(url + query, output, Object.class, actualizacion.getIdExterno(),
-				SolicitudEstadoConstants.RECIBIDA_OPL);
+				SolicitudDespachoClienteEstadoConstants.RECIBIDA_OPL);
 		return "";
 	}
 
 	@Override
 	protected void onSuccess(Object response, String output, ActualizacionDto actualizacion) {
 		super.onSuccess(response, output, actualizacion);
-		actualizacion.setSubEstadoIntegracion(SolicitudEstadoConstants.RECIBIDA_OPL);
+		actualizacion.setSubEstadoIntegracion(SolicitudDespachoClienteEstadoConstants.RECIBIDA_OPL);
 	}
 }

@@ -13,8 +13,8 @@ import com.egakat.io.core.dto.ActualizacionDto;
 import com.egakat.io.core.enums.EstadoIntegracionType;
 import com.egakat.io.core.enums.EstadoNotificacionType;
 import com.egakat.io.core.service.impl.rest.RestPullServiceImpl;
-import com.egakat.io.gws.client.constants.RestConstants;
-import com.egakat.io.gws.client.constants.SolicitudEstadoConstants;
+import com.egakat.io.gws.client.constants.GwsRestConstants;
+import com.egakat.io.gws.client.constants.SolicitudDespachoClienteEstadoConstants;
 import com.egakat.io.gws.client.properties.GwsSolicitudesDespachoRestProperties;
 import com.egakat.io.gws.service.api.documentos.DocumentoSolicitudPullService;
 
@@ -49,7 +49,7 @@ public class DocumentoSolicitudPullServiceImpl extends RestPullServiceImpl<Integ
 
 	@Override
 	protected String getApiEndPoint() {
-		return RestConstants.SOLICITUDES_DESPACHO;
+		return GwsRestConstants.SOLICITUDES_DESPACHO;
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class DocumentoSolicitudPullServiceImpl extends RestPullServiceImpl<Integ
 	@Override
 	public void pull() {
 		val correlacion = defaultCorrelacion();
-		val status = SolicitudEstadoConstants.DOC_CREADO_SAP;
+		val status = SolicitudDespachoClienteEstadoConstants.DOC_CREADO_SAP;
 
 		try {
 			val inputs = pull(status);
