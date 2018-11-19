@@ -19,7 +19,7 @@ public class Task {
 	
 	@Scheduled(cron = "${schedule.start}")
 	public void run() {
-		//solicitudesDespachoService.run();
+		solicitudesDespachoService.run();
 		ordenesAlistamientoIntegrationService.run();
 		
 		//CREAR SUSCRIPCION PARA DETECTAR CREACION DE ORDEN DE ALISTAMIENTO
