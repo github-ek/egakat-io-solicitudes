@@ -187,7 +187,7 @@ public class SolicitudesDespachoNotificacionStagePushServiceImpl
 
 	@Override
 	protected void onSuccess(String response, OrdenAlistamientoClienteDto output, ActualizacionDto actualizacion) {
-		actualizacion.setSubEstadoIntegracion("STAGE_NOTIFICADO");
+		actualizacion.setSubEstadoIntegracion("");
 		actualizacion.setReintentos(0);
 		actualizacion.setDatos(response);
 	}
