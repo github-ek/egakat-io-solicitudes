@@ -35,5 +35,6 @@
 	<modules>
 		<module>egakat-io-solicitudes-commons</module>
 		<module>egakat-io-solicitudes-clientes-gws-rest</module>
+		<module>egakat-io-solicitudes-clientes-ingredion</module>
 	</modules>
 </project>
