@@ -161,7 +161,7 @@ public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistad
 	public void marcarActasProcesadas(List<Long> id) {
 		val list = id.stream().distinct().collect(Collectors.toList());
 
-		MapSqlParameterSource[] namedParameters = new MapSqlParameterSource[id.size()];
+		MapSqlParameterSource[] namedParameters = new MapSqlParameterSource[list.size()];
 		int index = 0;
 		for (val value : list) {
 			namedParameters[index] = new MapSqlParameterSource();
