@@ -19,7 +19,6 @@ public class Task {
 	
 	@Scheduled(cron = "${schedule.start}")
 	public void run() {
-		//solicitudesDespachoService.run();
 		solicitudesDespachoService.run();
 		ordenesAlistamientoIntegrationService.run();
 		
