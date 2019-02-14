@@ -10,8 +10,11 @@ import com.egakat.io.ingredion.dto.ActaDto;
 public interface ActasIngredionAlistadasService {
 
 	@Transactional(readOnly = true)
+	List<String> getBodegasAlternas();
+
+	@Transactional(readOnly = true)
 	List<ActaDto> getActasAlistadas(LocalDate fechaDesde, LocalDate fechaHasta, List<String> estados,
-			List<Long> bodegas, List<Long> origenes);
+			List<String> bodegas);
 
 	@Transactional(readOnly = false)
 	void marcarActasProcesadas(List<Long> id);

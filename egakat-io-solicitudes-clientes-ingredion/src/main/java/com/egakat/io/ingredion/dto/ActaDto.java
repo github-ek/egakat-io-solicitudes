@@ -2,6 +2,7 @@ package com.egakat.io.ingredion.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -9,12 +10,14 @@ import lombok.Data;
 public class ActaDto {
 	private String registro;
 	
+	private Long rowNumber;
 	private Long idSolicitudActa;
 	private String estadoSolicitud;
 	private Long idBodega;
 	private Long idBodegaVirtual;
 	private LocalDate fechaMinimaSolicitada;
 	private LocalDate fechaMaximaSolicitada;
+	private LocalDateTime stgdte;
 	
 	private String tipoRemesa;
 	private String clienteCodigoAlternoTms;

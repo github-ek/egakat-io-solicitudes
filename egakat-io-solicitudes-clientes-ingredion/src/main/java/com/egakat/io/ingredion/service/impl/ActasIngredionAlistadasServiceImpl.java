@@ -26,8 +26,24 @@ public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistad
 	private NamedParameterJdbcTemplate jdbcTemplate;
 
 	@Override
+	public List<String> getBodegasAlternas() {
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+
+		val sql = "SELECT clave,valor FROM [eIntegration].dbo.mapas_valores WHERE id_mapa = 400 ORDER BY clave";
+		val result = jdbcTemplate.query(sql, parameters, new RowMapper<String>() {
+			@Override
+			public String mapRow(ResultSet rs, int i) throws SQLException {
+				val result = rs.getString("clave");
+
+				return result;
+			}
+		});
+		return result;
+	}
+
+	@Override
 	public List<ActaDto> getActasAlistadas(LocalDate fechaDesde, LocalDate fechaHasta, List<String> estados,
-			List<Long> bodegas, List<Long> origenes) {
+			List<String> bodegas) {
 
 		val sb = new StringBuilder();
 		sb.append(getSqlSelect());
@@ -46,12 +62,7 @@ public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistad
 
 		if (!bodegas.isEmpty()) {
 			parameters.addValue("bodegas", bodegas);
-			sb.append("AND a.id_bodega IN (:bodegas)\r\n");
-		}
-
-		if (!origenes.isEmpty()) {
-			parameters.addValue("origenes", origenes);
-			sb.append("AND a.id_bodega_virtual IN (:origenes)\r\n");
+			sb.append("AND a.bodega_codigo_alterno IN (:bodegas)\r\n");
 		}
 
 		val sql = sb.toString();
@@ -62,11 +73,11 @@ public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistad
 	private String getSqlSelect() {
 		// @formatter:off
 		val result = 
-				"SELECT * \r\n" + 
+				"SELECT ROW_NUMBER() OVER(ORDER BY bodega_codigo_alterno,solicitud_numero_documento) AS [rowNumber], a.* \r\n" + 
 				"FROM dbo.ActasIngredionAlistadas() a \r\n" + 
 				"WHERE \r\n" + 
-				"    a.fecha_minima_solicitada <= :hasta\r\n" + 
-				"AND a.fecha_maxima_solicitada >= :desde\r\n" +
+				"    a.stgdte >= :desde\r\n" + 
+				"AND a.stgdte <= :hasta\r\n" +
 				"AND a.estado_solicitud IN (:estados)\r\n" +
 				"";
 		// @formatter:on
@@ -80,12 +91,14 @@ public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistad
 				val result = new ActaDto();
 
 				result.setRegistro(rs.getString("registro"));
+				result.setRowNumber(rs.getLong("rowNumber"));
 				result.setIdSolicitudActa(rs.getLong("id_solicitud_acta"));
 				result.setEstadoSolicitud(rs.getString("estado_solicitud"));
 				result.setIdBodega(rs.getLong("id_bodega"));
 				result.setIdBodegaVirtual(rs.getLong("id_bodega_virtual"));
 				result.setFechaMinimaSolicitada(rs.getDate("fecha_minima_solicitada").toLocalDate());
 				result.setFechaMaximaSolicitada(rs.getDate("fecha_maxima_solicitada").toLocalDate());
+				result.setStgdte(rs.getTimestamp("stgdte").toLocalDateTime());
 
 				result.setTipoRemesa(rs.getString("tipo_remesa"));
 				result.setClienteCodigoAlternoTms(rs.getString("cliente_codigo_alterno_tms"));

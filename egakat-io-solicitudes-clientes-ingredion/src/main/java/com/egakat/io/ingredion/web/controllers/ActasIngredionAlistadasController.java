@@ -29,17 +29,22 @@ public class ActasIngredionAlistadasController {
 	@Autowired
 	private ActasIngredionAlistadasService service;
 
+	@GetMapping(path = "bodegas-alternas")
+	public List<String> getBodegasAlternas() {
+		val result = service.getBodegasAlternas();
+		return result;
+	}
+
 	@GetMapping(path = "find-by/{argv}")
 	public List<ActaDto> getActasAlistadas(
 	// @formatter:off
 		@MatrixVariable @DateTimeFormat(pattern = FORMATO_DATE) LocalDate fechaDesde,
 		@MatrixVariable @DateTimeFormat(pattern = FORMATO_DATE) LocalDate fechaHasta,
 		@MatrixVariable(required = false, defaultValue = "") List<String> estados,
-		@MatrixVariable(required = false, defaultValue = "") List<Long> bodegas,
-		@MatrixVariable(required = false, defaultValue = "") List<Long> origenes
+		@MatrixVariable(required = false, defaultValue = "") List<String> bodegas
 		// @formatter:on
 	) {
-		val result = service.getActasAlistadas(fechaDesde, fechaHasta, estados, bodegas, origenes);
+		val result = service.getActasAlistadas(fechaDesde, fechaHasta, estados, bodegas);
 		return result;
 	}
 
