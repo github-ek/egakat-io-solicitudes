@@ -7,9 +7,21 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class ActaDto {
+public class ActaDto implements Reintentable<Long> {
+
+	public Long getId() {
+		return this.idSolicitudActa;
+	}
+
+	private String idExterno;
+	private String estadoIntegracion;
+	private String subEstadoIntegracion;
+	private int reintentos;
+	private LocalDateTime fechaCreacion;
+	private LocalDateTime fechaModificacion;
+
 	private String registro;
-	
+
 	private Long rowNumber;
 	private Long idSolicitudActa;
 	private String estadoSolicitud;
@@ -18,7 +30,8 @@ public class ActaDto {
 	private LocalDate fechaMinimaSolicitada;
 	private LocalDate fechaMaximaSolicitada;
 	private LocalDateTime stgdte;
-	
+
+	private String centroCosto;
 	private String tipoRemesa;
 	private String clienteCodigoAlternoTms;
 	private String clienteDivision;
@@ -53,14 +66,22 @@ public class ActaDto {
 	private String fechaCompromisoFinal;
 	private String horaCompromisoInicial;
 	private String horaCompromisoFinal;
-	
+
 	private String placaVehiculo;
 	private Integer secuenciaEntrega;
 	private Integer seguro;
 	private Integer tarifa;
 	private String bodegaCodigoAlterno;
 	private String programa;
+
+	private String ciudadCodigoAlterno;
+	private String ciudadNombreAlterno;
+
 	private String puntoCodigoAlterno;
+	private String puntoNombreAlterno;
+	private String regional;
+	private String planta;
+
 	private String responsablePrincipal;
 	private String responsableSuplente;
 	private String remesaObservacion;
@@ -72,7 +93,7 @@ public class ActaDto {
 	private String estadoInventarioNombre;
 	private String lote;
 	private String fechaVencimiento;
-	
+
 	private BigDecimal cantidad;
 	private String unidadMedidaCodigoAlternoTms;
 	private Integer factorConversion;
@@ -83,4 +104,5 @@ public class ActaDto {
 	private BigDecimal volumenEmpaques;
 	private Integer valorDeclarado;
 	private String predistribucion;
+
 }

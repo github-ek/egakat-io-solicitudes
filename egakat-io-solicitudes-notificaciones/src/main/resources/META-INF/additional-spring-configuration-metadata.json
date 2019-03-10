@@ -1,0 +1,82 @@
+{"properties": [
+  {
+    "name": "server.database",
+    "type": "java.lang.String",
+    "description": "A description for 'server.database'"
+  },
+  {
+    "name": "com.mh.rest.connection.timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'com.mh.rest.connection.timeout'"
+  },
+  {
+    "name": "com.mh.rest.connection.connection-request-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'com.mh.rest.connection.connection-request-timeout'"
+  },
+  {
+    "name": "com.mh.rest.connection.connect-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'com.mh.rest.connection.connect-timeout'"
+  },
+  {
+    "name": "com.mh.rest.connection.read-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'com.mh.rest.connection.read-timeout'"
+  },
+  {
+    "name": "datasource.source.type",
+    "type": "java.lang.String",
+    "description": "A description for 'datasource.source.type'"
+  },
+  {
+    "name": "datasource.source.testOnBorrow",
+    "type": "java.lang.String",
+    "description": "A description for 'datasource.source.testOnBorrow'"
+  },
+  {
+    "name": "datasource.source.validationQuery",
+    "type": "java.lang.String",
+    "description": "A description for 'datasource.source.validationQuery'"
+  },
+  {
+    "name": "datasource.target.type",
+    "type": "java.lang.String",
+    "description": "A description for 'datasource.target.type'"
+  },
+  {
+    "name": "datasource.target.testOnBorrow",
+    "type": "java.lang.String",
+    "description": "A description for 'datasource.target.testOnBorrow'"
+  },
+  {
+    "name": "datasource.target.validationQuery",
+    "type": "java.lang.String",
+    "description": "A description for 'datasource.target.validationQuery'"
+  },
+  {
+    "name": "database.source.server",
+    "type": "java.lang.String",
+    "description": "A description for 'database.source.server'"
+  },
+  {
+    "name": "database.source.databaseName",
+    "type": "java.lang.String",
+    "description": "A description for 'database.source.databaseName'"
+  },
+  {
+    "name": "database.target.server",
+    "type": "java.lang.String",
+    "description": "A description for 'database.target.server'"
+  },
+  {
+    "name": "database.target.databaseName",
+    "type": "java.lang.String",
+    "description": "A description for 'database.target.databaseName'"
+  },
+  {
+    "name": "database.source.databaseName",
+    "type": "java.lang.String",
+    "description": "A description for 'database.source.databaseName'"
+  }
+]}

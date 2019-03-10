@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.egakat.io.ingredion.dto.ActaDto;
+import com.egakat.io.ingredion.dto.ErrorDto;
+import com.egakat.io.silogtran.dto.RemesaDto;
 
 public interface ActasIngredionAlistadasService {
 
@@ -18,4 +20,10 @@ public interface ActasIngredionAlistadasService {
 
 	@Transactional(readOnly = false)
 	void marcarActasProcesadas(List<Long> id);
+	
+	@Transactional(readOnly = false)
+	void marcarActasEnvidas(RemesaDto model);
+
+	@Transactional(readOnly = false)
+	void errorDuranteEnvio(RemesaDto model, List<ErrorDto> errores);
 }

@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title></title>
+<style type='text/css'>
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		"Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+		"Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-size: 1rem;
+	font-weight: 400;
+}
+
+table.redTable {
+	border: 1px solid #A40808;
+	background-color: #EEE7DB;
+	/* width: 100%; */
+	text-align: left;
+	border-collapse: collapse;
+	/* display: block; */
+	overflow-x: auto;
+	/* white-space: nowrap; */
+}
+
+table.redTable td, table.redTable th {
+	border: 1px solid #AAAAAA;
+	padding: 3px 2px;
+}
+
+table.redTable tbody td {
+	font-size: 13px;
+}
+
+table.redTable tr:nth-child(even) {
+	background: #F5C8BF;
+}
+
+table.redTable thead {
+	background: #A40808;
+}
+
+table.redTable thead th {
+	font-size: 15px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-align: center;
+	border-left: 2px solid #A40808;
+}
+
+table.redTable thead th:first-child {
+	border-left: none;
+}
+
+table.redTable tfoot {
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background: #A40808;
+}
+
+table.redTable tfoot td {
+	font-size: 14px;
+}
+
+table.redTable tfoot .links {
+	text-align: right;
+}
+
+table.redTable tfoot .links a {
+	display: inline-block;
+	background: #FFFFFF;
+	color: #A40808;
+	padding: 2px 8px;
+	border-radius: 5px;
+}
+</style>
+</head>
+
+<body>
+
+	<div id="content">
+		<div>
+			<h1 style="text-align: center">${title}</h1>
+		</div>
+		<div>
+			<table class="redTable">
+				<thead>
+					<tr>
+						<th>ESTADO</th>
+						<th>SUBESTADO</th>
+						<th>BODEGA WMS</th>
+						<th>BODEGA INGREDION</th>
+						<th>CIUDAD</th>
+						<th style="text-align: right;" >N&Uacute;MERO DE CASOS</th>
+					</tr>
+				</thead>
+				<tbody>${subtotales}
+				</tbody>
+			</table>
+		</div>
+		<div>&nbsp;</div>
+		<div>
+			<table class="redTable">
+				<thead>
+					<tr>
+						<th>ESTADO</th>
+						<th>SUBESTADO</th>
+						<th>BODEGA WMS</th>
+						<th>BODEGA INGREDION</th>
+						<th>CIUDAD</th>
+						<th>ID</th>
+						<th>N&Uacute;MERO DE SOLICITUD</th>
+						<th>DESTINATARIO</th>
+						<th>FECHA</th>
+						<th>C&Oacute;DIGO</th>
+						<th style="width: 40%;">MENSAJE</th>
+					</tr>
+				</thead>
+				<tbody>${errores}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- #content -->
+
+</body>
+
+</html>

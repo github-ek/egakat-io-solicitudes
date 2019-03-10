@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title></title>
+<style type='text/css'>
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		"Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+		"Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-size: 1rem;
+	font-weight: 400;
+}
+
+table.blueTable {
+	border: 1px solid #1C6EA4;
+	background-color: #EEEEEE;
+	/* width: 100%; */
+	text-align: left;
+	border-collapse: collapse;
+	/* display: block; */
+	overflow-x: auto;
+	/* white-space: nowrap; */
+}
+
+table.blueTable td, table.blueTable th {
+	border: 1px solid #AAAAAA;
+	padding: 3px 2px;
+}
+
+table.blueTable tbody td {
+	font-size: 13px;
+}
+
+table.blueTable tr:nth-child(even) {
+	background: #D0E4F5;
+}
+
+table.blueTable thead {
+	background: #1C6EA4;
+	background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+	background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+	background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+	border-bottom: 2px solid #444444;
+}
+
+table.blueTable thead th {
+	font-size: 15px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-align: center;
+	border-left: 2px solid #D0E4F5;
+}
+
+table.blueTable thead th:first-child {
+	border-left: none;
+}
+
+table.blueTable tfoot {
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background: #D0E4F5;
+	background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+	background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+	background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+	border-top: 2px solid #444444;
+}
+
+table.blueTable tfoot td {
+	font-size: 14px;
+}
+
+table.blueTable tfoot .links {
+	text-align: right;
+}
+
+table.blueTable tfoot .links a {
+	display: inline-block;
+	background: #1C6EA4;
+	color: #FFFFFF;
+	padding: 2px 8px;
+	border-radius: 5px;
+}
+</style>
+</head>
+
+<body>
+
+	<div id="content">
+		<div>
+			<h1 style="text-align: center">${title}</h1>
+		</div>
+		<div>
+			<table class="blueTable">
+				<thead>
+					<tr>
+						<th>ESTADO</th>
+						<th>SUBESTADO</th>
+						<th>BODEGA WMS</th>
+						<th>BODEGA INGREDION</th>
+						<th>CIUDAD</th>
+						<th style="text-align: right;" >N&Uacute;MERO DE CASOS</th>
+					</tr>
+				</thead>
+				<tbody>${subtotales}
+				</tbody>
+			</table>
+		</div>
+		<div>&nbsp;</div>
+		<div>
+			<table class="blueTable">
+				<thead>
+					<tr>
+						<th>ESTADO</th>
+						<th>SUBESTADO</th>
+						<th>BODEGA WMS</th>
+						<th>BODEGA INGREDION</th>
+						<th>CIUDAD</th>
+						<th>ID</th>
+						<th>N&Uacute;MERO DE SOLICITUD</th>
+						<th>DESTINATARIO</th>
+						<th>FECHA</th>
+						<th>C&Oacute;DIGO</th>
+						<th style="width: 40%;">MENSAJE</th>
+					</tr>
+				</thead>
+				<tbody>${errores}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- #content -->
+
+</body>
+
+</html>

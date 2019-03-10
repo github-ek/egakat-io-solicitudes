@@ -15,7 +15,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.egakat.io.ingredion.dto.ActaDto;
+import com.egakat.io.ingredion.dto.ErrorDto;
 import com.egakat.io.ingredion.service.api.ActasIngredionAlistadasService;
+import com.egakat.io.silogtran.dto.RemesaDto;
 
 import lombok.val;
 
@@ -90,6 +92,14 @@ public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistad
 			public ActaDto mapRow(ResultSet rs, int i) throws SQLException {
 				val result = new ActaDto();
 
+				result.setIdExterno(rs.getString("id_externo"));
+				result.setEstadoIntegracion(rs.getString("estado_solicitud"));
+				result.setSubEstadoIntegracion(rs.getString("subestado_solicitud"));
+				result.setReintentos(rs.getInt("reintentos"));
+				result.setFechaCreacion(rs.getTimestamp("fecha_creacion").toLocalDateTime());
+				result.setFechaModificacion(rs.getTimestamp("fecha_modificacion").toLocalDateTime());
+				
+				
 				result.setRegistro(rs.getString("registro"));
 				result.setRowNumber(rs.getLong("rowNumber"));
 				result.setIdSolicitudActa(rs.getLong("id_solicitud_acta"));
@@ -100,6 +110,7 @@ public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistad
 				result.setFechaMaximaSolicitada(rs.getDate("fecha_maxima_solicitada").toLocalDate());
 				result.setStgdte(rs.getTimestamp("stgdte").toLocalDateTime());
 
+				result.setCentroCosto(rs.getString("centro_costo"));
 				result.setTipoRemesa(rs.getString("tipo_remesa"));
 				result.setClienteCodigoAlternoTms(rs.getString("cliente_codigo_alterno_tms"));
 				result.setClienteDivision(rs.getString("cliente_division"));
@@ -141,7 +152,15 @@ public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistad
 				result.setTarifa(rs.getInt("tarifa"));
 				result.setBodegaCodigoAlterno(rs.getString("bodega_codigo_alterno"));
 				result.setPrograma(rs.getString("programa"));
+				
+				result.setCiudadCodigoAlterno(rs.getString("ciudad_codigo_alterno"));
+				result.setCiudadNombreAlterno(rs.getString("ciudad_nombre_alterno"));
+				
 				result.setPuntoCodigoAlterno(rs.getString("punto_codigo_alterno"));
+				result.setPuntoNombreAlterno(rs.getString("punto_nombre_alterno"));
+				result.setRegional(rs.getString("regional"));
+				result.setPlanta(rs.getString("planta"));
+				
 				result.setResponsablePrincipal(rs.getString("responsable_principal"));
 				result.setResponsableSuplente(rs.getString("responsable_suplente"));
 				result.setRemesaObservacion(rs.getString("remesa_observacion"));
@@ -172,6 +191,8 @@ public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistad
 
 	@Override
 	public void marcarActasProcesadas(List<Long> id) {
+		val sql = getSqlUpdate();
+
 		val list = id.stream().distinct().collect(Collectors.toList());
 
 		MapSqlParameterSource[] namedParameters = new MapSqlParameterSource[list.size()];
@@ -182,7 +203,6 @@ public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistad
 			index++;
 		}
 
-		val sql = getSqlUpdate();
 		jdbcTemplate.batchUpdate(sql, namedParameters);
 
 	}
@@ -202,4 +222,70 @@ public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistad
 				"";
 		// @formatter:on
 	}
+
+	@Override
+	public void marcarActasEnvidas(RemesaDto model) {
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("id", model.getId());
+		namedParameters.addValue("estado_solicitud", model.getEstadoIntegracion());
+		namedParameters.addValue("subestado_solicitud", model.getSubEstadoIntegracion());
+		namedParameters.addValue("reintentos", model.getReintentos());
+		namedParameters.addValue("numero_confirmacion_silogtran", model.getNumeroConfirmacionSilogtran());
+		namedParameters.addValue("fecha_integracion_silogtran", model.getFechaIntegracionSilogtran());
+		
+		val sql = getSqlUpdateEnvio();
+		jdbcTemplate.update(sql, namedParameters);
+	}
+	
+	private String getSqlUpdateEnvio() {
+		// @formatter:off
+		return "" + 
+				"UPDATE a \r\n" + 
+				"SET \r\n" + 
+				"     a.estado_solicitud = :estado_solicitud\r\n" + 
+				"    ,a.subestado_solicitud = :subestado_solicitud\r\n" +
+				"    ,a.reintentos = :reintentos\r\n" +
+				"    ,a.numero_confirmacion_silogtran = :numero_confirmacion_silogtran\r\n" +
+				"    ,a.fecha_integracion_silogtran = :fecha_integracion_silogtran\r\n" +				
+				"    ,a.fecha_modificacion = GETDATE()\r\n" + 
+				"    ,a.version = a.version + 1 \r\n" + 
+				"FROM eConnect.dbo.solicitudes_actas_ingredion a \r\n" + 
+				"WHERE \r\n" + 
+				"    a.id_solicitud_acta = :id\r\n" + 
+				"";
+		// @formatter:on
+	}
+
+	@Override
+	public void errorDuranteEnvio(RemesaDto model, List<ErrorDto> errores) {
+		marcarActasEnvidas(model);
+		val sql = getSqlInsertError();
+
+		MapSqlParameterSource[] parameters = new MapSqlParameterSource[errores.size()];
+		int index = 0;
+		for (val error : errores) {
+			parameters[index] = new MapSqlParameterSource();
+			parameters[index].addValue("idSolicitudActa", model.getId());
+			parameters[index].addValue("codigo", error.getCodigo());
+			parameters[index].addValue("mensaje", error.getMensaje());
+			parameters[index].addValue("estadoNotificacion", error.getEstadoNotificacion());
+			parameters[index].addValue("fechaCreacion", error.getFechaCreacion());
+			parameters[index].addValue("fechaModificacion", error.getFechaModificacion());
+			index++;
+		}
+		
+		jdbcTemplate.batchUpdate(sql,parameters);
+	}
+	
+	private String getSqlInsertError() {
+		// @formatter:off
+		return "" + 
+				"INSERT INTO eConnect.dbo.solicitudes_actas_ingredion_errores\r\n" + 
+				"    (id_solicitud_acta,codigo,mensaje,estado_notificacion,fecha_creacion,fecha_modificacion)\r\n" + 
+				"VALUES\r\n" + 
+				"    (:idSolicitudActa, :codigo, :mensaje, :estadoNotificacion,:fechaCreacion,:fechaModificacion)\r\n" +
+				"";
+		// @formatter:on
+	}
+
 }

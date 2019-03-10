@@ -18,7 +18,7 @@ import lombok.ToString;
 @Validated
 public class GwsSolicitudesDespachoRestProperties implements RestProperties {
 
-	static final String CONFIGURATION_PROPERTIES = "endpoint.gws.solicitudes.despacho.rest";
+	public static final String CONFIGURATION_PROPERTIES = "endpoint.gws.solicitudes.despacho.rest";
 	
 	private String basePath;
 }
