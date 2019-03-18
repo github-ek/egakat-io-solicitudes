@@ -12,7 +12,7 @@ public class Task {
 	@Autowired
 	private RemesasPushService service;
 	
-	@Scheduled(cron = "${cron-ordenes-alistamiento}")
+	@Scheduled(cron = "${cron-remesas}")
 	public void run() {
 		service.push();
 	}

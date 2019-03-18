@@ -111,8 +111,11 @@ public class SilogtranTokenGenerator extends AbstractTokenGenerator<JsonNode, St
 				}
 			} else {
 				// TODO throw error
-				val msg = node.findValue(FIELD_MSG).asText();
-				log.error(msg);
+				val n = node.findValue(FIELD_MSG);
+				if(n != null) {
+					val msg = n.asText();
+					log.error(msg);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

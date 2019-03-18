@@ -44,6 +44,10 @@ import lombok.extern.slf4j.Slf4j;
 public class RemesasPushServiceImpl extends RestPushServiceImpl<Long, RemesaDto, RemesaDto, String>
 		implements RemesasPushService {
 
+	private static final String EXPIRED_TOKEN = "expired token";
+
+	private static final String FIELD_MSG = "msg";
+
 	@Value("${com.silogtran.rest.api-secret-value}")
 	private String apiSecretValue;
 
@@ -58,6 +62,8 @@ public class RemesasPushServiceImpl extends RestPushServiceImpl<Long, RemesaDto,
 
 	@Autowired
 	private SilogtranRestClient restClient;
+
+	private ObjectMapper mapper;
 
 	@Override
 	protected SilogtranRestProperties getProperties() {
@@ -83,7 +89,7 @@ public class RemesasPushServiceImpl extends RestPushServiceImpl<Long, RemesaDto,
 	protected List<RemesaDto> getPendientes() {
 		LocalDate fechaDesde = LocalDate.of(2019, 1, 1);
 		LocalDate fechaHasta = LocalDate.of(2020, 1, 1);
-		//List<String> estados = Arrays.asList("ORDEN_ALISTAMIENTO_EN_STAGE");
+		// List<String> estados = Arrays.asList("ORDEN_ALISTAMIENTO_EN_STAGE");
 		List<String> estados = Arrays.asList("PROCESADO");
 		List<String> bodegas = new ArrayList<>();
 
@@ -94,7 +100,7 @@ public class RemesasPushServiceImpl extends RestPushServiceImpl<Long, RemesaDto,
 
 		int i = 0;
 		int n = grupos.keySet().size();
-		
+
 		for (val id : grupos.keySet()) {
 
 			val lineas = grupos.get(id);
@@ -112,6 +118,11 @@ public class RemesasPushServiceImpl extends RestPushServiceImpl<Long, RemesaDto,
 	}
 
 	@Override
+	protected void init(List<RemesaDto> inputs) {
+		this.mapper = new ObjectMapper();
+	}
+
+	@Override
 	protected RemesaDto asOutput(RemesaDto input, List<ErrorDto> errores) {
 		return input;
 	}
@@ -121,26 +132,50 @@ public class RemesasPushServiceImpl extends RestPushServiceImpl<Long, RemesaDto,
 		try {
 			String result = null;
 			val url = getUrl();
-			ObjectMapper mapper = new ObjectMapper();
 
-			ObjectNode body = asBodyRequest(output, mapper);
+			ObjectNode body = asBodyRequest(output);
 
-			log.debug("body={}",body);
+			log.debug("body={}", body);
 			val response = getRestClient().post(url, body, String.class);
-			
-			result = readResponse(response.getBody(), mapper, errores);
+
+			result = readResponse(response.getBody(), errores);
 
 			input.setNumeroConfirmacionSilogtran(result);
 			input.setFechaIntegracionSilogtran(LocalDateTime.now());
 
 			return result;
 		} catch (HttpStatusCodeException e) {
-			if (e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+			if (cacheEvict(e)) {
 				tokenGenerator.cacheEvict();
 			}
-			
 			throw e;
 		}
+	}
+
+	private boolean cacheEvict(HttpStatusCodeException e) {
+		boolean result = false;
+
+		if (e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+			result = true;
+		} else {
+			if (e.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+				try {
+					val body = e.getResponseBodyAsString();
+					val node = this.mapper.readTree(body).findValue(FIELD_MSG);
+
+					if (node != null) {
+						val msg = node.asText();
+						if (EXPIRED_TOKEN.equalsIgnoreCase(msg)) {
+							result = true;
+						}
+					}
+				} catch (IOException e1) {
+					;
+				}
+			}
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -286,21 +321,21 @@ public class RemesasPushServiceImpl extends RestPushServiceImpl<Long, RemesaDto,
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// --
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	private ObjectNode asBodyRequest(RemesaDto output, ObjectMapper mapper) {
+	private ObjectNode asBodyRequest(RemesaDto output) {
 		ObjectNode body;
-		body = mapper.createObjectNode();
-		JsonNode remesa = mapper.convertValue(output, JsonNode.class);
+		body = this.mapper.createObjectNode();
+		JsonNode remesa = this.mapper.convertValue(output, JsonNode.class);
 
 		body.put("secret", apiSecretValue);
 		body.putArray("remesas").add(remesa);
 		return body;
 	}
 
-	private String readResponse(String response, ObjectMapper mapper, List<ErrorDto> errores) {
+	private String readResponse(String response, List<ErrorDto> errores) {
 		String result = "";
 
 		try {
-			JsonNode node = mapper.readTree(response);
+			JsonNode node = this.mapper.readTree(response);
 
 			val remesas = node.get("remesas");
 
