@@ -6,19 +6,19 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.egakat.integration.service.impl.crud.IntegracionEntityCrudServiceImpl;
 import com.egakat.io.commons.documentos.domain.DocumentoSolicitud;
 import com.egakat.io.commons.documentos.domain.DocumentoSolicitudLinea;
 import com.egakat.io.commons.documentos.dto.DocumentoSolicitudDto;
 import com.egakat.io.commons.documentos.dto.DocumentoSolicitudLineaDto;
 import com.egakat.io.commons.documentos.repository.DocumentoSolicitudRepository;
 import com.egakat.io.commons.documentos.service.api.DocumentoSolicitudCrudService;
-import com.egakat.io.core.service.impl.crud.ExtendedIntegracionEntityCrudServiceImpl;
 
 import lombok.val;
 
 //@Service
 public class DocumentoSolicitudCrudServiceImpl
-		extends ExtendedIntegracionEntityCrudServiceImpl<DocumentoSolicitud, DocumentoSolicitudDto>
+		extends IntegracionEntityCrudServiceImpl<DocumentoSolicitud, DocumentoSolicitudDto>
 		implements DocumentoSolicitudCrudService {
 
 	@Autowired

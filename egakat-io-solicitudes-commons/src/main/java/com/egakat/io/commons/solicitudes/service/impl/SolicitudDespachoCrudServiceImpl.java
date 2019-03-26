@@ -7,19 +7,19 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.egakat.integration.service.impl.crud.IntegracionEntityCrudServiceImpl;
 import com.egakat.io.commons.solicitudes.domain.SolicitudDespacho;
 import com.egakat.io.commons.solicitudes.domain.SolicitudDespachoLinea;
 import com.egakat.io.commons.solicitudes.dto.SolicitudDespachoDto;
 import com.egakat.io.commons.solicitudes.dto.SolicitudDespachoLineaDto;
 import com.egakat.io.commons.solicitudes.repository.SolicitudDespachoRepository;
 import com.egakat.io.commons.solicitudes.service.api.SolicitudDespachoCrudService;
-import com.egakat.io.core.service.impl.crud.ExtendedIntegracionEntityCrudServiceImpl;
 
 import lombok.val;
 
 @Service
 public class SolicitudDespachoCrudServiceImpl
-		extends ExtendedIntegracionEntityCrudServiceImpl<SolicitudDespacho, SolicitudDespachoDto>
+		extends IntegracionEntityCrudServiceImpl<SolicitudDespacho, SolicitudDespachoDto>
 		implements SolicitudDespachoCrudService {
 
 	@Autowired

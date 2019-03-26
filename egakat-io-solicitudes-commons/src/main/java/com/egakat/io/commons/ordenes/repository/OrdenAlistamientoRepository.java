@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.egakat.integration.repository.IntegracionEntityRepository;
 import com.egakat.io.commons.ordenes.domain.OrdenAlistamiento;
-import com.egakat.io.core.repository.IntegrationEntityRepository;
 
-public interface OrdenAlistamientoRepository extends IntegrationEntityRepository<OrdenAlistamiento> {
+public interface OrdenAlistamientoRepository extends IntegracionEntityRepository<OrdenAlistamiento> {
 
 	// TODO esto debe estar en una entidad de ordenes de alistamiento
 	// @formatter:off

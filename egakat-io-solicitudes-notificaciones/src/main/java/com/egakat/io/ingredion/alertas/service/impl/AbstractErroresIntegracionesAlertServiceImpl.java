@@ -206,6 +206,7 @@ public abstract class AbstractErroresIntegracionesAlertServiceImpl
 	}
 
 	protected void formatSheet(XSSFSheet sheet, List<List<String>> data) {
+		@SuppressWarnings("deprecation")
 		XSSFTable my_table = sheet.createTable();
 		CTTable cttable = my_table.getCTTable();
 		CTTableStyleInfo table_style = cttable.addNewTableStyleInfo();

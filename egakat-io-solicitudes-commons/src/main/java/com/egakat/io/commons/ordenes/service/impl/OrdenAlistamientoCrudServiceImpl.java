@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.egakat.integration.service.impl.crud.IntegracionEntityCrudServiceImpl;
 import com.egakat.io.commons.ordenes.domain.OrdenAlistamiento;
 import com.egakat.io.commons.ordenes.domain.OrdenAlistamientoCancelacion;
 import com.egakat.io.commons.ordenes.domain.OrdenAlistamientoLinea;
@@ -17,13 +18,12 @@ import com.egakat.io.commons.ordenes.dto.OrdenAlistamientoLineaDto;
 import com.egakat.io.commons.ordenes.dto.OrdenAlistamientoLoteDto;
 import com.egakat.io.commons.ordenes.repository.OrdenAlistamientoRepository;
 import com.egakat.io.commons.ordenes.service.api.OrdenAlistamientoCrudService;
-import com.egakat.io.core.service.impl.crud.ExtendedIntegracionEntityCrudServiceImpl;
 
 import lombok.val;
 
 @Service
 public class OrdenAlistamientoCrudServiceImpl
-		extends ExtendedIntegracionEntityCrudServiceImpl<OrdenAlistamiento, OrdenAlistamientoDto>
+		extends IntegracionEntityCrudServiceImpl<OrdenAlistamiento, OrdenAlistamientoDto>
 		implements OrdenAlistamientoCrudService {
 
 	@Autowired

@@ -8,7 +8,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.egakat.io.core.dto.IntegracionEntityDto;
+import com.egakat.integration.dto.IntegracionEntityDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
