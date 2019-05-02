@@ -11,6 +11,7 @@ import com.egakat.io.clientes.gws.service.api.solicitudes.SolicitudesDespachoMap
 import com.egakat.io.clientes.gws.service.api.solicitudes.SolicitudesDespachoNotificacionAceptacionPushService;
 import com.egakat.io.clientes.gws.service.api.solicitudes.SolicitudesDespachoNotificacionRechazoPushService;
 import com.egakat.io.clientes.gws.service.api.solicitudes.SolicitudesDespachoNotificacionReciboPushService;
+import com.egakat.io.clientes.gws.service.api.solicitudes.SolicitudesDespachoNotificacionStagePushService;
 import com.egakat.io.clientes.gws.service.api.solicitudes.SolicitudesDespachoPullService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,9 @@ public class SolicitudesDespachoBdiIntegrationServiceImpl implements Solicitudes
 
 	@Autowired
 	private SolicitudesDespachoNotificacionRechazoPushService notificacionRechazoPushService;
+	
+	@Autowired
+	private SolicitudesDespachoNotificacionStagePushService notificacionStagePushService;
 
 	@Value("${cron-retries}")
 	private Integer retries;
@@ -68,6 +72,7 @@ public class SolicitudesDespachoBdiIntegrationServiceImpl implements Solicitudes
 			// XML
 
 			success &= notificacionAceptacionPushService.push();
+			success &= notificacionStagePushService.push();
 			success &= notificacionRechazoPushService.push();
 
 			if (success) {

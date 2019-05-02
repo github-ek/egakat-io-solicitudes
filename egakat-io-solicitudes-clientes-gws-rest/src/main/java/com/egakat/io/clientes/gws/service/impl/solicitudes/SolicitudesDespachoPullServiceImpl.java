@@ -63,7 +63,7 @@ public class SolicitudesDespachoPullServiceImpl extends RestPullServiceImpl<Inte
 		val url = getUrl();
 		val query = getQuery();
 		val status = SolicitudDespachoClienteEstadoConstants.ENVIAR;
-		//al status = "RECIBIDA_OPL1";
+
 		int total = 0;
 		String format = "integracion={}, operación= {} ,url= {}{}";
 

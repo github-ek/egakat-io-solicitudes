@@ -11,4 +11,6 @@ public class RestConstants {
 	final public static String ORDENES_ALISTAMIENTO = BASE + "/solicitudes/ordenalistamiento";
 
 	final public static String DOCUMENTOS_SOLICITUDES_DESPACHO = BASE + "/solicitudes/documentoDespacho";
+	
+	final public static String DOCUMENTOS_SOLICITUDES_DESPACHO_BY_STATUS = "?status={status}";
 }

@@ -1,11 +1,13 @@
-package com.egakat.io.clientes.gws.service.impl.ordenesalistamiento;
+package com.egakat.io.clientes.gws.service.impl.solicitudes;
 
-import java.util.HashMap;
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Service;
 
 import com.egakat.core.web.client.components.RestClient;
@@ -13,24 +15,33 @@ import com.egakat.core.web.client.properties.RestProperties;
 import com.egakat.integration.dto.ActualizacionDto;
 import com.egakat.integration.dto.ErrorIntegracionDto;
 import com.egakat.integration.enums.EstadoIntegracionType;
+import com.egakat.integration.enums.EstadoNotificacionType;
 import com.egakat.integration.service.impl.rest.RestPushServiceImpl;
 import com.egakat.io.clientes.gws.components.GwsRestClient;
 import com.egakat.io.clientes.gws.constants.IntegracionesConstants;
 import com.egakat.io.clientes.gws.constants.RestConstants;
+import com.egakat.io.clientes.gws.constants.SolicitudDespachoClienteEstadoConstants;
 import com.egakat.io.clientes.gws.dto.OrdenAlistamientoClienteCancelacionDto;
 import com.egakat.io.clientes.gws.dto.OrdenAlistamientoClienteDto;
 import com.egakat.io.clientes.gws.dto.OrdenAlistamientoClienteLineaDto;
 import com.egakat.io.clientes.gws.dto.OrdenAlistamientoClienteLoteDto;
 import com.egakat.io.clientes.gws.properties.SolicitudesDespachoRestProperties;
+import com.egakat.io.clientes.gws.service.api.solicitudes.SolicitudesDespachoNotificacionStagePushService;
 
 import lombok.val;
 
 @Service
 public class SolicitudesDespachoNotificacionStagePushServiceImpl
-		extends RestPushServiceImpl<Object, OrdenAlistamientoClienteDto, String> {
+		extends RestPushServiceImpl<Object, OrdenAlistamientoClienteDto, String>
+		implements SolicitudesDespachoNotificacionStagePushService {
 
-	@Autowired
-	private NamedParameterJdbcTemplate jdbcTemplate;
+	private static final String ORDEN_DE_ALISTAMIENTO_LOTES_QUERY = "SELECT * FROM dbo.OrdenDeAlistamientoLotes(:id_orden_alistamiento)";
+
+	private static final String ORDEN_DE_ALISTAMIENTO_CANCELACIONES_QUERY = "SELECT * FROM dbo.OrdenDeAlistamientoCancelaciones(:id_orden_alistamiento)";
+
+	private static final String ORDEN_DE_ALISTAMIENTO_LINEAS_QUERY = "SELECT * FROM dbo.OrdenDeAlistamientoLineas(:id_orden_alistamiento)";
+
+	private static final String ORDEN_DE_ALISTAMIENTO_QUERY = "SELECT * FROM dbo.OrdenDeAlistamiento(:integracion,:id_externo)";
 
 	@Autowired
 	private SolicitudesDespachoRestProperties properties;
@@ -38,9 +49,8 @@ public class SolicitudesDespachoNotificacionStagePushServiceImpl
 	@Autowired
 	private GwsRestClient restClient;
 
-	protected NamedParameterJdbcTemplate getJdbcTemplate() {
-		return jdbcTemplate;
-	}
+	@Autowired
+	private NamedParameterJdbcTemplate jdbcTemplate;
 
 	@Override
 	protected RestProperties getProperties() {
@@ -63,9 +73,50 @@ public class SolicitudesDespachoNotificacionStagePushServiceImpl
 	}
 
 	@Override
+	protected String getOperacion() {
+		val result = String.format("PUSH NOTIFICACION STAGE %s", getIntegracion());
+		return result;
+	}
+
+	@Override
 	protected List<ActualizacionDto> getPendientes() {
-		val result = getActualizacionesService().findAllByIntegracionAndEstadoIntegracionAndSubEstadoIntegracionIn(
-				getIntegracion(), EstadoIntegracionType.CARGADO, "STAGE");
+		val estado = EstadoIntegracionType.CARGADO;
+		val subestado = "STAGE";
+
+		val result = getActualizacionesService()
+				.findAllByIntegracionAndEstadoIntegracionAndSubEstadoIntegracionIn(getIntegracion(), estado, subestado);
+		return result;
+	}
+
+	@Override
+	protected Object getInput(ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
+		return null;
+	}
+
+	@Override
+	protected OrdenAlistamientoClienteDto asOutput(Object input, ActualizacionDto actualizacion,
+			List<ErrorIntegracionDto> errores) {
+		val sql = ORDEN_DE_ALISTAMIENTO_QUERY;
+
+		// @formatter:off
+		SqlParameterSource namedParameters = new MapSqlParameterSource()
+				.addValue("integracion", actualizacion.getIntegracion())
+				.addValue("id_externo", actualizacion.getIdExterno());
+		// @formatter:on
+
+		val result = jdbcTemplate.queryForObject(sql, namedParameters, (rs, rowNum) -> {
+			OrdenAlistamientoClienteDto obj = new OrdenAlistamientoClienteDto();
+
+			obj.setId(rs.getString("id_externo"));
+			obj.setIdOrdenAlistamiento(rs.getLong("id_orden_alistamiento"));
+			obj.setNumeroOrden(rs.getString("numero_orden"));
+			obj.setTipoOrden(rs.getString("tipo_orden"));
+
+			obj.setLineas(asLineas(obj.getIdOrdenAlistamiento()));
+
+			return obj;
+		});
+
 		return result;
 	}
 
@@ -75,10 +126,8 @@ public class SolicitudesDespachoNotificacionStagePushServiceImpl
 		val lotes = getLotes(id_orden_alistamiento);
 
 		for (val linea : result) {
-			val c = cancelaciones.stream().filter(a -> a.getNumeroLinea() == linea.getNumeroLinea())
-					.collect(Collectors.toList());
-			val l = lotes.stream().filter(a -> a.getNumeroLinea() == linea.getNumeroLinea())
-					.collect(Collectors.toList());
+			val c = cancelaciones.stream().filter(a -> a.getNumeroLinea() == linea.getNumeroLinea()).collect(toList());
+			val l = lotes.stream().filter(a -> a.getNumeroLinea() == linea.getNumeroLinea()).collect(toList());
 			linea.setCancelaciones(c);
 			linea.setLotes(l);
 		}
@@ -87,12 +136,14 @@ public class SolicitudesDespachoNotificacionStagePushServiceImpl
 	}
 
 	private List<OrdenAlistamientoClienteLineaDto> getLineas(long id_orden_alistamiento) {
-		val sql = "SELECT * FROM dbo.OrdenDeAlistamientoLineas(:id_orden_alistamiento)";
+		val sql = ORDEN_DE_ALISTAMIENTO_LINEAS_QUERY;
 
-		val paramMap = new HashMap<String, Object>();
-		paramMap.put("id_orden_alistamiento", id_orden_alistamiento);
+		// @formatter:off
+		SqlParameterSource namedParameters = new MapSqlParameterSource()
+				.addValue("id_orden_alistamiento", id_orden_alistamiento);
+		// @formatter:on
 
-		val result = getJdbcTemplate().query(sql, paramMap, (rs, rowNum) -> {
+		val result = jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> {
 			int cantidad_solicitada = rs.getInt("cantidad_solicitada");
 			int unidades_alistadas = rs.getInt("unidades_alistadas");
 			int cantidad_no_despachada = cantidad_solicitada - unidades_alistadas;
@@ -118,12 +169,14 @@ public class SolicitudesDespachoNotificacionStagePushServiceImpl
 	}
 
 	private List<OrdenAlistamientoClienteCancelacionDto> getCancelaciones(long id_orden_alistamiento) {
-		val sql = "SELECT * FROM dbo.OrdenDeAlistamientoCancelaciones(:id_orden_alistamiento)";
+		val sql = ORDEN_DE_ALISTAMIENTO_CANCELACIONES_QUERY;
 
-		val paramMap = new HashMap<String, Object>();
-		paramMap.put("id_orden_alistamiento", id_orden_alistamiento);
+		// @formatter:off
+		SqlParameterSource namedParameters = new MapSqlParameterSource()
+				.addValue("id_orden_alistamiento", id_orden_alistamiento);
+		// @formatter:on
 
-		val result = getJdbcTemplate().query(sql, paramMap, (rs, rowNum) -> {
+		val result = jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> {
 			OrdenAlistamientoClienteCancelacionDto m = new OrdenAlistamientoClienteCancelacionDto();
 
 			m.setNumeroLinea(rs.getInt("numero_linea"));
@@ -136,12 +189,14 @@ public class SolicitudesDespachoNotificacionStagePushServiceImpl
 	}
 
 	private List<OrdenAlistamientoClienteLoteDto> getLotes(long id_orden_alistamiento) {
-		val sql = "SELECT * FROM dbo.OrdenDeAlistamientoLotes(:id_orden_alistamiento)";
+		val sql = ORDEN_DE_ALISTAMIENTO_LOTES_QUERY;
 
-		val paramMap = new HashMap<String, Object>();
-		paramMap.put("id_orden_alistamiento", id_orden_alistamiento);
+		// @formatter:off
+		SqlParameterSource namedParameters = new MapSqlParameterSource()
+				.addValue("id_orden_alistamiento", id_orden_alistamiento);
+		// @formatter:on
 
-		val result = getJdbcTemplate().query(sql, paramMap, (rs, rowNum) -> {
+		val result = jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> {
 			OrdenAlistamientoClienteLoteDto m = new OrdenAlistamientoClienteLoteDto();
 
 			m.setNumeroLinea(rs.getInt("numero_linea"));
@@ -151,43 +206,6 @@ public class SolicitudesDespachoNotificacionStagePushServiceImpl
 
 			return m;
 		});
-		return result;
-	}
-
-	@Override
-	protected void onError(ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
-		actualizacion.setSubEstadoIntegracion("ERROR_NOTIFICANDO_STAGE");
-		actualizacion.setReintentos(0);
-	}
-
-	@Override
-	protected Object getInput(ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected OrdenAlistamientoClienteDto asOutput(Object input, ActualizacionDto actualizacion,
-			List<ErrorIntegracionDto> errores) {
-		val sql = "SELECT * FROM dbo.OrdenDeAlistamiento(:integracion,:id_externo)";
-
-		val paramMap = new HashMap<String, Object>();
-		paramMap.put("integracion", actualizacion.getIntegracion());
-		paramMap.put("id_externo", actualizacion.getIdExterno());
-
-		val result = getJdbcTemplate().queryForObject(sql, paramMap, (rs, rowNum) -> {
-			OrdenAlistamientoClienteDto obj = new OrdenAlistamientoClienteDto();
-
-			obj.setId(rs.getString("id_externo"));
-			obj.setIdOrdenAlistamiento(rs.getLong("id_orden_alistamiento"));
-			obj.setNumeroOrden(rs.getString("numero_orden"));
-			obj.setTipoOrden(rs.getString("tipo_orden"));
-
-			obj.setLineas(asLineas(obj.getIdOrdenAlistamiento()));
-
-			return obj;
-		});
-
 		return result;
 	}
 
@@ -203,16 +221,28 @@ public class SolicitudesDespachoNotificacionStagePushServiceImpl
 	@Override
 	protected void onSuccess(String result, OrdenAlistamientoClienteDto output, Object input,
 			ActualizacionDto actualizacion) {
-		actualizacion.setSubEstadoIntegracion("");
+		val subestado = SolicitudDespachoClienteEstadoConstants.ALISTADA_OPL;
+		val estadoNotificacion = EstadoNotificacionType.NOTIFICADA;
+
+		actualizacion.setSubEstadoIntegracion(subestado);
+		actualizacion.setEstadoNotificacion(estadoNotificacion);
 		actualizacion.setReintentos(0);
 		actualizacion.setDatos(result);
-
 	}
 
 	@Override
 	protected void updateOnSuccess(String result, OrdenAlistamientoClienteDto output, Object input,
 			ActualizacionDto actualizacion) {
-		// TODO Auto-generated method stub
+		getActualizacionesService().update(actualizacion);
+	}
 
+	@Override
+	protected void onError(ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
+		val subestado = "ERROR_NOTIFICANDO_STAGE";
+		val estadoNotificacion = EstadoNotificacionType.ERROR;
+		
+		actualizacion.setSubEstadoIntegracion(subestado);
+		actualizacion.setEstadoNotificacion(estadoNotificacion);
+		actualizacion.setReintentos(0);
 	}
 }

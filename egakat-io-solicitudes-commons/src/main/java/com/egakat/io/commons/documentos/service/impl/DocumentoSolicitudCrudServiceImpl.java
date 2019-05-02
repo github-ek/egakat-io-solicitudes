@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.egakat.integration.service.impl.crud.IntegracionEntityCrudServiceImpl;
 import com.egakat.io.commons.documentos.domain.DocumentoSolicitud;
@@ -16,7 +17,7 @@ import com.egakat.io.commons.documentos.service.api.DocumentoSolicitudCrudServic
 
 import lombok.val;
 
-//@Service
+@Service
 public class DocumentoSolicitudCrudServiceImpl
 		extends IntegracionEntityCrudServiceImpl<DocumentoSolicitud, DocumentoSolicitudDto>
 		implements DocumentoSolicitudCrudService {

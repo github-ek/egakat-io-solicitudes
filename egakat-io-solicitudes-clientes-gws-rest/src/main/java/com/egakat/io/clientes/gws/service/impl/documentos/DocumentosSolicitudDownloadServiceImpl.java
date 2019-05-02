@@ -6,28 +6,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.egakat.core.web.client.components.RestClient;
 import com.egakat.core.web.client.properties.RestProperties;
 import com.egakat.integration.dto.ActualizacionDto;
 import com.egakat.integration.dto.ErrorIntegracionDto;
+import com.egakat.integration.enums.EstadoIntegracionType;
 import com.egakat.integration.service.impl.rest.RestIntegracionEntityDownloadServiceImpl;
+import com.egakat.io.clientes.gws.components.GwsRestClient;
+import com.egakat.io.clientes.gws.constants.IntegracionesConstants;
 import com.egakat.io.clientes.gws.constants.RestConstants;
 import com.egakat.io.clientes.gws.dto.DocumentoDespachoClienteDto;
 import com.egakat.io.clientes.gws.dto.DocumentoDespachoClienteLineaDto;
 import com.egakat.io.clientes.gws.properties.SolicitudesDespachoRestProperties;
-import com.egakat.io.clientes.gws.service.api.documentos.DocumentoSolicitudDownloadService;
-import com.egakat.io.commons.constants.IntegracionesConstants;
+import com.egakat.io.clientes.gws.service.api.documentos.DocumentosSolicitudDownloadService;
 import com.egakat.io.commons.documentos.dto.DocumentoSolicitudDto;
 import com.egakat.io.commons.documentos.dto.DocumentoSolicitudLineaDto;
 import com.egakat.io.commons.documentos.service.api.DocumentoSolicitudCrudService;
 
 import lombok.val;
 
-//@Service
-public class DocumentoSolicitudDownloadServiceImpl
-		extends RestIntegracionEntityDownloadServiceImpl<DocumentoDespachoClienteDto, DocumentoSolicitudDto,Object>
-		implements DocumentoSolicitudDownloadService {
+@Service
+public class DocumentosSolicitudDownloadServiceImpl
+		extends RestIntegracionEntityDownloadServiceImpl<DocumentoDespachoClienteDto, DocumentoSolicitudDto, Object>
+		implements DocumentosSolicitudDownloadService {
 
 	@Autowired
 	private DocumentoSolicitudCrudService crudService;
@@ -36,7 +39,7 @@ public class DocumentoSolicitudDownloadServiceImpl
 	private SolicitudesDespachoRestProperties properties;
 
 	@Autowired
-	private RestClient restClient;
+	private GwsRestClient restClient;
 
 	@Override
 	protected DocumentoSolicitudCrudService getCrudService() {
@@ -68,17 +71,23 @@ public class DocumentoSolicitudDownloadServiceImpl
 		return "/{id}";
 	}
 
-	protected Class<DocumentoDespachoClienteDto> getResponseType() {
-		return DocumentoDespachoClienteDto.class;
+	@Override
+	protected List<ActualizacionDto> getPendientes() {
+		val estado = EstadoIntegracionType.NO_PROCESADO;
+		val subestado = "";
+
+		val result = getActualizacionesService()
+				.findAllByIntegracionAndEstadoIntegracionAndSubEstadoIntegracionIn(getIntegracion(), estado, subestado);
+		return result;
 	}
 
 	@Override
 	protected DocumentoDespachoClienteDto getInput(ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
-		val url = getProperties().getBasePath() + getApiEndPoint();
+		val url = getUrl();
 		val query = getQuery();
+		val id = actualizacion.getIdExterno();
 
-		val response = getRestClient().getOneQuery(url, query, getResponseType(), actualizacion.getIdExterno());
-
+		val response = getRestClient().getOneQuery(url, query, DocumentoDespachoClienteDto.class, id);
 		val result = response.getBody();
 		return result;
 	}
@@ -95,24 +104,24 @@ public class DocumentoSolicitudDownloadServiceImpl
 		val numeroDocumentoSinPrefijo = String.valueOf(input.getNumeroDocumentoSinPrefijo());
 		val numeroDocumento = String.format("%s-%s", prefijoDocumento, numeroDocumentoSinPrefijo);
 
-		val model = new DocumentoSolicitudDto();
+		val result = new DocumentoSolicitudDto();
 
-		model.setIntegracion(actualizacion.getIntegracion());
-		model.setCorrelacion(actualizacion.getCorrelacion());
-		model.setIdExterno(actualizacion.getIdExterno());
+		result.setIntegracion(actualizacion.getIntegracion());
+		result.setCorrelacion(actualizacion.getCorrelacion());
+		result.setIdExterno(actualizacion.getIdExterno());
 
-		model.setClienteCodigoAlterno("GWS");
-		model.setTipoDocumentoCodigoAlterno("FACTURA");
-		model.setNumeroSolicitud(numeroSolicitud);
-		model.setPrefijo(prefijo);
-		model.setNumeroSolicitudSinPrefijo(numeroSolicitudSinPrefijo);
-		model.setNumeroDocumento(numeroDocumento);
-		model.setPrefijoDocumento(prefijoDocumento);
-		model.setNumeroDocumentoSinPrefijo(numeroDocumentoSinPrefijo);
+		result.setClienteCodigoAlterno("GWS");
+		result.setTipoDocumentoCodigoAlterno("FACTURA");
+		result.setNumeroSolicitud(numeroSolicitud);
+		result.setPrefijo(prefijo);
+		result.setNumeroSolicitudSinPrefijo(numeroSolicitudSinPrefijo);
+		result.setNumeroDocumento(numeroDocumento);
+		result.setPrefijoDocumento(prefijoDocumento);
+		result.setNumeroDocumentoSinPrefijo(numeroDocumentoSinPrefijo);
 
-		model.setLineas(asLineas(input));
+		result.setLineas(asLineas(input));
 
-		return model;
+		return result;
 	}
 
 	protected List<DocumentoSolicitudLineaDto> asLineas(DocumentoDespachoClienteDto input) {
@@ -126,58 +135,48 @@ public class DocumentoSolicitudDownloadServiceImpl
 	}
 
 	protected DocumentoSolicitudLineaDto asLinea(int numeroLinea, DocumentoDespachoClienteLineaDto input) {
-		val model = new DocumentoSolicitudLineaDto();
+		val result = new DocumentoSolicitudLineaDto();
 
-		model.setNumeroLinea(numeroLinea);
-		model.setNumeroLineaExterno(input.getNumeroLineaExterno());
-		model.setNumeroSubLineaExterno("");
-		model.setProductoCodigoAlterno(input.getProductoCodigoAlterno());
-		model.setProductoNombre("");
-		model.setCantidad(input.getCantidad());
-		model.setBodegaCodigoAlterno("");
-		model.setEstadoInventarioCodigoAlterno("");
-		model.setLote("");
+		result.setNumeroLinea(numeroLinea);
+		result.setNumeroLineaExterno(input.getNumeroLineaExterno());
+		result.setNumeroSubLineaExterno("");
+		result.setProductoCodigoAlterno(input.getProductoCodigoAlterno());
+		result.setProductoNombre("");
+		result.setCantidad(input.getCantidad());
+		result.setBodegaCodigoAlterno("");
+		result.setEstadoInventarioCodigoAlterno("");
+		result.setLote("");
 
-		return model;
-	}
-
-	protected ErrorIntegracionDto errorAtributoRequeridoNoSuministrado(ActualizacionDto entry, String attribute) {
-		val format = "El atributo %s no admite valores nulos o vacios. Debe sumnistrar un valor.";
-		val mensaje = String.format(format, attribute);
-		val result = getErroresService().error(entry, attribute, mensaje);
 		return result;
-	}
-
-	@Override
-	protected List<ActualizacionDto> getPendientes() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	protected Object push(DocumentoSolicitudDto output, DocumentoDespachoClienteDto input,
 			ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected void onSuccess(Object result, DocumentoSolicitudDto output, DocumentoDespachoClienteDto input,
 			ActualizacionDto actualizacion) {
-		// TODO Auto-generated method stub
-		
+		val estado = EstadoIntegracionType.ESTRUCTURA_VALIDA;
+		val subestado = "";
+
+		actualizacion.setEstadoIntegracion(estado);
+		actualizacion.setSubEstadoIntegracion(subestado);
+		actualizacion.setReintentos(0);
 	}
 
 	@Override
 	protected void updateOnSuccess(Object result, DocumentoSolicitudDto output, DocumentoDespachoClienteDto input,
 			ActualizacionDto actualizacion) {
-		// TODO Auto-generated method stub
-		
+		getCrudService().create(output, actualizacion, actualizacion.getEstadoIntegracion());
 	}
 
 	@Override
 	protected void onError(ActualizacionDto actualizacion, List<ErrorIntegracionDto> errores) {
-		// TODO Auto-generated method stub
-		
+		val estado = EstadoIntegracionType.ERROR_ESTRUCTURA;
+
+		actualizacion.setEstadoIntegracion(estado);
 	}
 }

@@ -1,39 +1,38 @@
 package com.egakat.io.clientes.gws.service.impl.documentos;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.egakat.core.web.client.components.RestClient;
-import com.egakat.core.web.client.properties.RestProperties;
 import com.egakat.integration.dto.ActualizacionDto;
 import com.egakat.integration.enums.EstadoIntegracionType;
 import com.egakat.integration.enums.EstadoNotificacionType;
 import com.egakat.integration.service.impl.rest.RestPullServiceImpl;
+import com.egakat.io.clientes.gws.components.GwsRestClient;
+import com.egakat.io.clientes.gws.constants.IntegracionesConstants;
 import com.egakat.io.clientes.gws.constants.RestConstants;
 import com.egakat.io.clientes.gws.constants.SolicitudDespachoClienteEstadoConstants;
 import com.egakat.io.clientes.gws.properties.SolicitudesDespachoRestProperties;
-import com.egakat.io.clientes.gws.service.api.documentos.DocumentoSolicitudPullService;
-import com.egakat.io.commons.constants.IntegracionesConstants;
+import com.egakat.io.clientes.gws.service.api.documentos.DocumentosSolicitudPullService;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class DocumentoSolicitudPullServiceImpl extends RestPullServiceImpl<Integer>
-		implements DocumentoSolicitudPullService {
+public class DocumentosSolicitudPullServiceImpl extends RestPullServiceImpl<Integer>
+		implements DocumentosSolicitudPullService {
 
 	@Autowired
 	private SolicitudesDespachoRestProperties properties;
 
-	//@Autowired
-	private RestClient restClient;
+	@Autowired
+	private GwsRestClient restClient;
 
 	@Override
-	protected RestProperties getProperties() {
+	protected SolicitudesDespachoRestProperties getProperties() {
 		return properties;
 	}
 
@@ -54,31 +53,35 @@ public class DocumentoSolicitudPullServiceImpl extends RestPullServiceImpl<Integ
 
 	@Override
 	protected String getQuery() {
-		return "?status={status}";
+		return RestConstants.SOLICITUDES_DESPACHO_BY_STATUS;
 	}
 
 	@Override
 	public void pull() {
+		val operacion = getOperacion();
 		val correlacion = defaultCorrelacion();
+		val url = getUrl();
+		val query = getQuery();
 		val status = SolicitudDespachoClienteEstadoConstants.DOC_CREADO_SAP;
 
+		int total = 0;
+		String format = "integracion={}, operación= {} ,url= {}{}";
+
+		log.debug(format, getIntegracion(), operacion, url, query);
 		try {
-			val inputs = pull(status);
+			val response = getRestClient().getAllQuery(url, query, Integer[].class, status);
+			val inputs = Arrays.asList(response.getBody());
+			total = inputs.size();
 
 			enqueue(correlacion, inputs);
 		} catch (RuntimeException e) {
-			getErroresService().create(getIntegracion(), correlacion, "", e);
+			boolean ignorar = isRetryableException(e);
+			getErroresService().create(getIntegracion(), correlacion, "", ignorar, e);
 			log.error("Exception:", e);
 		}
-	}
 
-	protected List<Integer> pull(Object... arg) {
-		val url = getProperties().getBasePath() + getApiEndPoint();
-		val query = getQuery();
-
-		val response = getRestClient().getAllQuery(url, query, Integer[].class, arg);
-		val result = Arrays.asList(response.getBody());
-		return result;
+		format = "integracion={}, operación= {}: Finalización de la consulta de solicitudes con estado={}, total={}, url={}{}";
+		log.debug(format, getIntegracion(), operacion, status, total, url, query);
 	}
 
 	@Override
@@ -86,9 +89,10 @@ public class DocumentoSolicitudPullServiceImpl extends RestPullServiceImpl<Integ
 		val result = new ActualizacionDto();
 
 		result.setIntegracion(getIntegracion());
-		result.setIdExterno(input.toString());
 		result.setCorrelacion(correlacion);
+		result.setIdExterno(input.toString());
 		result.setEstadoIntegracion(EstadoIntegracionType.NO_PROCESADO);
+		result.setSubEstadoIntegracion("");
 		result.setEstadoNotificacion(EstadoNotificacionType.SIN_NOVEDAD);
 
 		return result;
