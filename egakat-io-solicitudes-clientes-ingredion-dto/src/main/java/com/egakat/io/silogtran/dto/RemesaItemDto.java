@@ -8,33 +8,11 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-"id_producto_econnect",
-"codigo_producto",
-"producto_nombre",
-"producto_codigoministerio",
-"naturaleza_carga",
-"tipo_producto",
-"codigo_empaque",
-"peso",
-"peso_bruto",
-"cantidad",
-"volumen",
-"valor_declarado",
-"descripcion_detalle_remesa",
-"predistribucion",
-"factor_conversion",
-"cantidad_embalaje",
-"lote",
-"estado_inventario_nombre",
-"fecha_vencimiento"
-})
 public class RemesaItemDto {
 
 @JsonProperty("id_producto_econnect")
@@ -67,8 +45,8 @@ public String descripcionDetalleRemesa;
 public String predistribucion;
 @JsonProperty("factor_conversion")
 public String factorConversion;
-@JsonProperty("cantidad_embalaje")
-public String cantidadEmbalaje;
+@JsonProperty("cantidad_recibida")
+public String cantidadRecibida;
 @JsonProperty("lote")
 public String lote;
 @JsonProperty("estado_inventario_nombre")

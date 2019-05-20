@@ -31,6 +31,7 @@ public class ActaDto implements Reintentable<Long> {
 	private LocalDate fechaMaximaSolicitada;
 	private LocalDateTime stgdte;
 
+	
 	private String centroCosto;
 	private String tipoRemesa;
 	private String clienteCodigoAlternoTms;
@@ -81,7 +82,8 @@ public class ActaDto implements Reintentable<Long> {
 	private String puntoNombreAlterno;
 	private String regional;
 	private String planta;
-
+	private String periodo;
+	
 	private String responsablePrincipal;
 	private String responsableSuplente;
 	private String remesaObservacion;

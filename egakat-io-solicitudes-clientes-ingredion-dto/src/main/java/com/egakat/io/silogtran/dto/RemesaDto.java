@@ -12,22 +12,11 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "centro_costo", "tipo_remesa", "codigo_cliente", "division_cliente", "nombre_remitente",
-		"tipo_documento_remitente", "documento_remitente", "direccion_remitente", "telefono_remitente",
-		"contacto_remitente", "ciudad_remitente", "departamento_remitente", "nombre_destinatario",
-		"tipo_documento_destinatario", "documento_destinatario", "direccion_destinatario", "telefono_destinatario",
-		"contacto_destinatario1", "contacto_destinatario2", "ciudad_destinatario", "departamento_destinatario",
-		"zona_ciudad_destinatario", "coordenada_x_longitud", "coordenada_y_latitud", "observacion_remesa",
-		"fecha_compromiso_minima", "fecha_compromiso_maxima", "hora_compromiso_maxima", "hora_compromiso_minima",
-		"placa_vehiculo", "secuencia_entrega", "tipo_remision", "remision", "documento_wms",
-		"documento_numero_solicitud", "id_ordentransporte", "punto_codigo_alterno", "regional", "ciudad_nombre_alterno",
-		"bodega_codigo_alterno", "programa", "planta", "items" })
 public class RemesaDto implements Reintentable<Long> {
 	@JsonIgnore
 	private Long id;
@@ -134,6 +123,8 @@ public class RemesaDto implements Reintentable<Long> {
 	public String programa;
 	@JsonProperty("planta")
 	public String planta;
+	@JsonProperty("periodo_acta")
+	public String periodoActa;
 	@JsonProperty("items")
 	public List<RemesaItemDto> items = null;
 	@JsonIgnore

@@ -160,6 +160,7 @@ public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistad
 				result.setPuntoNombreAlterno(rs.getString("punto_nombre_alterno"));
 				result.setRegional(rs.getString("regional"));
 				result.setPlanta(rs.getString("planta"));
+				result.setPeriodo(rs.getString("periodo"));
 				
 				result.setResponsablePrincipal(rs.getString("responsable_principal"));
 				result.setResponsableSuplente(rs.getString("responsable_suplente"));

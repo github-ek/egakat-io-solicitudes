@@ -208,12 +208,12 @@ public class RemesasPushServiceImpl extends RestPushServiceImpl<Long, RemesaDto,
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// --
 	// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	private static DecimalFormat df = new DecimalFormat("0.0", getDecimalFormatSymbols());
+	private static DecimalFormat df = new DecimalFormat("##############0.0", getDecimalFormatSymbols());
 
 	private static DecimalFormatSymbols getDecimalFormatSymbols() {
 		val result = new DecimalFormatSymbols(Locale.getDefault());
-		result.setDecimalSeparator('.');
-		result.setGroupingSeparator(',');
+		result.setDecimalSeparator(',');
+		result.setGroupingSeparator('.');
 		return result;
 	}
 
@@ -288,7 +288,8 @@ public class RemesasPushServiceImpl extends RestPushServiceImpl<Long, RemesaDto,
 		result.setBodegaCodigoAlterno(acta.getBodegaCodigoAlterno());
 		result.setPrograma(acta.getPrograma());
 		result.setPlanta(acta.getPlanta());
-
+		result.setPeriodoActa(acta.getPeriodo());
+		
 		result.setItems(new ArrayList<>());
 		return result;
 	}
@@ -310,7 +311,7 @@ public class RemesasPushServiceImpl extends RestPushServiceImpl<Long, RemesaDto,
 		result.setDescripcionDetalleRemesa(acta.getRemesaObservacion());
 		result.setPredistribucion(acta.getPredistribucion());
 		result.setFactorConversion(String.valueOf(acta.getFactorConversion()));
-		result.setCantidadEmbalaje(df.format(acta.getCantidad()));
+		result.setCantidadRecibida(df.format(acta.getCantidad()));
 		result.setLote(acta.getLote());
 		result.setEstadoInventarioNombre(acta.getEstadoInventarioNombre());
 		result.setFechaVencimiento(acta.getFechaVencimiento());
