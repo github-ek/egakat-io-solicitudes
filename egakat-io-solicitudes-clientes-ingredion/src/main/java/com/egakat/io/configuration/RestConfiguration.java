@@ -1,4 +1,4 @@
-package com.egakat.io.ingredion.configuration;
+package com.egakat.io.configuration;
 
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;

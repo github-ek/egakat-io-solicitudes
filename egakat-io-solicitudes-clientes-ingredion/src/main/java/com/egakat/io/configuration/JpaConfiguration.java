@@ -1,4 +1,4 @@
-package com.egakat.io.ingredion.configuration;
+package com.egakat.io.configuration;
 
 import javax.sql.DataSource;
 

@@ -24,7 +24,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import com.egakat.core.web.client.components.RestClient;
 import com.egakat.io.ingredion.dto.ActaDto;
 import com.egakat.io.ingredion.dto.ErrorDto;
-import com.egakat.io.ingredion.service.api.ActasIngredionAlistadasService;
+import com.egakat.io.ingredion.service.api.ActasAlistadasService;
 import com.egakat.io.silogtran.components.SilogtranRestClient;
 import com.egakat.io.silogtran.components.SilogtranRestProperties;
 import com.egakat.io.silogtran.components.SilogtranTokenGenerator;
@@ -52,7 +52,7 @@ public class RemesasPushServiceImpl extends RestPushServiceImpl<Long, RemesaDto,
 	private String apiSecretValue;
 
 	@Autowired
-	private ActasIngredionAlistadasService service;
+	private ActasAlistadasService service;
 
 	@Autowired
 	private SilogtranTokenGenerator tokenGenerator;

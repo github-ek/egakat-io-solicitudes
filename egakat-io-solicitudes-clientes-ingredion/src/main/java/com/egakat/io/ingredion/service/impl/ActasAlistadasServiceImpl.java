@@ -16,13 +16,13 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.io.ingredion.dto.ActaDto;
 import com.egakat.io.ingredion.dto.ErrorDto;
-import com.egakat.io.ingredion.service.api.ActasIngredionAlistadasService;
+import com.egakat.io.ingredion.service.api.ActasAlistadasService;
 import com.egakat.io.silogtran.dto.RemesaDto;
 
 import lombok.val;
 
 @Service
-public class ActasIngredionAlistadasServiceImpl implements ActasIngredionAlistadasService {
+public class ActasAlistadasServiceImpl implements ActasAlistadasService {
 
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;

@@ -1,4 +1,4 @@
-package com.egakat.io.ingredion.tasks;
+package com.egakat.io.silogtran.tasks;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,6 +14,6 @@ public class Task {
 	
 	@Scheduled(cron = "${cron-remesas}")
 	public void run() {
-		service.push();
+		//service.push();
 	}
 }

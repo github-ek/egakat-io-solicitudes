@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.egakat.io.ingredion.dto.ActaDto;
-import com.egakat.io.ingredion.service.api.ActasIngredionAlistadasService;
+import com.egakat.io.ingredion.service.api.ActasAlistadasService;
 
 import lombok.val;
 
 @RestController
 @RequestMapping(value = "/api/actas-alistadas", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin("*")
-public class ActasIngredionAlistadasController {
+public class ActasAlistadasController {
 
 	private static final String FORMATO_DATE = "yyyy-MM-dd";
 
 	@Autowired
-	private ActasIngredionAlistadasService service;
+	private ActasAlistadasService service;
 
 	@GetMapping(path = "bodegas-alternas")
 	public List<String> getBodegasAlternas() {

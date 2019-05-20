@@ -9,7 +9,7 @@ import com.egakat.io.ingredion.dto.ActaDto;
 import com.egakat.io.ingredion.dto.ErrorDto;
 import com.egakat.io.silogtran.dto.RemesaDto;
 
-public interface ActasIngredionAlistadasService {
+public interface ActasAlistadasService {
 
 	@Transactional(readOnly = true)
 	List<String> getBodegasAlternas();
