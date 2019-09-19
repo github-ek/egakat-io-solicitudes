@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "datasource.server",
+    "type": "java.lang.String",
+    "description": "A description for 'datasource.server'"
+  },
+  {
+    "name": "datasource.databaseName",
+    "type": "java.lang.String",
+    "description": "A description for 'datasource.databaseName'"
+  },
+  {
+    "name": "datasource.username",
+    "type": "java.lang.String",
+    "description": "A description for 'datasource.username'"
+  },
+  {
+    "name": "datasource.password",
+    "type": "java.lang.String",
+    "description": "A description for 'datasource.password'"
+  }
+]}

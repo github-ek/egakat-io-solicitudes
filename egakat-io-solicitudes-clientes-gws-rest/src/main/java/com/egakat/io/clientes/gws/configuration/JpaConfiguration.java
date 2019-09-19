@@ -2,6 +2,7 @@ package com.egakat.io.clientes.gws.configuration;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -22,12 +23,13 @@ public class JpaConfiguration extends HikariConfig {
 
 	@Bean
 	@ConfigurationProperties(prefix = DATASOURCE_PROPERTIES_PREFIX)
-	public DataSource dataSource() {
+	public HikariDataSource dataSource() {
 		val result = DataSourceBuilder.create().type(HikariDataSource.class).build();
 		return result;
 	}
 
 	@Bean
+	@Autowired
 	public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
 		val result = new NamedParameterJdbcTemplate(dataSource);
 		return result;

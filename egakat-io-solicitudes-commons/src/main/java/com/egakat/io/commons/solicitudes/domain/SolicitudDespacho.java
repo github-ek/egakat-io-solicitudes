@@ -116,6 +116,26 @@ public class SolicitudDespacho extends IntegracionEntity {
 	@Size(max = 100)
 	private String puntoNombre;
 
+	@Column(name = "contacto_principal_nombre", length = 100, nullable = false)
+	@NotNull
+	@Size(max = 100)
+	private String contactoPrincipalNombre;
+	
+	@Column(name = "contacto_principal_telefono", length = 100, nullable = false)
+	@NotNull
+	@Size(max = 100)
+	private String contactoPrincipalTelefono;
+
+	@Column(name = "contacto_secundario_nombre", length = 100, nullable = false)
+	@NotNull
+	@Size(max = 100)
+	private String contactoSecundarioNombre;
+	
+	@Column(name = "contacto_secundario_telefono", length = 100, nullable = false)
+	@NotNull
+	@Size(max = 100)
+	private String contactoSecundarioTelefono;
+	
 	@Column(name = "autorizado_identificacion", length = 20, nullable = false)
 	@NotNull
 	@Size(max = 20)
@@ -125,15 +145,40 @@ public class SolicitudDespacho extends IntegracionEntity {
 	@NotNull
 	@Size(max = 100)
 	private String autorizadoNombres;
+	
+	@Column(name = "tipo_documento_codigo_orden_compra", length = 50, nullable = true)
+	@Size(max = 50)
+	private String tipoDocumentoCodigoOrdenCompra;
 
-	@Column(name = "numero_orden_compra", length = 20, nullable = false)
-	@NotNull
+	@Column(name = "numero_orden_compra", length = 20, nullable = true)
 	@Size(max = 20)
 	private String numeroOrdenCompra;
 
 	@Column(name = "fecha_orden_compra")
 	private LocalDate fechaOrdenCompra;
 
+	@Column(name = "tipo_documento_codigo_aux1", length = 50, nullable = true)
+	@Size(max = 50)
+	private String tipoDocumentoCodigoAuxiliar1;
+
+	@Column(name = "numero_documento_aux1", length = 50, nullable = true)
+	@Size(max = 50)
+	private String numeroDocumentoAuxiliar1;
+
+	@Column(name = "fecha_documento_aux1")
+	private LocalDate fechaDocumentoAuxiliar1;
+
+	@Column(name = "tipo_documento_codigo_aux2", length = 50, nullable = true)
+	@Size(max = 50)
+	private String tipoDocumentoCodigoAuxiliar2;
+
+	@Column(name = "numero_documento_aux2", length = 50, nullable = true)
+	@Size(max = 50)
+	private String numeroDocumentoAuxiliar2;
+
+	@Column(name = "fecha_documento_aux2")
+	private LocalDate fechaDocumentoAuxiliar2;
+	
 	@Column(name = "nota", length = 200, nullable = false)
 	@NotNull
 	@Size(max = 200)

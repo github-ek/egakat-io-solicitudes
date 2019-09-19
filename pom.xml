@@ -65,5 +65,7 @@
 		<module>egakat-io-solicitudes-clientes-ingredion</module>
 		<module>egakat-io-solicitudes-clientes-ingredion-dto</module>
 		<module>egakat-io-solicitudes-notificaciones</module>
+		
+		<module>egakat-io-solicitudes-clientes-diageo</module>
 	</modules>
 </project>
