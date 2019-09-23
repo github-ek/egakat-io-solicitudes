@@ -1,13 +1,13 @@
 package com.egakat.io.solicitudes.transformation.service.impl;
 
-import static com.egakat.integration.files.enums.EstadoRegistroType.DESCARTADO;
-import static com.egakat.integration.files.enums.EstadoRegistroType.ERROR_ENRIQUECIMIENTO;
-import static com.egakat.integration.files.enums.EstadoRegistroType.ERROR_HOMOLOGACION;
-import static com.egakat.integration.files.enums.EstadoRegistroType.ERROR_VALIDACION;
-import static com.egakat.integration.files.enums.EstadoRegistroType.PROCESADO;
-import static com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom.ESTADO_INVENTARIO_BOM_CODIGO_ALTERNO;
-import static com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom.PRODUCTO_BOM_CODIGO_ALTERNO;
-import static com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom.SUBESTADO_INVENTARIO_BOM_CODIGO_ALTERNO;
+import static com.egakat.integration.commons.archivos.enums.EstadoRegistroType.DESCARTADO;
+import static com.egakat.integration.commons.archivos.enums.EstadoRegistroType.ERROR_ENRIQUECIMIENTO;
+import static com.egakat.integration.commons.archivos.enums.EstadoRegistroType.ERROR_HOMOLOGACION;
+import static com.egakat.integration.commons.archivos.enums.EstadoRegistroType.ERROR_VALIDACION;
+import static com.egakat.integration.commons.archivos.enums.EstadoRegistroType.PROCESADO;
+import static com.egakat.io.commons.solicitudes.domain.manufacturas.ManufacturaBom.ESTADO_INVENTARIO_BOM_CODIGO_ALTERNO;
+import static com.egakat.io.commons.solicitudes.domain.manufacturas.ManufacturaBom.PRODUCTO_BOM_CODIGO_ALTERNO;
+import static com.egakat.io.commons.solicitudes.domain.manufacturas.ManufacturaBom.SUBESTADO_INVENTARIO_BOM_CODIGO_ALTERNO;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.summingInt;
@@ -23,10 +23,10 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.econnect.maestros.client.service.api.BodegaLocalService;
 import com.egakat.econnect.maestros.client.service.api.ClienteLocalService;
-import com.egakat.integration.files.dto.ArchivoErrorDto;
-import com.egakat.integration.files.dto.CampoDto;
-import com.egakat.io.solicitudes.domain.manufacturas.ManufacturaBom;
-import com.egakat.io.solicitudes.repository.manufacturas.ManufacturaBomRepository;
+import com.egakat.integration.commons.archivos.dto.ArchivoErrorDto;
+import com.egakat.integration.commons.archivos.dto.CampoDto;
+import com.egakat.io.commons.solicitudes.domain.manufacturas.ManufacturaBom;
+import com.egakat.io.commons.solicitudes.repository.manufacturas.ManufacturaBomRepository;
 import com.egakat.io.solicitudes.transformation.service.api.ManufacturasBomTransformationService;
 import com.egakat.wms.maestros.client.service.api.WhareHouseLocalService;
 import com.egakat.wms.maestros.dto.MaterialDto;

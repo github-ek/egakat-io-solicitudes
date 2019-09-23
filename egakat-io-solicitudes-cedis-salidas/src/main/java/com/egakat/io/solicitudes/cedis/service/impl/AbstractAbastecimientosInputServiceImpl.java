@@ -3,11 +3,11 @@ package com.egakat.io.solicitudes.cedis.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.egakat.integration.core.files.components.decorators.Decorator;
-import com.egakat.integration.core.files.service.impl.excel.ArchivoExcelInputServiceImpl;
+import com.egakat.integration.core.files.service.impl.ArchivoExcelInputServiceImpl;
+import com.egakat.io.commons.components.MapEntidadTrasladoDecorator;
+import com.egakat.io.commons.solicitudes.domain.salidas.Traslado;
+import com.egakat.io.commons.solicitudes.repository.salidas.TrasladoRepository;
 import com.egakat.io.solicitudes.cedis.service.api.AbastecimientosInputService;
-import com.egakat.io.solicitudes.components.decorators.MapEntidadTrasladoDecorator;
-import com.egakat.io.solicitudes.domain.salidas.Traslado;
-import com.egakat.io.solicitudes.repository.salidas.TrasladoRepository;
 
 public abstract class AbstractAbastecimientosInputServiceImpl extends ArchivoExcelInputServiceImpl<Traslado> implements AbastecimientosInputService{
 	

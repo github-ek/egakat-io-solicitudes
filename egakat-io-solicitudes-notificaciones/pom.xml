@@ -51,15 +51,15 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>com.egakat</groupId>
-			<artifactId>
-				egakat-io-solicitudes-clientes-ingredion-dto
-			</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.egakat</groupId>
+			<artifactId>
+				egakat-integration-commons-actualizaciones
+			</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

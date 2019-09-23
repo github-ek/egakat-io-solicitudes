@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.egakat.econnect.maestros.client.service.api.BodegaLocalService;
 import com.egakat.econnect.maestros.client.service.api.ClienteLocalService;
-import com.egakat.integration.files.dto.ArchivoErrorDto;
-import com.egakat.integration.files.dto.CampoDto;
-import com.egakat.io.solicitudes.domain.manufacturas.Manufactura;
-import com.egakat.io.solicitudes.repository.manufacturas.ManufacturaRepository;
+import com.egakat.integration.commons.archivos.dto.ArchivoErrorDto;
+import com.egakat.integration.commons.archivos.dto.CampoDto;
+import com.egakat.io.commons.solicitudes.domain.manufacturas.Manufactura;
+import com.egakat.io.commons.solicitudes.repository.manufacturas.ManufacturaRepository;
 import com.egakat.io.solicitudes.transformation.service.api.ManufacturasTransformationService;
 import com.egakat.wms.maestros.client.service.api.WhareHouseLocalService;
 

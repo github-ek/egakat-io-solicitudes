@@ -19,8 +19,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.egakat.integration.dto.ErrorIntegracionDto;
 import com.egakat.io.ingredion.alertas.dto.ErrorActaDto;
-import com.egakat.io.ingredion.dto.ErrorDto;
 
 import lombok.val;
 
@@ -79,7 +79,7 @@ public class ErroresService {
 		return result;
 	}
 
-	private List<ErrorDto> getErroresById(Long id, List<String> estados) {
+	private List<ErrorIntegracionDto> getErroresById(Long id, List<String> estados) {
 
 		val sql = getSqlSelectErrores();
 
@@ -165,16 +165,16 @@ public class ErroresService {
 		};
 	}
 
-	private RowMapper<ErrorDto> getErrorRowMapper() {
-		return new RowMapper<ErrorDto>() {
+	private RowMapper<ErrorIntegracionDto> getErrorRowMapper() {
+		return new RowMapper<ErrorIntegracionDto>() {
 			@Override
-			public ErrorDto mapRow(ResultSet rs, int i) throws SQLException {
-				val result = new ErrorDto();
+			public ErrorIntegracionDto mapRow(ResultSet rs, int i) throws SQLException {
+				val result = new ErrorIntegracionDto();
 
 				result.setId(rs.getLong("id"));
 				result.setCodigo(rs.getString("codigo"));
 				result.setMensaje(rs.getString("mensaje"));
-				result.setEstadoNotificacion(rs.getString("estado_notificacion"));
+				//result.setEstadoNotificacion(rs.getString("estado_notificacion"));
 				result.setFechaNotificacion(getLocalDateTime(rs, "fecha_notificacion"));
 
 				result.setVersion(rs.getInt("version"));

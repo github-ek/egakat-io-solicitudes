@@ -25,20 +25,24 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.egakat</groupId>
-			<artifactId>egakat-integration-core-transformation</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.egakat</groupId>
-			<artifactId>egakat-e-connect-maestros-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.egakat</groupId>
 			<artifactId>egakat-io-solicitudes-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.egakat</groupId>
+			<artifactId>
+				egakat-integration-core-transformation
+			</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.egakat</groupId>
+			<artifactId>egakat-e-connect-maestros-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.egakat</groupId>
 			<artifactId>egakat-wms-maestros-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

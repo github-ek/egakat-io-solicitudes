@@ -57,6 +57,18 @@
 				<artifactId>poi-ooxml</artifactId>
 				<version>${poi.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>egakat-integration-core-files</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egakat</groupId>
+				<artifactId>
+					egakat-integration-core-transformation
+				</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<modules>

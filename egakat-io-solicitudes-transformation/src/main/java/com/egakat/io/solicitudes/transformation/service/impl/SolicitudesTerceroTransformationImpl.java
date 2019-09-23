@@ -1,12 +1,12 @@
 package com.egakat.io.solicitudes.transformation.service.impl;
 
-import static com.egakat.io.solicitudes.domain.SolicitudTercero.CANAL_CODIGO_ALTERNO;
-import static com.egakat.io.solicitudes.domain.SolicitudTercero.CIUDAD_CODIGO_ALTERNO;
-import static com.egakat.io.solicitudes.domain.SolicitudTercero.PUNTO_CODIGO_ALTERNO;
-import static com.egakat.io.solicitudes.domain.SolicitudTercero.TERCERO_IDENTIFICACION;
+import static com.egakat.io.commons.solicitudes.domain.SolicitudTercero.CANAL_CODIGO_ALTERNO;
+import static com.egakat.io.commons.solicitudes.domain.SolicitudTercero.CIUDAD_CODIGO_ALTERNO;
+import static com.egakat.io.commons.solicitudes.domain.SolicitudTercero.PUNTO_CODIGO_ALTERNO;
+import static com.egakat.io.commons.solicitudes.domain.SolicitudTercero.TERCERO_IDENTIFICACION;
 
-import com.egakat.integration.files.dto.CampoDto;
-import com.egakat.io.solicitudes.domain.SolicitudTercero;
+import com.egakat.integration.commons.archivos.dto.CampoDto;
+import com.egakat.io.commons.solicitudes.domain.SolicitudTercero;
 
 import lombok.val;
 

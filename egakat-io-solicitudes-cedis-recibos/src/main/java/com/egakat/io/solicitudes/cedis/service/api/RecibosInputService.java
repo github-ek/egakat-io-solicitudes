@@ -1,7 +1,7 @@
 package com.egakat.io.solicitudes.cedis.service.api;
 
 import com.egakat.integration.core.files.service.api.InputService;
-import com.egakat.io.solicitudes.domain.recibos.Recibo;
+import com.egakat.io.commons.solicitudes.domain.recibos.Recibo;
 
 public interface RecibosInputService extends InputService<Recibo> {
 

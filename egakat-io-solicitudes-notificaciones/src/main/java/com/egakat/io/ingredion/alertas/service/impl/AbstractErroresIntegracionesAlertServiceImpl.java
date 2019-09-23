@@ -29,8 +29,8 @@ import org.springframework.web.util.HtmlUtils;
 
 import com.egakat.core.alertas.service.impl.AlertServiceImpl;
 import com.egakat.core.mail.dto.MailMessageDto;
+import com.egakat.integration.dto.ErrorIntegracionDto;
 import com.egakat.io.ingredion.alertas.dto.ErrorActaDto;
-import com.egakat.io.ingredion.dto.ErrorDto;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -116,7 +116,7 @@ public abstract class AbstractErroresIntegracionesAlertServiceImpl
 
 	protected void appendDetail(StringBuilder sb, ErrorActaDto acta) {
 		val formatter = getFormatterDateTime();
-		val comparator = Comparator.comparing(ErrorDto::getFechaCreacion);
+		val comparator = Comparator.comparing(ErrorIntegracionDto::getFechaCreacion);
 
 		val list = acta.getErrores().stream().sorted(comparator);
 

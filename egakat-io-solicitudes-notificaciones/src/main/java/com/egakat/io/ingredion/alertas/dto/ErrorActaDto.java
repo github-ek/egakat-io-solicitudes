@@ -3,7 +3,7 @@ package com.egakat.io.ingredion.alertas.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.egakat.io.ingredion.dto.ErrorDto;
+import com.egakat.integration.dto.ErrorIntegracionDto;
 
 import lombok.Data;
 
@@ -25,5 +25,5 @@ public class ErrorActaDto  {
 	private String destinatarioIdentificacion;
 	private String destinatarioNombre;
 	
-	private List<ErrorDto> errores = new ArrayList<>();
+	private List<ErrorIntegracionDto> errores = new ArrayList<>();
 }

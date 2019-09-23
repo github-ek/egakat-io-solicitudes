@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.egakat.integration.core.files.components.decorators.Decorator;
-import com.egakat.integration.core.files.service.impl.excel.ArchivoExcelInputServiceImpl;
+import com.egakat.integration.core.files.service.impl.ArchivoExcelInputServiceImpl;
+import com.egakat.io.commons.components.MapEntidadDestruccionDecorator;
+import com.egakat.io.commons.solicitudes.domain.salidas.Destruccion;
+import com.egakat.io.commons.solicitudes.repository.salidas.DestruccionRepository;
 import com.egakat.io.solicitudes.cedis.service.api.DestruccionesInputService;
-import com.egakat.io.solicitudes.components.decorators.MapEntidadDestruccionDecorator;
-import com.egakat.io.solicitudes.domain.salidas.Destruccion;
-import com.egakat.io.solicitudes.repository.salidas.DestruccionRepository;
 
 @Service(DestruccionesInputService.DESTRUCCIONES_SERVICE)
 public class DestruccionesInputServiceImpl extends ArchivoExcelInputServiceImpl<Destruccion> implements DestruccionesInputService{

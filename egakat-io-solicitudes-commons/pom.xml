@@ -52,5 +52,14 @@
 			</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.egakat</groupId>
+			<artifactId>egakat-integration-commons-archivos</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.egakat</groupId>
+			<artifactId>egakat-integration-core-files</artifactId>
+		</dependency>
 	</dependencies>
 </project>

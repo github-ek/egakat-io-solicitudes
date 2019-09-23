@@ -1,19 +1,19 @@
 package com.egakat.io.solicitudes.transformation.service.impl;
 
-import static com.egakat.io.solicitudes.domain.Solicitud.BODEGA_CODIGO_ALTERNO;
-import static com.egakat.io.solicitudes.domain.Solicitud.CLIENTE_CODIGO;
-import static com.egakat.io.solicitudes.domain.Solicitud.ESTADO_INVENTARIO_CODIGO_ALTERNO;
-import static com.egakat.io.solicitudes.domain.Solicitud.PRODUCTO_CODIGO_ALTERNO;
-import static com.egakat.io.solicitudes.domain.Solicitud.SERVICIO_CODIGO_ALTERNO;
-import static com.egakat.io.solicitudes.domain.Solicitud.UNIDAD_MEDIDA_CODIGO_ALTERNO;
+import static com.egakat.io.commons.solicitudes.domain.Solicitud.BODEGA_CODIGO_ALTERNO;
+import static com.egakat.io.commons.solicitudes.domain.Solicitud.CLIENTE_CODIGO;
+import static com.egakat.io.commons.solicitudes.domain.Solicitud.ESTADO_INVENTARIO_CODIGO_ALTERNO;
+import static com.egakat.io.commons.solicitudes.domain.Solicitud.PRODUCTO_CODIGO_ALTERNO;
+import static com.egakat.io.commons.solicitudes.domain.Solicitud.SERVICIO_CODIGO_ALTERNO;
+import static com.egakat.io.commons.solicitudes.domain.Solicitud.UNIDAD_MEDIDA_CODIGO_ALTERNO;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.egakat.econnect.maestros.client.service.api.lookup.LookUpService;
+import com.egakat.integration.commons.archivos.dto.CampoDto;
 import com.egakat.integration.core.transformation.service.impl.TransformationServiceImpl;
-import com.egakat.integration.files.dto.CampoDto;
-import com.egakat.io.solicitudes.domain.Solicitud;
+import com.egakat.io.commons.solicitudes.domain.Solicitud;
 
 import lombok.val;
 

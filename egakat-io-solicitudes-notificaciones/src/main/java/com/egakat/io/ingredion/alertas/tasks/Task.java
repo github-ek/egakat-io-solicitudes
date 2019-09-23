@@ -8,10 +8,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.egakat.core.mail.service.api.MailService;
+import com.egakat.integration.service.api.crud.ErrorIntegracionCrudService;
 import com.egakat.io.ingredion.alertas.dto.ErrorActaDto;
 import com.egakat.io.ingredion.alertas.service.api.ErroresConsolidadosIntegracionesAlertService;
 import com.egakat.io.ingredion.alertas.service.api.ErroresIntegracionesAlertService;
-import com.egakat.io.ingredion.alertas.service.impl.ErroresService;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Task {
 
 	@Autowired
-	private ErroresService errores;
+	private ErrorIntegracionCrudService erroresService;
 
 	@Autowired
 	private ErroresIntegracionesAlertService recientesService;
@@ -38,11 +38,11 @@ public class Task {
 	@Scheduled(cron = "${cron-alertas-errores}")
 	public void recientes() {
 		try {
-			val partitions = errores.getActasConError();
+			//val partitions = erroresService.getActasConError();
 
-			partitions.forEach(actas -> {
-				recientes(actas);
-			});
+			//partitions.forEach(actas -> {
+			//	recientes(actas);
+			//});
 		} catch (RuntimeException e) {
 			log.error("catch (" + e.getClass().getSimpleName() + " e), exception:" + e.getMessage());
 		}
@@ -51,11 +51,11 @@ public class Task {
 	@Scheduled(cron = "${cron-alertas-errores-consolidados}")
 	public void consolidados() {
 		try {
-			val partitions = errores.getConsolidadoActasConError();
-
-			partitions.forEach(errores -> {
-				consolidados(errores);
-			});
+//			val partitions = erroresService.getConsolidadoActasConError();
+//
+//			partitions.forEach(errores -> {
+//				consolidados(erroresService);
+//			});
 		} catch (RuntimeException e) {
 			log.error("catch (" + e.getClass().getSimpleName() + " e), exception:" + e.getMessage());
 		}
@@ -67,7 +67,7 @@ public class Task {
 			if (!actas.isEmpty()) {
 				val message = recientesService.getMessage(actas);
 				mailService.sendMail(message);
-				errores.notificados(actas);
+				//erroresService.notificados(actas);
 			}
 		} catch (RuntimeException e) {
 			log.error("catch (" + e.getClass().getSimpleName() + " e), exception:" + e.getMessage());

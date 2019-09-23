@@ -1,17 +1,17 @@
 package com.egakat.io.solicitudes.transformation.service.impl;
 
-import static com.egakat.io.solicitudes.domain.salidas.Traslado.BODEGA_TRASLADO_CODIGO_ALTERNO;
-import static com.egakat.io.solicitudes.domain.salidas.Traslado.ESTADO_INVENTARIO_TRASLADO_CODIGO_ALTERNO;
+import static com.egakat.io.commons.solicitudes.domain.salidas.Traslado.BODEGA_TRASLADO_CODIGO_ALTERNO;
+import static com.egakat.io.commons.solicitudes.domain.salidas.Traslado.ESTADO_INVENTARIO_TRASLADO_CODIGO_ALTERNO;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.egakat.integration.files.dto.ArchivoErrorDto;
-import com.egakat.integration.files.dto.CampoDto;
-import com.egakat.io.solicitudes.domain.salidas.Traslado;
-import com.egakat.io.solicitudes.repository.salidas.TrasladoRepository;
+import com.egakat.integration.commons.archivos.dto.ArchivoErrorDto;
+import com.egakat.integration.commons.archivos.dto.CampoDto;
+import com.egakat.io.commons.solicitudes.domain.salidas.Traslado;
+import com.egakat.io.commons.solicitudes.repository.salidas.TrasladoRepository;
 import com.egakat.io.solicitudes.transformation.service.api.TrasladosTransformationService;
 
 import lombok.val;
